@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+exec python2 -c 'import collections, json, re, sys; json.dump(json.load(sys.stdin, object_pairs_hook=collections.OrderedDict), sys.stdout, indent=2)'

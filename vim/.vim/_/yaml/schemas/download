@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -o errexit -o nounset -o pipefail # -o xtrace
+
+DIR=$(dirname $(realpath "$0"))
+cd "${DIR}"
+openapi2jsonschema https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json --expanded --kubernetes --strict --output kubernetes
+sed --regexp-extended --in-place "s|(KUBERNETES_SCHEMA_URL = ')[^']+|\1file://${DIR}/kubernetes/all.json|" "$(dirname "$(realpath "$(which yaml-language-server)")")/../out/server/src/languageservice/utils/schemaUrls.js"

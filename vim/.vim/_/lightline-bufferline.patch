@@ -1,0 +1,18 @@
+diff --git a/autoload/lightline/bufferline.vim b/autoload/lightline/bufferline.vim
+index 792f733..0d7921f 100644
+--- a/autoload/lightline/bufferline.vim
++++ b/autoload/lightline/bufferline.vim
+@@ -103,12 +103,8 @@ function! s:get_from_number_map(i)
+   return l:result
+ endfunction
+ 
+-function! s:filter_buffer(i)
+-  return bufexists(a:i) && buflisted(a:i) && !(getbufvar(a:i, '&filetype') ==# 'qf')
+-endfunction
+-
+ function! s:filtered_buffers()
+-  let l:buffers = filter(range(1, bufnr('$')), 's:filter_buffer(v:val)')
++  let l:buffers = map(getbufinfo({'buflisted': 1}), 'v:val.bufnr')
+   if s:reverse_buffers == 1
+     let l:buffers = reverse(l:buffers)
+   endif

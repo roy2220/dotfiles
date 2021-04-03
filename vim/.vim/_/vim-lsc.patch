@@ -1,0 +1,181 @@
+diff --git a/autoload/lsc/cursor.vim b/autoload/lsc/cursor.vim
+index 35c02ba..bec4d39 100644
+--- a/autoload/lsc/cursor.vim
++++ b/autoload/lsc/cursor.vim
+@@ -33,8 +33,8 @@ function! lsc#cursor#showDiagnostic() abort
+     else
+       echo l:message
+     endif
+-  else
+-    echo ''
++  " else
++  "   echo ''
+   endif
+ endfunction
+ 
+@@ -69,7 +69,14 @@ endfunction
+ 
+ function! s:CanHighlightReferences() abort
+   for l:server in lsc#server#current()
+-    if l:server.capabilities.referenceHighlights
++    let l:reference_highlights = l:server.capabilities.referenceHighlights
++    if type(l:reference_highlights) == v:t_dict
++      if l:reference_highlights.workDoneProgress
++        return v:true
++      endif
++      continue
++    endif
++    if l:reference_highlights
+       return v:true
+     endif
+   endfor
+diff --git a/autoload/lsc/diagnostics.vim b/autoload/lsc/diagnostics.vim
+index ec848b5..f52e377 100644
+--- a/autoload/lsc/diagnostics.vim
++++ b/autoload/lsc/diagnostics.vim
+@@ -220,12 +220,7 @@ endfunction
+ 
+ " Finds all diagnostics and populates the quickfix list.
+ function! lsc#diagnostics#showInQuickFix() abort
+-  call setqflist([], ' ', {
+-      \ 'items': s:AllDiagnostics(),
+-      \ 'title': 'LSC Diagnostics',
+-      \ 'context': {'client': 'LSC'}
+-      \})
+-  copen
++  call ShowQuickfix(s:AllDiagnostics())
+ endfunction
+ 
+ function! s:UpdateQuickFix(...) abort
+diff --git a/autoload/lsc/reference.vim b/autoload/lsc/reference.vim
+index 42ef669..65e304d 100644
+--- a/autoload/lsc/reference.vim
++++ b/autoload/lsc/reference.vim
+@@ -46,7 +46,7 @@ endfunction
+ function! lsc#reference#findReferences() abort
+   call lsc#file#flushChanges()
+   let l:params = lsc#params#documentPosition()
+-  let l:params.context = {'includeDeclaration': v:true}
++  let l:params.context = {'includeDeclaration': v:false}
+   call lsc#server#userCall('textDocument/references', l:params,
+       \ function('<SID>setQuickFixLocations', ['references']))
+ endfunction
+@@ -65,8 +65,7 @@ function! s:setQuickFixLocations(label, results) abort
+   endif
+   call map(a:results, {_, ref -> s:QuickFixItem(ref)})
+   call sort(a:results, 'lsc#util#compareQuickFixItems')
+-  call setqflist(a:results)
+-  copen
++  call ShowQuickfix(a:results)
+ endfunction
+ 
+ " Convert an LSP Location to a item suitable for the vim quickfix list.
+@@ -119,6 +118,7 @@ function! s:goTo(file, line, character, mods, issplit) abort
+     " Set curswant manually to work around vim bug
+     call cursor([0, a:character, 0, virtcol([a:line, a:character])])
+   endif
++  normal! zz
+ endfunction
+ 
+ function! lsc#reference#hover() abort
+@@ -307,6 +307,7 @@ function! lsc#reference#findNext(direction) abort
+   if !exists('l:target')
+     return
+   endif
++  let l:target[1] = virtcol(l:target)
+   " Move with 'G' to ensure a jump is left
+   exec 'normal! '.l:target[0].'G'.l:target[1].'|'
+ endfunction
+diff --git a/autoload/lsc/search.vim b/autoload/lsc/search.vim
+index 77473d0..064ecec 100644
+--- a/autoload/lsc/search.vim
++++ b/autoload/lsc/search.vim
+@@ -16,6 +16,5 @@ function! s:setQuickFixSymbols(results) abort
+ 
+   call map(a:results, {_, symbol -> lsc#convert#quickFixSymbol(symbol)})
+   call sort(a:results, 'lsc#util#compareQuickFixItems')
+-  call setqflist(a:results)
+-  copen
++  call ShowQuickfix(a:results)
+ endfunction
+diff --git a/autoload/lsc/signaturehelp.vim b/autoload/lsc/signaturehelp.vim
+index 1922969..4bcfa96 100644
+--- a/autoload/lsc/signaturehelp.vim
++++ b/autoload/lsc/signaturehelp.vim
+@@ -13,7 +13,11 @@ function! lsc#signaturehelp#getSignatureHelp() abort
+ endfunction
+ 
+ function! s:HighlightCurrentParameter() abort
+-  execute 'match lscCurrentParameter /\V' . s:current_parameter . '/'
++  let [l:line, l:col] = searchpos('\C\V' . s:current_parameter, 'n')
++  let l:col = virtcol([l:line, l:col])
++  execute printf('normal! %dG%d|', l:line, l:col + len(s:current_parameter))
++  call clearmatches()
++  call matchaddpos('lscCurrentParameter', [[l:line, l:col, len(s:current_parameter)]])
+ endfunction
+ 
+ function! s:ShowHelp(signatureHelp) abort
+diff --git a/autoload/lsc/util.vim b/autoload/lsc/util.vim
+index f15f251..1298439 100644
+--- a/autoload/lsc/util.vim
++++ b/autoload/lsc/util.vim
+@@ -57,7 +57,7 @@ endfunction
+ function! lsc#util#displayAsPreview(lines, filetype, function) abort
+   let l:view = winsaveview()
+   let l:alternate=@#
+-  call s:createOrJumpToPreview(s:countDisplayLines(a:lines, &previewheight))
++  call s:createOrJumpToPreview()
+   setlocal modifiable
+   setlocal noreadonly
+   %d
+@@ -71,29 +71,14 @@ function! lsc#util#displayAsPreview(lines, filetype, function) abort
+   let @#=l:alternate
+ endfunction
+ 
+-" Approximates the number of lines it will take to display some text assuming an
+-" 80 character line wrap. Only counts up to `max`.
+-function! s:countDisplayLines(lines, max) abort
+-  let l:count = 0
+-  for l:line in a:lines
+-    if len(l:line) <= 80
+-      let l:count += 1
+-    else
+-      let l:count += float2nr(ceil(len(l:line) / 80.0))
+-    endif
+-    if l:count > a:max | return a:max | endif
+-  endfor
+-  return l:count
+-endfunction
+-
+-function! s:createOrJumpToPreview(want_height) abort
++function! s:createOrJumpToPreview() abort
+   let l:windows = range(1, winnr('$'))
+   call filter(l:windows, {_, win -> getwinvar(win, "&previewwindow") == 1})
+   if len(l:windows) > 0
+     execute string(l:windows[0]).' wincmd W'
+     edit __lsc_preview__
+-    if winheight(l:windows[0]) < a:want_height
+-      execute 'resize '.a:want_height
++    if winheight(l:windows[0]) != 1
++      resize 1
+     endif
+   else
+     if exists('g:lsc_preview_split_direction')
+@@ -101,7 +86,7 @@ function! s:createOrJumpToPreview(want_height) abort
+     else
+       let l:direction = ''
+     endif
+-    execute l:direction.' '.string(a:want_height).'split __lsc_preview__'
++    execute l:direction.' 1split __lsc_preview__'
+     if exists('#User#LSCShowPreview')
+       doautocmd <nomodeline> User LSCShowPreview
+     endif
+@@ -112,6 +97,8 @@ function! s:createOrJumpToPreview(want_height) abort
+   setlocal nobuflisted
+   setlocal buftype=nofile
+   setlocal noswapfile
++  set nonumber
++  set colorcolumn=0
+ endfunction
+ 
+ " Adds [value] to the [list] and removes the earliest entry if it would make the
