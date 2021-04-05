@@ -4,5 +4,10 @@ set -o errexit -o nounset -o pipefail # -o xtrace
 
 DIR=$(dirname $(realpath "$0"))
 cd "${DIR}"
-openapi2jsonschema https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json --expanded --kubernetes --strict --output kubernetes
-sed --regexp-extended --in-place "s|(KUBERNETES_SCHEMA_URL = ')[^']+|\1file://${DIR}/kubernetes/all.json|" "$(dirname "$(realpath "$(which yaml-language-server)")")/../out/server/src/languageservice/utils/schemaUrls.js"
+if [[ ! -d kubernetes ]]; then
+    openapi2jsonschema https://github.com/kubernetes/kubernetes/raw/master/api/openapi-spec/swagger.json --expanded --kubernetes --strict --output kubernetes
+    sed --regexp-extended --in-place "s|(KUBERNETES_SCHEMA_URL = ')[^']+|\1file://${DIR}/kubernetes/all.json|" "$(dirname "$(realpath "$(which yaml-language-server)")")/../out/server/src/languageservice/utils/schemaUrls.js"
+fi
+if [[ ! -f compose-spec.json ]]; then
+    curl --silent --show-error --fail --request GET --location https://github.com/compose-spec/compose-spec/raw/master/schema/compose-spec.json --output compose-spec.json
+fi

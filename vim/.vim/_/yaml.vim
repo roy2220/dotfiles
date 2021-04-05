@@ -6,7 +6,11 @@ if executable('bash-language-server')
     \   'workspace_config': {
     \        'yaml': {
     \            'schemas': {
-    \                'kubernetes': '*.k8s.yaml'
+    \                'kubernetes': '*.k8s.yaml',
+    \                'file://'.expand('<sfile>:p:h').'/yaml/schemas/compose-spec.json': ['docker-compose.yml', 'docker-compose.override.yml'],
+    \            },
+    \            'schemaStore': {
+    \                'enable': v:false,
     \            },
     \        },
     \   },
