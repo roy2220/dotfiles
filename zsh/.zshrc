@@ -34,9 +34,9 @@ z() {
     cd "$(_z -l 2>&1 | fzf --nth 2.. --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
 }
 
-source ~/.fzf-git.zsh
-source ~/.fzf-k8s.zsh
-source ~/.fzf-word.zsh
+source ~/.fzf-complete-git.zsh
+source ~/.fzf-complete-k8s.zsh
+source ~/.fzf-complete-word.zsh
 
 test -f ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.zplug/init.zsh

@@ -1,4 +1,6 @@
-fzf-k8s-resource() {
+fzf-complete-k8s-resource() {
+    local query
+    [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
     # local etcdctl_cmd="
     #     kubectl exec --namespace=kube-system pod/etcd-docker-desktop -- sh -c '
     #         ETCDCTL_CACERT=/run/config/pki/etcd/ca.crt
@@ -43,22 +45,22 @@ for line in lines:
         print("-n {} {}/{}".format(parts[1], parts[0], parts[2]))
 ')
     local resource_locator
-    resource_locator=$(fzf <<< ${resource_locators})
+    resource_locator=$(fzf --query=${query} <<< ${resource_locators})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${resource_locator} ]]; then
         return
     fi
     if [[ -v LBUFFER ]]; then
-        LBUFFER=${LBUFFER}${resource_locator}
+        LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${resource_locator}
     else
         echo ${resource_locator}
     fi
 }
-zle -N fzf-k8s-resource
-bindkey '^fkr' fzf-k8s-resource
+zle -N fzf-complete-k8s-resource
+bindkey '^kkr' fzf-complete-k8s-resource
 Kdr () {
     local resource_locator
-    resource_locator=$(fzf-k8s-resource)
+    resource_locator=$(fzf-complete-k8s-resource)
     if [[ -z ${resource_locator} ]]; then
         return
     fi

@@ -1,9 +1,11 @@
-fzf-git-branch() {
+fzf-complete-git-branch() {
     local current_branch
     current_branch=$(git rev-parse --abbrev-ref HEAD)
     if [[ -z ${current_branch} ]]; then
         return
     fi
+    local query
+    [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
     local raw_branches
     raw_branches=$(git branch --all --sort=-committerdate | cut --characters 3- | grep --fixed-strings --invert-match HEAD)
     if [[ -z ${raw_branches} ]]; then
@@ -21,71 +23,75 @@ fzf-git-branch() {
         fi
     fi
     local branch
-    branch=$(awk '!visited[$0]++' <<< ${branches} | fzf)
+    branch=$(awk '!visited[$0]++' <<< ${branches} | fzf --query=${query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${branch} ]]; then
         return
     fi
     if [[ -v LBUFFER ]]; then
-        LBUFFER=${LBUFFER}${branch}
+        LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${branch}
     else
         echo ${branch}
     fi
 }
-zle -N fzf-git-branch
-bindkey '^fgb' fzf-git-branch
+zle -N fzf-complete-git-branch
+bindkey '^kgb' fzf-complete-git-branch
 Gcb () {
     local branch
-    branch=$(fzf-git-branch)
+    branch=$(fzf-complete-git-branch)
     if [[ -z ${branch} ]]; then
         return
     fi
     git checkout ${branch}
 }
 
-fzf-git-tag() {
+fzf-complete-git-tag() {
     if ! git rev-parse --is-inside-work-tree >/dev/null; then
         return
     fi
+    local query
+    [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
     local tags
     tags=$(git tag --list --sort=-version:refname)
     if [[ -z ${tags} ]]; then
         return
     fi
     local tag
-    tag=$(fzf <<< ${tags})
+    tag=$(fzf --query=${query} <<< ${tags})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${tag} ]]; then
         return
     fi
     if [[ -v LBUFFER ]]; then
-        LBUFFER=${LBUFFER}${tag}
+        LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${tag}
     else
         echo ${tag}
     fi
 }
-zle -N fzf-git-tag
-bindkey '^fgt' fzf-git-tag
+zle -N fzf-complete-git-tag
+bindkey '^kgt' fzf-complete-git-tag
 Gct () {
     local tag
-    tag=$(fzf-git-tag)
+    tag=$(fzf-complete-git-tag)
     if [[ -z ${tag} ]]; then
         return
     fi
     git checkout ${tag}
 }
 
-fzf-git-commit() {
+fzf-complete-git-commit() {
     if ! git rev-parse --is-inside-work-tree >/dev/null; then
         return
     fi
+    local query
+    [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
     local commits_and_messages
     commits_and_messages=$(git log --format='%h %s')
     if [[ -z ${commits_and_messages} ]]; then
         return
     fi
     local commit_and_message
-    commit_and_message=$(fzf <<< ${commits_and_messages})
+    commit_and_message=$(fzf --query=${query} <<< ${commits_and_messages})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${commit_and_message} ]]; then
         return
@@ -96,48 +102,50 @@ fzf-git-commit() {
         return
     fi
     if [[ -v LBUFFER ]]; then
-        LBUFFER=${LBUFFER}${commit}
+        LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${commit}
     else
         echo ${commit}
     fi
 }
-zle -N fzf-git-commit
-bindkey '^fgc' fzf-git-commit
+zle -N fzf-complete-git-commit
+bindkey '^kgc' fzf-complete-git-commit
 Gcc () {
     local commit
-    commit=$(fzf-git-commit)
+    commit=$(fzf-complete-git-commit)
     if [[ -z ${commit} ]]; then
         return
     fi
     git checkout ${commit}
 }
 
-fzf-git-file() {
+fzf-complete-git-file() {
     if ! git rev-parse --is-inside-work-tree >/dev/null; then
         return
     fi
+    local query
+    [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
     local files
     files=$(git ls-files)
     if [[ -z ${files} ]]; then
         return
     fi
     local file
-    file=$(fzf <<< ${files})
+    file=$(fzf --query=${query} <<< ${files})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${file} ]]; then
         return
     fi
     if [[ -v LBUFFER ]]; then
-        LBUFFER=${LBUFFER}${file}
+        LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${file}
     else
         echo ${file}
     fi
 }
-zle -N fzf-git-file
-bindkey '^fgf' fzf-git-file
+zle -N fzf-complete-git-file
+bindkey '^kgf' fzf-complete-git-file
 Gcf () {
     local file
-    file=$(fzf-git-file)
+    file=$(fzf-complete-git-file)
     if [[ -z ${file} ]]; then
         return
     fi

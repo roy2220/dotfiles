@@ -1,4 +1,6 @@
-fzf-word() {
+fzf-complete-word() {
+    local query
+    query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
     local words
     words=$(tmux capture-pane -p | python2 -c '\
 import itertools
@@ -32,16 +34,12 @@ for word in sorted(words):
     print(word)
 ')
     local word
-    word=$(fzf-tmux -d 10 <<< ${words})
-    [[ -v LBUFFER ]] && zle reset-prompt
+    word=$(fzf-tmux -d 10 -- --query=${query} <<< ${words})
+    zle reset-prompt
     if [[ -z ${word} ]]; then
         return
     fi
-    if [[ -v LBUFFER ]]; then
-        LBUFFER=${LBUFFER}${word}
-    else
-        echo ${word}
-    fi
+    LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${word}
 }
-zle -N fzf-word
-bindkey '^fw' fzf-word
+zle -N fzf-complete-word
+bindkey '^kw' fzf-complete-word
