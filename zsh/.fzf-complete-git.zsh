@@ -35,7 +35,7 @@ fzf-complete-git-branch() {
     fi
 }
 zle -N fzf-complete-git-branch
-bindkey '^kgb' fzf-complete-git-branch
+bindkey '^xgb' fzf-complete-git-branch
 Gcb () {
     local branch
     branch=$(fzf-complete-git-branch)
@@ -69,7 +69,7 @@ fzf-complete-git-tag() {
     fi
 }
 zle -N fzf-complete-git-tag
-bindkey '^kgt' fzf-complete-git-tag
+bindkey '^xgt' fzf-complete-git-tag
 Gct () {
     local tag
     tag=$(fzf-complete-git-tag)
@@ -108,7 +108,7 @@ fzf-complete-git-commit() {
     fi
 }
 zle -N fzf-complete-git-commit
-bindkey '^kgc' fzf-complete-git-commit
+bindkey '^xgc' fzf-complete-git-commit
 Gcc () {
     local commit
     commit=$(fzf-complete-git-commit)
@@ -142,7 +142,7 @@ fzf-complete-git-file() {
     fi
 }
 zle -N fzf-complete-git-file
-bindkey '^kgf' fzf-complete-git-file
+bindkey '^xgf' fzf-complete-git-file
 Gcf () {
     local file
     file=$(fzf-complete-git-file)

@@ -57,7 +57,7 @@ for line in lines:
     fi
 }
 zle -N fzf-complete-k8s-resource
-bindkey '^kkr' fzf-complete-k8s-resource
+bindkey '^xkr' fzf-complete-k8s-resource
 Kdr () {
     local resource_locator
     resource_locator=$(fzf-complete-k8s-resource)

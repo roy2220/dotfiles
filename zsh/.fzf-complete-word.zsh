@@ -42,4 +42,4 @@ for word in sorted(words):
     LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${word}
 }
 zle -N fzf-complete-word
-bindkey '^kw' fzf-complete-word
+bindkey '^xw' fzf-complete-word
