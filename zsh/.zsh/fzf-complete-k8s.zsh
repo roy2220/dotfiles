@@ -18,8 +18,8 @@ fzf-complete-k8s-resource() {
         ETCDCTL_API=3
         etcdctl get /registry/ --prefix --keys-only
     '
-    local resource_locators
-    resource_locators=$(eval ${=etcdctl_cmd} | python2 -c '\
+    local resource_locator
+    resource_locator=$(eval ${=etcdctl_cmd} | python2 -c '\
 import re
 import sys
 
@@ -43,9 +43,7 @@ for line in lines:
         print("{}/{}".format(parts[0], parts[1]))
     elif len(parts) == 3:
         print("-n {} {}/{}".format(parts[1], parts[0], parts[2]))
-')
-    local resource_locator
-    resource_locator=$(fzf --query=${query} <<< ${resource_locators})
+' | fzf --query=${query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${resource_locator} ]]; then
         return

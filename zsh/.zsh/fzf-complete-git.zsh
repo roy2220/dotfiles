@@ -1,21 +1,15 @@
 fzf-complete-git-branch() {
-    local current_branch
-    current_branch=$(git rev-parse --abbrev-ref HEAD)
-    if [[ -z ${current_branch} ]]; then
-        return
-    fi
     local query
     [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
     local raw_branches
     raw_branches=$(git branch --all --sort=-committerdate | cut --characters 3- | grep --fixed-strings --invert-match HEAD)
-    if [[ -z ${raw_branches} ]]; then
-        return
-    fi
     local branches
     branches=$(sed --silent --regexp-extended 's/^(remotes\/)?(.+)$/\2/p' <<< ${raw_branches})
     local additional_branches
     additional_branches=$(sed --silent --regexp-extended 's/^remotes\/[^\/]+\/(.+)$/\1/p' <<< ${raw_branches})
     if [[ ! -z ${additional_branches} ]]; then
+        local current_branch
+        current_branch=$(git rev-parse --abbrev-ref HEAD)
         if [[ ${current_branch} == HEAD ]]; then
             branches+=$'\n'${additional_branches}
         else
@@ -23,7 +17,7 @@ fzf-complete-git-branch() {
         fi
     fi
     local branch
-    branch=$(awk '!visited[$0]++' <<< ${branches} | fzf --query=${query})
+    branch=$(echo -n ${branches} | awk '!visited[$0]++' | fzf --query=${query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${branch} ]]; then
         return
@@ -46,18 +40,10 @@ Gcb () {
 }
 
 fzf-complete-git-tag() {
-    if ! git rev-parse --is-inside-work-tree >/dev/null; then
-        return
-    fi
     local query
     [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local tags
-    tags=$(git tag --list --sort=-version:refname)
-    if [[ -z ${tags} ]]; then
-        return
-    fi
     local tag
-    tag=$(fzf --query=${query} <<< ${tags})
+    tag=$(git tag --list --sort=-version:refname | fzf --query=${query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${tag} ]]; then
         return
@@ -80,27 +66,16 @@ Gct () {
 }
 
 fzf-complete-git-commit() {
-    if ! git rev-parse --is-inside-work-tree >/dev/null; then
-        return
-    fi
     local query
     [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local commits_and_messages
-    commits_and_messages=$(git log --format='%h %s')
-    if [[ -z ${commits_and_messages} ]]; then
-        return
-    fi
     local commit_and_message
-    commit_and_message=$(fzf --query=${query} <<< ${commits_and_messages})
+    commit_and_message=$(git log --format='%h %s' | fzf --query=${query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${commit_and_message} ]]; then
         return
     fi
     local commit
     commit=$(cut --delimiter=' ' --fields=1 <<< ${commit_and_message})
-    if [[ -z ${commit} ]]; then
-        return
-    fi
     if [[ -v LBUFFER ]]; then
         LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${commit}
     else
@@ -119,18 +94,10 @@ Gcc () {
 }
 
 fzf-complete-git-file() {
-    if ! git rev-parse --is-inside-work-tree >/dev/null; then
-        return
-    fi
     local query
     [[ -v LBUFFER ]] && query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local files
-    files=$(git ls-files)
-    if [[ -z ${files} ]]; then
-        return
-    fi
     local file
-    file=$(fzf --query=${query} <<< ${files})
+    file=$(git ls-files | fzf --query=${query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${file} ]]; then
         return

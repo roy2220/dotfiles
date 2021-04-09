@@ -2,6 +2,7 @@ if [[ -o login ]]; then
     if [[ -f ~/.ssh/keys.tar.gpg ]]; then
         git -C ~/.files pull --ff-only
         stow --dir ~/.files $(ls ~/.files)
+        find ~ -mindepth 1 -maxdepth 1 -type l -exec test ! -e {} \; -delete
         until gpg -o- ~/.ssh/keys.tar.gpg | tar x -C ~/.ssh; do done
         rm ~/.ssh/keys.tar.gpg
         git -C ~/.files remote set-url origin git@github.com:roy2220/dotfiles.git
@@ -15,6 +16,9 @@ if [[ -o login ]]; then
     exec tmux new-session -A -s $(id --user --name)
 fi
 
+setopt histreduceblanks
+setopt histignorespace
+setopt histignorealldups
 setopt autocd
 
 alias k=kubectl
@@ -34,10 +38,6 @@ z() {
     cd "$(_z -l 2>&1 | fzf --nth 2.. --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
 }
 
-source ~/.fzf-complete-git.zsh
-source ~/.fzf-complete-k8s.zsh
-source ~/.fzf-complete-word.zsh
-
 test -f ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.zplug/init.zsh
 {
@@ -53,9 +53,12 @@ source ~/.zplug/init.zsh
     zplug "zsh-users/zsh-syntax-highlighting", depth:1
 
     zplug "junegunn/fzf", use:"shell/completion.zsh", depth:1, defer:2
-    zplug "junegunn/fzf", use:"shell/key-bindings.zsh", depth:1, defer:2
     zplug "zsh-users/zsh-autosuggestions", depth:1, defer:2
     zplug "zsh-users/zsh-history-substring-search", depth:1, defer:2
 }
 zplug load
 source ~/.p10k.zsh
+for file in ~/.zsh/*.zsh; do
+    source ${file}
+done
+unset file

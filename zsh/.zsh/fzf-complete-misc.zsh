@@ -1,8 +1,34 @@
+fzf-complete-command() {
+    local command
+    command=$(fc -nrl 1 | fzf --query=${LBUFFER})
+    zle reset-prompt
+    if [[ -z ${command} ]]; then
+        return
+    fi
+    LBUFFER=${command}
+}
+zle -N fzf-complete-command
+bindkey '^r' fzf-complete-command
+
+fzf-complete-file() {
+    local query
+    query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+    local file
+    file=$(find . -mindepth 1 \( -type f -printf '%P\n' \) -or \( -type d -printf '%P/\n' \) | fzf --query=${query})
+    zle reset-prompt
+    if [[ -z ${file} ]]; then
+        return
+    fi
+    LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${file}
+}
+zle -N fzf-complete-file
+bindkey '^x^f' fzf-complete-file
+
 fzf-complete-word() {
     local query
     query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local words
-    words=$(tmux capture-pane -p | python2 -c '\
+    local word
+    word=$(tmux capture-pane -p | python2 -c '\
 import itertools
 import re
 import sys
@@ -32,9 +58,7 @@ words = words1.union(words2).union(words3).union(words4)
 words.remove("")
 for word in sorted(words):
     print(word)
-')
-    local word
-    word=$(fzf-tmux -d 10 -- --query=${query} <<< ${words})
+' | fzf-tmux -d 10 -- --query=${query})
     zle reset-prompt
     if [[ -z ${word} ]]; then
         return
@@ -42,4 +66,4 @@ for word in sorted(words):
     LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${word}
 }
 zle -N fzf-complete-word
-bindkey '^xw' fzf-complete-word
+bindkey '^x^w' fzf-complete-word
