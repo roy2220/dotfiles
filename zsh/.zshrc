@@ -33,11 +33,6 @@ eval "$(direnv hook zsh)"
 
 export FZF_DEFAULT_OPTS='--height=40% --reverse --bind '\''ctrl-y:execute-silent(echo -n {} | pbcopy; tmux set-buffer {})+abort'\'
 
-z() {
-    [ $# -gt 0 ] && _z "$*" && return
-    cd "$(_z -l 2>&1 | fzf --nth 2.. --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
-}
-
 test -f ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.zplug/init.zsh
 {
