@@ -1,95 +1,88 @@
 e() {
     local db_file=${HOME}/.zsh/e.db
-    local get_pwd_sql='SELECT dir.abs_path FROM dir INNER JOIN pwd ON dir.id = pwd.id'
-    local delete_dirs_sql1='DELETE FROM dir WHERE id > (SELECT id FROM pwd)'
-    local delete_dirs_sql2='DELETE FROM dir WHERE id <= (SELECT id FROM dir ORDER BY id DESC LIMIT 1 OFFSET 100)'
-    local update_pwd_sql='REPLACE INTO pwd(dummy, id) SELECT 0, id FROM dir ORDER BY id DESC LIMIT 1'
-    local show_pwd_script='
-echo "Current Directory: ${PWD}\nCTRL-]: move into directory, CTRL-O: move back, CTRL-I: move forward"
-ls --all --dereference --group-directories-first --indicator-style=slash -1
+    local get_cur_dir_sql='SELECT dir.abs_path FROM dir INNER JOIN cur_dir ON dir.id = cur_dir.id'
+    local update_cur_dir_script="
+if [[ \${dir} != \${cur_dir} ]]; then
+    sqlite3 ${db_file:q} '
+DELETE FROM dir WHERE id > (SELECT id FROM cur_dir);
+INSERT INTO dir(id, abs_path) VALUES(NULL, \"'\${dir}'\");
+DELETE FROM dir WHERE id <= (SELECT id FROM dir ORDER BY id DESC LIMIT 1 OFFSET 100);
+REPLACE INTO cur_dir(dummy, id) SELECT 0, id FROM dir ORDER BY id DESC LIMIT 1;
+'
+    cur_dir=\${dir}
+fi
+"
+    local show_cur_dir_script='
+echo "Current Directory: ${cur_dir}\nCTRL-]: move into directory, CTRL-O: move back, CTRL-I: move forward"
+ls --all --dereference --group-directories-first --indicator-style=slash -1 ${cur_dir} 2>/dev/null || true
 '
     if [[ ! -e ${db_file} ]]; then
-        sqlite3 ${db_file} "
+        sqlite3 ${db_file} '
 CREATE TABLE dir(id INTEGER PRIMARY KEY, abs_path INTEGER);
-CREATE TABLE pwd(dummy INTEGER PRIMARY KEY, id INTEGER);
-"
+INSERT INTO dir(id, abs_path) VALUES(1, "/");
+CREATE TABLE cur_dir(dummy INTEGER PRIMARY KEY, id INTEGER);
+INSERT INTO cur_dir(dummy, id) VALUES(0, 1);
+'
     fi
-    local pwd
-    pwd=$(sqlite3 ${db_file} ${get_pwd_sql})
-    if [[ ${PWD} != ${pwd} ]]; then
-        sqlite3 ${db_file} "
-${delete_dirs_sql1};
-INSERT INTO dir(id, abs_path) VALUES(NULL, \"${PWD}\");
-${delete_dirs_sql2};
-${update_pwd_sql};
-"
+    local cur_dir=$(sqlite3 ${db_file} ${get_cur_dir_sql})
+    if [[ ! -z ${1} ]]; then
+        local dir=$(realpath ${1})
+        eval ${update_cur_dir_script}
     fi
     export PREVIEW_FILE_SCRIPT="
-cd \$(sqlite3 ${db_file:q} ${get_pwd_sql:q})
-if [[ \${FILE[-1]} == / ]]; then
-    ls --all --format=long --group-directories-first --human-readable --indicator-style=classify \${FILE} --color
+local cur_dir=\$(sqlite3 ${db_file:q} ${get_cur_dir_sql:q})
+if [[ \${name[-1]} == / ]]; then
+    local dir=\${cur_dir}/\${name}
+    ls --all --format=long --group-directories-first --human-readable --indicator-style=classify \${dir} --color
 else
-    if [[ -f \${FILE} ]]; then
-        cat \${FILE}
+    local file=\${cur_dir}/\${name}
+    if [[ -f \${file} ]]; then
+        cat \${file}
     else
         echo 'not a regular file'
     fi
 fi
 "
     export MOVE_INTO_DIR_SCRIPT="
-cd \$(sqlite3 ${db_file:q} ${get_pwd_sql:q})
-if [[ \${FILE} != ./ && \${FILE[-1]} == / ]]; then
-    cd \${FILE}
-    sqlite3 ${db_file:q} \"
-${delete_dirs_sql1};
-INSERT INTO dir(id, abs_path) VALUES(NULL, \\\"\${PWD}\\\");
-${delete_dirs_sql2};
-${update_pwd_sql};
-\"
+local cur_dir=\$(sqlite3 ${db_file:q} ${get_cur_dir_sql:q})
+if [[ \${name[-1]} == / ]]; then
+    local dir=\$(realpath \${cur_dir}/\${name})
+    ${update_cur_dir_script}
 fi
-${show_pwd_script}
+${show_cur_dir_script}
 "
     export MOVE_INTO_PREV_DIR_SCRIPT="
-DIR=\$(sqlite3 ${db_file:q} '
-REPLACE INTO pwd(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN pwd ON dir.id < pwd.id ORDER BY dir.id DESC LIMIT 1;
-${get_pwd_sql};
+local cur_dir=\$(sqlite3 ${db_file:q} '
+REPLACE INTO cur_dir(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN cur_dir ON dir.id < cur_dir.id ORDER BY dir.id DESC LIMIT 1;
+${get_cur_dir_sql};
 ')
-cd \${DIR}
-${show_pwd_script};
+${show_cur_dir_script};
 "
     export MOVE_INTO_NEXT_DIR_SCRIPT="
-DIR=\$(sqlite3 ${db_file:q} '
-REPLACE INTO pwd(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN pwd ON dir.id > pwd.id ORDER BY dir.id ASC LIMIT 1;
-${get_pwd_sql};
+local cur_dir=\$(sqlite3 ${db_file:q} '
+REPLACE INTO cur_dir(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN cur_dir ON dir.id > cur_dir.id ORDER BY dir.id ASC LIMIT 1;
+${get_cur_dir_sql};
 ')
-cd \${DIR}
-${show_pwd_script}
+${show_cur_dir_script}
 "
-    local file
-    file=$(eval ${show_pwd_script} |
+    local name=$(eval ${show_cur_dir_script} |
         SHELL=${ZSH_ARGZERO} fzf --height=100% --reverse \
         --header-lines=2 \
-        --preview='FILE={}; eval ${PREVIEW_FILE_SCRIPT}' \
-        --bind='ctrl-]:reload(FILE={}; eval ${MOVE_INTO_DIR_SCRIPT})+clear-query+first' \
+        --preview='name={}; eval ${PREVIEW_FILE_SCRIPT}' \
+        --bind='ctrl-]:reload(name={}; eval ${MOVE_INTO_DIR_SCRIPT})+clear-query+first' \
         --bind='ctrl-o:reload(eval ${MOVE_INTO_PREV_DIR_SCRIPT})+clear-query+first' \
         --bind='ctrl-i:reload(eval ${MOVE_INTO_NEXT_DIR_SCRIPT})+clear-query+first')
-    pwd=$(sqlite3 ${db_file} ${get_pwd_sql})
-    if [[ -z ${file} ]]; then
-        if [[ ${PWD} != ${pwd} ]]; then
-            cd ${pwd}
-        fi
+    if [[ -z ${name} ]]; then
         return
     fi
-    if [[ ${file[-1]} == / ]]; then
-        local dir
-        dir=$(realpath ${pwd}/${file})
-        if [[ ${PWD} != ${dir} ]]; then
+    cur_dir=$(sqlite3 ${db_file} ${get_cur_dir_sql})
+    if [[ ${name[-1]} == / ]]; then
+        local dir=$(realpath ${cur_dir}/${name})
+        if [[ ${dir} != ${PWD} ]]; then
             cd ${dir}
         fi
     else
-        if [[ ${PWD} != ${pwd} ]]; then
-            cd ${pwd}
-        fi
+        local file=${cur_dir}/${name}
         ${EDITOR:-vi} ${file}
     fi
 }
