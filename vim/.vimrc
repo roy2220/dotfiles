@@ -27,6 +27,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'othree/eregex.vim'
     Plug 'preservim/nerdtree'
     Plug 'psliwka/vim-smoothie'
+    Plug 'TaDaa/vimade'
     Plug 'tommcdo/vim-exchange'
     Plug 'tmux-plugins/vim-tmux-focus-events'
     Plug 'tpope/vim-abolish'
