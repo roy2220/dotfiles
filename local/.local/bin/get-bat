@@ -2,14 +2,15 @@
 
 set -o errexit -o nounset -o pipefail # -o xtrace
 
-DOWNLOAD_URL=$(curl --silent --show-error --fail --request GET --location https://api.github.com/repos/simeji/jid/releases/latest | python2 -c '
+DOWNLOAD_URL=$(curl --silent --show-error --fail --request GET --location https://api.github.com/repos/sharkdp/bat/releases/latest | python2 -c '
 import json
+import re
 import sys
 
 releases = json.loads(sys.stdin.read())
 download_url = None
 for asset in releases["assets"]:
-    if asset["name"] == "jid_linux_amd64.zip":
+    if re.match(r"bat-[^-]+-x86_64-unknown-linux-gnu\.tar\.gz$", asset["name"]) is not None:
         download_url = asset["browser_download_url"]
         break
 if download_url is None:
@@ -17,11 +18,8 @@ if download_url is None:
     sys.exit(1)
 print download_url
 ')
-TEMP_FILE=$(mktemp)
-curl --silent --show-error --fail --request GET --location "${DOWNLOAD_URL}" --output "${TEMP_FILE}"
 TEMP_DIR=$(mktemp --directory)
-unzip -d "${TEMP_DIR}" "${TEMP_FILE}"
-rm --force "${TEMP_FILE}"
+curl --silent --show-error --fail --request GET --location "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"
 DIR=$(dirname $(realpath "$0"))
-install -D "${TEMP_DIR}/jid" "${DIR}/jid"
+install -D "${TEMP_DIR}/bat-"*'-x86_64-unknown-linux-gnu/bat' "${DIR}/bat"
 rm --force --recursive "${TEMP_DIR}"
