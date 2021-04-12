@@ -37,7 +37,7 @@ if [[ \${name[-1]} == / ]]; then
 else
     local file=\${cur_dir}/\${name}
     if [[ -f \${file} ]]; then
-        cat \${file}
+        bat --color=always --style=numbers \${file}
     else
         echo 'not a regular file'
     fi
