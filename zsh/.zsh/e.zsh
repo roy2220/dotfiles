@@ -1,9 +1,9 @@
+export E_DB_FILE=$(dirname $(realpath ${_}))/e.db
 e() {
-    local db_file=${HOME}/.zsh/e.db
     local get_cur_dir_sql='SELECT dir.abs_path FROM dir INNER JOIN cur_dir ON dir.id = cur_dir.id'
     local update_cur_dir_script="
 if [[ \${dir} != \${cur_dir} ]]; then
-    sqlite3 ${db_file:q} '
+    sqlite3 \${E_DB_FILE} '
 DELETE FROM dir WHERE id > (SELECT id FROM cur_dir);
 INSERT INTO dir(id, abs_path) VALUES(NULL, \"'\${dir}'\");
 DELETE FROM dir WHERE id <= (SELECT id FROM dir ORDER BY id DESC LIMIT 1 OFFSET 100);
@@ -16,35 +16,41 @@ fi
 echo "Current Directory: ${cur_dir}\nCTRL-]: move into directory, CTRL-O: move back, CTRL-I: move forward"
 ls --all --dereference --group-directories-first --indicator-style=slash -1 ${cur_dir} 2>/dev/null || true
 '
-    if [[ ! -e ${db_file} ]]; then
-        sqlite3 ${db_file} '
+    if [[ ! -e ${E_DB_FILE} ]]; then
+        sqlite3 ${E_DB_FILE} '
 CREATE TABLE dir(id INTEGER PRIMARY KEY, abs_path INTEGER);
 INSERT INTO dir(id, abs_path) VALUES(1, "/");
 CREATE TABLE cur_dir(dummy INTEGER PRIMARY KEY, id INTEGER);
 INSERT INTO cur_dir(dummy, id) VALUES(0, 1);
 '
     fi
-    local cur_dir=$(sqlite3 ${db_file} ${get_cur_dir_sql})
+    local cur_dir=$(sqlite3 ${E_DB_FILE} ${get_cur_dir_sql})
     if [[ ! -z ${1} ]]; then
         local dir=$(realpath ${1})
         eval ${update_cur_dir_script}
     fi
+    local cat_cmd
+    if command -v bat >/dev/null 2>&1; then
+        cat_cmd='bat --color=always --style=numbers'
+    else
+        cat_cmd='cat'
+    fi
     export PREVIEW_FILE_SCRIPT="
-local cur_dir=\$(sqlite3 ${db_file:q} ${get_cur_dir_sql:q})
+local cur_dir=\$(sqlite3 \${E_DB_FILE} ${get_cur_dir_sql:q})
 if [[ \${name[-1]} == / ]]; then
     local dir=\${cur_dir}/\${name}
     ls --all --format=long --group-directories-first --human-readable --indicator-style=classify \${dir} --color
 else
     local file=\${cur_dir}/\${name}
     if [[ -f \${file} ]]; then
-        bat --color=always --style=numbers \${file}
+        ${cat_cmd} \${file}
     else
         echo 'not a regular file'
     fi
 fi
 "
     export MOVE_INTO_DIR_SCRIPT="
-local cur_dir=\$(sqlite3 ${db_file:q} ${get_cur_dir_sql:q})
+local cur_dir=\$(sqlite3 \${E_DB_FILE} ${get_cur_dir_sql:q})
 if [[ \${name[-1]} == / ]]; then
     local dir=\$(realpath \${cur_dir}/\${name})
     ${update_cur_dir_script}
@@ -52,14 +58,14 @@ fi
 ${show_cur_dir_script}
 "
     export MOVE_INTO_PREV_DIR_SCRIPT="
-local cur_dir=\$(sqlite3 ${db_file:q} '
+local cur_dir=\$(sqlite3 \${E_DB_FILE} '
 REPLACE INTO cur_dir(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN cur_dir ON dir.id < cur_dir.id ORDER BY dir.id DESC LIMIT 1;
 ${get_cur_dir_sql};
 ')
 ${show_cur_dir_script};
 "
     export MOVE_INTO_NEXT_DIR_SCRIPT="
-local cur_dir=\$(sqlite3 ${db_file:q} '
+local cur_dir=\$(sqlite3 \${E_DB_FILE} '
 REPLACE INTO cur_dir(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN cur_dir ON dir.id > cur_dir.id ORDER BY dir.id ASC LIMIT 1;
 ${get_cur_dir_sql};
 ')
@@ -75,7 +81,7 @@ ${show_cur_dir_script}
     if [[ -z ${name} ]]; then
         return
     fi
-    cur_dir=$(sqlite3 ${db_file} ${get_cur_dir_sql})
+    cur_dir=$(sqlite3 ${E_DB_FILE} ${get_cur_dir_sql})
     if [[ ${name[-1]} == / ]]; then
         local dir=$(realpath ${cur_dir}/${name})
         if [[ ${dir} != ${PWD} ]]; then
@@ -83,6 +89,6 @@ ${show_cur_dir_script}
         fi
     else
         local file=${cur_dir}/${name}
-        ${EDITOR:-vi} ${file}
+        ${EDITOR:-$(command -v vim vi less | head -1)} ${file}
     fi
 }
