@@ -5,7 +5,7 @@ fzf-complete-command() {
     if [[ -z ${command} ]]; then
         return
     fi
-    LBUFFER=${command}
+    LBUFFER=$(echo -e ${command})
 }
 zle -N fzf-complete-command
 bindkey '^r' fzf-complete-command

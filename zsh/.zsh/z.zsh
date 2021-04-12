@@ -1,6 +1,6 @@
 z() {
     local dir
-    dir=$(_z 2>&1 | cut -c12- | fzf --tac --no-sort)
+    dir=$(_z 2>&1 | cut --characters=12- | fzf --tac --no-sort)
     if [[ -z ${dir} ]]; then
         return
     fi
