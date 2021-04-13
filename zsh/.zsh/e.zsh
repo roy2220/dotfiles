@@ -29,11 +29,10 @@ INSERT INTO cur_dir(dummy, id) VALUES(0, 1);
         local dir=$(realpath ${1})
         eval ${update_cur_dir_script}
     fi
-    local cat_cmd
     if command -v bat >/dev/null 2>&1; then
-        cat_cmd='bat --color=always --style=numbers'
+        local cat_cmd='bat --color=always --style=numbers'
     else
-        cat_cmd='cat'
+        local cat_cmd='cat'
     fi
     export PREVIEW_FILE_SCRIPT="
 local cur_dir=\$(sqlite3 \${E_DB_FILE} ${get_cur_dir_sql:q})

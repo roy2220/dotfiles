@@ -1,6 +1,5 @@
 fzf-complete-command() {
-    local command
-    command=$(fc -nrl 1 | fzf --query=${LBUFFER})
+    local command=$(fc -nrl 1 | fzf --query=${LBUFFER})
     zle reset-prompt
     if [[ -z ${command} ]]; then
         return
@@ -11,10 +10,15 @@ zle -N fzf-complete-command
 bindkey '^r' fzf-complete-command
 
 fzf-complete-file() {
-    local query
-    query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local file
-    file=$(find . -mindepth 1 \( -type f -printf '%P\n' \) -or \( -type d -printf '%P/\n' \) | fzf --query=${query})
+    local dir_or_query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+    if [[ ${dir_or_query[-1]} == / ]]; then
+        eval "local dir=${dir_or_query}"
+        local file=$(find ${dir} -mindepth 1 \( -type f -printf '%P\n' \) -or \( -type d -printf '%P/\n' \) | fzf --prompt="${dir}> ")
+        local query=''
+    else
+        local query=${dir_or_query}
+        local file=$(find . -mindepth 1 \( -type f -printf '%P\n' \) -or \( -type d -printf '%P/\n' \) | fzf --query=${query})
+    fi
     zle reset-prompt
     if [[ -z ${file} ]]; then
         return
@@ -25,10 +29,8 @@ zle -N fzf-complete-file
 bindkey '^x^f' fzf-complete-file
 
 fzf-complete-word() {
-    local query
-    query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local word
-    word=$(tmux capture-pane -p | python2 -c '\
+    local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+    local word=$(tmux capture-pane -p | python2 -c '\
 import itertools
 import re
 import sys
