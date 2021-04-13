@@ -1,5 +1,5 @@
 fzf-complete-command() {
-    local command=$(fc -nrl 1 | fzf --query=${LBUFFER})
+    local command=$(fc -nrl 1 | fzf --no-sort --query=${LBUFFER})
     zle reset-prompt
     if [[ -z ${command} ]]; then
         return
