@@ -1,7 +1,13 @@
 fzf-complete-git-branch() {
-    [[ -v LBUFFER ]] && local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+    if [[ -v LBUFFER ]]; then
+        local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+        eval "local expanded_query=${query}"
+    else
+        local query=${1}
+        local expanded_query=${1}
+    fi
     local raw_branches=$(git branch --all --sort=-committerdate | cut --characters 3- | grep --fixed-strings --invert-match HEAD)
-    local ranches=$(sed --silent --regexp-extended 's/^(remotes\/)?(.+)$/\2/p' <<< ${raw_branches})
+    local branches=$(sed --silent --regexp-extended 's/^(remotes\/)?(.+)$/\2/p' <<< ${raw_branches})
     local additional_branches=$(sed --silent --regexp-extended 's/^remotes\/[^\/]+\/(.+)$/\1/p' <<< ${raw_branches})
     if [[ ! -z ${additional_branches} ]]; then
         local current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -11,7 +17,7 @@ fzf-complete-git-branch() {
             branches=${current_branch}$'\n'${branches}$'\n'${additional_branches}
         fi
     fi
-    local branch=$(echo -n ${branches} | awk '!visited[$0]++' | fzf --query=${query})
+    local branch=$(head --bytes=-1 <<< ${branches} | awk '!visited[$0]++' | fzf --query=${expanded_query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${branch} ]]; then
         return
@@ -25,7 +31,7 @@ fzf-complete-git-branch() {
 zle -N fzf-complete-git-branch
 bindkey '^xgb' fzf-complete-git-branch
 Gcb () {
-    local branch=$(fzf-complete-git-branch)
+    local branch=$(fzf-complete-git-branch ${1})
     if [[ -z ${branch} ]]; then
         return
     fi
@@ -33,8 +39,14 @@ Gcb () {
 }
 
 fzf-complete-git-tag() {
-    [[ -v LBUFFER ]] && local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local tag=$(git tag --list --sort=-version:refname | fzf --query=${query})
+    if [[ -v LBUFFER ]]; then
+        local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+        eval "local expanded_query=${query}"
+    else
+        local query=${1}
+        local expanded_query=${1}
+    fi
+    local tag=$(git tag --list --sort=-version:refname | fzf --query=${expanded_query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${tag} ]]; then
         return
@@ -48,7 +60,7 @@ fzf-complete-git-tag() {
 zle -N fzf-complete-git-tag
 bindkey '^xgt' fzf-complete-git-tag
 Gct () {
-    local tag=$(fzf-complete-git-tag)
+    local tag=$(fzf-complete-git-tag ${1})
     if [[ -z ${tag} ]]; then
         return
     fi
@@ -56,8 +68,14 @@ Gct () {
 }
 
 fzf-complete-git-commit() {
-    [[ -v LBUFFER ]] && local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local commit_and_message=$(git log --format='%h %s' | fzf --query=${query})
+    if [[ -v LBUFFER ]]; then
+        local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+        eval "local expanded_query=${query}"
+    else
+        local query=${1}
+        local expanded_query=${1}
+    fi
+    local commit_and_message=$(git log --format='%h %s' | fzf --query=${expanded_query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${commit_and_message} ]]; then
         return
@@ -72,7 +90,7 @@ fzf-complete-git-commit() {
 zle -N fzf-complete-git-commit
 bindkey '^xgc' fzf-complete-git-commit
 Gcc () {
-    local commit=$(fzf-complete-git-commit)
+    local commit=$(fzf-complete-git-commit ${1})
     if [[ -z ${commit} ]]; then
         return
     fi
@@ -80,8 +98,14 @@ Gcc () {
 }
 
 fzf-complete-git-file() {
-    [[ -v LBUFFER ]] && local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    local file=$(git ls-files | fzf --query=${query})
+    if [[ -v LBUFFER ]]; then
+        local query=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+        eval "local expanded_query=${query}"
+    else
+        local query=${1}
+        local expanded_query=${1}
+    fi
+    local file=$(git ls-files | fzf --query=${expanded_query})
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${file} ]]; then
         return
@@ -95,7 +119,7 @@ fzf-complete-git-file() {
 zle -N fzf-complete-git-file
 bindkey '^xgf' fzf-complete-git-file
 Gcf () {
-    local file=$(fzf-complete-git-file)
+    local file=$(fzf-complete-git-file ${1})
     if [[ -z ${file} ]]; then
         return
     fi
