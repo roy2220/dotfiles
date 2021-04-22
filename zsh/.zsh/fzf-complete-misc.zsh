@@ -10,18 +10,28 @@ zle -N fzf-complete-command
 bindkey '^r' fzf-complete-command
 
 fzf-complete-file() {
-    local dir=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
-    if [[ ${dir[-1]} == / ]]; then
-        eval "local expanded_dir=${dir}"
-        local file=$(find ${expanded_dir} -mindepth 1 \( -type f -printf '%P\n' \) -or \( -type d -printf '%P/\n' \) | fzf --prompt="${expanded_dir}> ")
+    local file=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
+    if [[ -z ${file} ]]; then
+        local dir=
+        local query=
     else
-        local file=$(find . -mindepth 1 \( -type f -printf '%P\n' \) -or \( -type d -printf '%P/\n' \) | fzf)
+        if [[ ${file[-1]} == / ]]; then
+            local dir=${file}
+            local query=
+        else
+            local dir=$(dirname ${file})
+            [[ ${dir} != / ]] && dir+=/
+            local query=$(basename ${file})
+        fi
     fi
+    eval "local expanded_dir=${dir}"
+    eval "local expanded_query=${query}"
+    local file=$(find ${expanded_dir} -mindepth 1 \( -type f -printf '%P\n' \) -or \( -type d -printf '%P/\n' \) | fzf --prompt="${expanded_dir}> " --query=${expanded_query})
     zle reset-prompt
     if [[ -z ${file} ]]; then
         return
     fi
-    LBUFFER=${LBUFFER}${file}
+    LBUFFER=${LBUFFER:0:${#LBUFFER}-${#query}}${file}
 }
 zle -N fzf-complete-file
 bindkey '^x^f' fzf-complete-file
