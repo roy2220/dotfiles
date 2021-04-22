@@ -32,7 +32,7 @@ for line in lines:
     line = re.sub(r"^services/specs/(.+)", r"services/\g<1>", line)
     parts = line.split("/")
     if parts[0].find(".") >= 0:
-        continue
+        parts = parts[1:]
     resource_type = parts[0]
     if resource_type in bad_resource_types:
         continue
