@@ -10,7 +10,7 @@ fzf-complete-git-branch() {
             branches=${current_branch}$'\n'${branches}$'\n'${additional_branches}
         fi
     fi
-    local branch=$(head --bytes=-1 <<< ${branches} | awk '!visited[$0]++' | fzf)
+    local branch=$(head --bytes=-1 <<< ${branches} | awk '!visited[$0]++' | fzf --prompt='Git-Branch> ')
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${branch} ]]; then
         return
@@ -34,7 +34,7 @@ Gcb() {
 }
 
 fzf-complete-git-tag() {
-    local tag=$(git tag --list --sort=-version:refname | fzf)
+    local tag=$(git tag --list --sort=-version:refname | fzf --prompt='Git-Tag> ')
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${tag} ]]; then
         return
@@ -58,7 +58,7 @@ Gct() {
 }
 
 fzf-complete-git-commit() {
-    local commit_and_message=$(git log --format='%h %s' | fzf)
+    local commit_and_message=$(git log --format='%h %s' | fzf --prompt='Git-Commit> ')
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${commit_and_message} ]]; then
         return
@@ -83,7 +83,7 @@ Gcc() {
 }
 
 fzf-complete-git-file() {
-    local file=$(git ls-files | fzf)
+    local file=$(git ls-files | fzf --prompt='Git-File> ')
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${file} ]]; then
         return

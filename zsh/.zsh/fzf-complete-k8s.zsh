@@ -48,7 +48,7 @@ for line in lines:
         print(dir_resource)
         last_dir_resource = dir_resource
     print("{}/{}".format(dir_resource, parts[-1]))
-' | fzf)
+' | fzf --prompt='K8s-Resource> ')
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${resource_locator} ]]; then
         return
@@ -89,16 +89,17 @@ Ker() {
     ${=cmd}
 }
 fzf-complete-k8s-container() {
-    local container_locator=$(kubectl get pods --all-namespaces --output=json | python2 -c '\
-import json
+    local container_locator=$(kubectl get pods --all-namespaces --output=jsonpath='{range .items[*]}{.metadata.namespace}{" "}{.metadata.name}{range .spec.containers[*]}{" "}{.name}{end}{"\n"}{end}' | python2 -c '\
 import sys
 
-result = json.loads(sys.stdin.read())
-for item in result["items"]:
-    metadata = item["metadata"]
-    for container in item["spec"]["containers"]:
-        print("-n {} {} -c {}".format(metadata["namespace"], metadata["name"], container["name"]))
-' | fzf)
+lines = sys.stdin.read().rstrip().split("\n")
+for line in lines:
+    parts = line.split(" ")
+    namespace = parts[0]
+    pod_name = parts[1]
+    for container_name in parts[2:]:
+        print("-n {} {} -c {}".format(namespace, pod_name, container_name))
+' | fzf --prompt='K8s-Container> ')
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${container_locator} ]]; then
         return
@@ -112,11 +113,12 @@ for item in result["items"]:
 zle -N fzf-complete-k8s-container
 bindkey '^xkc' fzf-complete-k8s-container
 Kec() {
-    local container_locator=$(fzf-complete-k8s-container)
+    local cmd_prefix='kubectl exec -it '
+    local container_locator=$(PROMPT=${cmd_prefix} fzf-complete-k8s-container)
     if [[ -z ${container_locator} ]]; then
         return
     fi
-    sh -c "sleep 0.2; tmux send-keys 'kubectl exec -it ${container_locator} -- sh' Enter" >/dev/null 2>&1 &|
+    sh -c "sleep 0.2; tmux send-keys '${cmd_prefix}${container_locator} -- sh' Enter" >/dev/null 2>&1 &|
 }
 Klc() {
     local container_locator=$(fzf-complete-k8s-container)

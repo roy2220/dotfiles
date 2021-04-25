@@ -1,5 +1,5 @@
 fzf-complete-command() {
-    local command=$(fc -nrl 1 | fzf --no-sort)
+    local command=$(fc -nrl 1 | fzf --no-sort --prompt='Command> ')
     zle reset-prompt
     if [[ -z ${command} ]]; then
         return
@@ -67,7 +67,7 @@ words = words1.union(words2).union(words3).union(words4)
 words.remove("")
 for word in sorted(words):
     print(word)
-' | fzf-tmux -d 10)
+' | fzf-tmux -d 10 -- --prompt='Word> ')
     zle reset-prompt
     if [[ -z ${word} ]]; then
         return
