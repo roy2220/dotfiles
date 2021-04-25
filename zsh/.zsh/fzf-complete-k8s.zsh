@@ -22,7 +22,7 @@ import sys
 
 lines = sys.stdin.read().split("\n")
 bad_resource_types = {"minions", "ranges", "masterleases"}
-resources = set()
+last_dir_resource = None
 for line in lines:
     line = line.strip()
     if line == "":
@@ -36,10 +36,18 @@ for line in lines:
     resource_type = parts[0]
     if resource_type in bad_resource_types:
         continue
+    if len(parts) not in (2, 3):
+        continue
     if len(parts) == 2:
-        print("{}/{}".format(parts[0], parts[1]))
+        dir_resource = parts[0]
     elif len(parts) == 3:
-        print("-n {} {}/{}".format(parts[1], parts[0], parts[2]))
+        dir_resource = "-n {} {}".format(parts[1], parts[0])
+    else:
+        assert(False)
+    if dir_resource != last_dir_resource:
+        print(dir_resource)
+        last_dir_resource = dir_resource
+    print("{}/{}".format(dir_resource, parts[-1]))
 ' | fzf)
     [[ -v LBUFFER ]] && zle reset-prompt
     if [[ -z ${resource_locator} ]]; then
@@ -53,10 +61,30 @@ for line in lines:
 }
 zle -N fzf-complete-k8s-resource
 bindkey '^xkr' fzf-complete-k8s-resource
-Kdr () {
+Kgr() {
     local resource_locator=$(fzf-complete-k8s-resource)
     if [[ -z ${resource_locator} ]]; then
         return
     fi
-    kubectl describe ${=resource_locator}
+    local cmd="kubectl get ${@:+${@:q} }${resource_locator}"
+    print -rs ${cmd}
+    ${=cmd}
+}
+Kdr() {
+    local resource_locator=$(fzf-complete-k8s-resource)
+    if [[ -z ${resource_locator} ]]; then
+        return
+    fi
+    local cmd="kubectl describe ${@:+${@:q} }${resource_locator}"
+    print -rs ${cmd}
+    ${=cmd}
+}
+Ker() {
+    local resource_locator=$(fzf-complete-k8s-resource)
+    if [[ -z ${resource_locator} ]]; then
+        return
+    fi
+    local cmd="kubectl edit ${@:+${@:q} }${resource_locator}"
+    print -rs ${cmd}
+    ${=cmd}
 }

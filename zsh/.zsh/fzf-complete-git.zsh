@@ -23,12 +23,14 @@ fzf-complete-git-branch() {
 }
 zle -N fzf-complete-git-branch
 bindkey '^xgb' fzf-complete-git-branch
-Gcb () {
+Gcb() {
     local branch=$(fzf-complete-git-branch)
     if [[ -z ${branch} ]]; then
         return
     fi
-    git checkout ${branch}
+    local cmd="git checkout ${@:+${@:q} }${branch:q}"
+    print -rs ${cmd}
+    ${=cmd}
 }
 
 fzf-complete-git-tag() {
@@ -45,12 +47,14 @@ fzf-complete-git-tag() {
 }
 zle -N fzf-complete-git-tag
 bindkey '^xgt' fzf-complete-git-tag
-Gct () {
+Gct() {
     local tag=$(fzf-complete-git-tag)
     if [[ -z ${tag} ]]; then
         return
     fi
-    git checkout ${tag}
+    local cmd="git checkout ${@:+${@:q} }${tag:q}"
+    print -rs ${cmd}
+    ${=cmd}
 }
 
 fzf-complete-git-commit() {
@@ -68,12 +72,14 @@ fzf-complete-git-commit() {
 }
 zle -N fzf-complete-git-commit
 bindkey '^xgc' fzf-complete-git-commit
-Gcc () {
+Gcc() {
     local commit=$(fzf-complete-git-commit)
     if [[ -z ${commit} ]]; then
         return
     fi
-    git checkout ${commit}
+    local cmd="git checkout ${@:+${@:q} }${commit:q}"
+    print -rs ${cmd}
+    ${=cmd}
 }
 
 fzf-complete-git-file() {
@@ -90,10 +96,12 @@ fzf-complete-git-file() {
 }
 zle -N fzf-complete-git-file
 bindkey '^xgf' fzf-complete-git-file
-Gcf () {
+Gcf() {
     local file=$(fzf-complete-git-file)
     if [[ -z ${file} ]]; then
         return
     fi
-    git checkout ${file}
+    local cmd="git checkout ${@:+${@:q} }${file:q}"
+    print -rs ${cmd}
+    ${=cmd}
 }
