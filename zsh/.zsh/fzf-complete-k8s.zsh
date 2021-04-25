@@ -88,3 +88,40 @@ Ker() {
     print -rs ${cmd}
     ${=cmd}
 }
+fzf-complete-k8s-container() {
+    local container_locator=$(kubectl get pods --all-namespaces --output=json | python2 -c '\
+import json
+import sys
+
+result = json.loads(sys.stdin.read())
+for item in result["items"]:
+    metadata = item["metadata"]
+    for container in item["spec"]["containers"]:
+        print("-n {} {} -c {}".format(metadata["namespace"], metadata["name"], container["name"]))
+' | fzf)
+    [[ -v LBUFFER ]] && zle reset-prompt
+    if [[ -z ${container_locator} ]]; then
+        return
+    fi
+    if [[ -v LBUFFER ]]; then
+        LBUFFER=${LBUFFER}${container_locator}
+    else
+        echo ${container_locator}
+    fi
+}
+zle -N fzf-complete-k8s-container
+bindkey '^xkc' fzf-complete-k8s-container
+Kec() {
+    local container_locator=$(fzf-complete-k8s-container)
+    if [[ -z ${container_locator} ]]; then
+        return
+    fi
+    sh -c "sleep 0.2; tmux send-keys 'kubectl exec -it ${container_locator} -- sh' Enter" >/dev/null 2>&1 &|
+}
+Klc() {
+    local container_locator=$(fzf-complete-k8s-container)
+    if [[ -z ${container_locator} ]]; then
+        return
+    fi
+    sh -c "sleep 0.2; tmux send-keys 'kubectl logs ${container_locator} | vim -' Enter" >/dev/null 2>&1 &|
+}
