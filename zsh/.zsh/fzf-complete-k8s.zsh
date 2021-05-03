@@ -84,9 +84,7 @@ Ker() {
     if [[ -z ${resource_locator} ]]; then
         return
     fi
-    local cmd="kubectl edit ${@:+${@:q} }${resource_locator}"
-    print -rs ${cmd}
-    ${=cmd}
+    sh -c "sleep 0.2; tmux send-keys 'kubectl edit ${@:+${@:q} }${resource_locator}' Enter" >/dev/null 2>&1 &|
 }
 fzf-complete-k8s-container() {
     local container_locator=$(kubectl get pods --all-namespaces --output=jsonpath='{range .items[*]}{.metadata.namespace}{" "}{.metadata.name}{range .spec.containers[*]}{" "}{.name}{end}{"\n"}{end}' | python2 -c '\
@@ -113,12 +111,11 @@ for line in lines:
 zle -N fzf-complete-k8s-container
 bindkey '^xkc' fzf-complete-k8s-container
 Kec() {
-    local cmd_prefix='kubectl exec -it '
-    local container_locator=$(PROMPT=${cmd_prefix} fzf-complete-k8s-container)
+    local container_locator=$(fzf-complete-k8s-container)
     if [[ -z ${container_locator} ]]; then
         return
     fi
-    sh -c "sleep 0.2; tmux send-keys '${cmd_prefix}${container_locator} -- sh' Enter" >/dev/null 2>&1 &|
+    sh -c "sleep 0.2; tmux send-keys 'kubectl exec -it ${container_locator} -- sh' Enter" >/dev/null 2>&1 &|
 }
 Klc() {
     local container_locator=$(fzf-complete-k8s-container)
