@@ -28,9 +28,7 @@ Gcb() {
     if [[ -z ${branch} ]]; then
         return
     fi
-    local cmd="git checkout ${@:+${@:q} }${branch:q}"
-    print -rs ${cmd}
-    ${=cmd}
+    send-command "git checkout ${@:+${@:q} }${branch:q}"
 }
 
 fzf-complete-git-tag() {
@@ -52,9 +50,7 @@ Gct() {
     if [[ -z ${tag} ]]; then
         return
     fi
-    local cmd="git checkout ${@:+${@:q} }${tag:q}"
-    print -rs ${cmd}
-    ${=cmd}
+    send-command "git checkout ${@:+${@:q} }${tag:q}"
 }
 
 fzf-complete-git-commit() {
@@ -77,9 +73,7 @@ Gcc() {
     if [[ -z ${commit} ]]; then
         return
     fi
-    local cmd="git checkout ${@:+${@:q} }${commit:q}"
-    print -rs ${cmd}
-    ${=cmd}
+    send-command "git checkout ${@:+${@:q} }${commit:q}"
 }
 
 fzf-complete-git-file() {
@@ -101,7 +95,5 @@ Gcf() {
     if [[ -z ${file} ]]; then
         return
     fi
-    local cmd="git checkout ${@:+${@:q} }${file:q}"
-    print -rs ${cmd}
-    ${=cmd}
+    send-command "git checkout ${@:+${@:q} }${file:q}"
 }

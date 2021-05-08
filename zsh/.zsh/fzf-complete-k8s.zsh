@@ -66,25 +66,21 @@ Kgr() {
     if [[ -z ${resource_locator} ]]; then
         return
     fi
-    local cmd="kubectl get ${@:+${@:q} }${resource_locator}"
-    print -rs ${cmd}
-    ${=cmd}
+    send-command "kubectl get ${@:+${@:q} }${resource_locator}"
 }
 Kdr() {
     local resource_locator=$(fzf-complete-k8s-resource)
     if [[ -z ${resource_locator} ]]; then
         return
     fi
-    local cmd="kubectl describe ${@:+${@:q} }${resource_locator}"
-    print -rs ${cmd}
-    ${=cmd}
+    send-command "kubectl describe ${@:+${@:q} }${resource_locator}"
 }
 Ker() {
     local resource_locator=$(fzf-complete-k8s-resource)
     if [[ -z ${resource_locator} ]]; then
         return
     fi
-    sh -c "sleep 0.2; tmux send-keys 'kubectl edit ${@:+${@:q} }${resource_locator}' Enter" >/dev/null 2>&1 &|
+    send-command "kubectl edit ${@:+${@:q} }${resource_locator}"
 }
 fzf-complete-k8s-container() {
     local container_locator=$(kubectl get pods --all-namespaces --output=jsonpath='{range .items[*]}{.metadata.namespace}{" "}{.metadata.name}{range .spec.containers[*]}{" "}{.name}{end}{"\n"}{end}' | python2 -c '\
@@ -115,12 +111,12 @@ Kec() {
     if [[ -z ${container_locator} ]]; then
         return
     fi
-    sh -c "sleep 0.2; tmux send-keys 'kubectl exec -it ${container_locator} -- sh' Enter" >/dev/null 2>&1 &|
+    send-command "kubectl exec -it ${container_locator} -- ${@:-sh}"
 }
 Klc() {
     local container_locator=$(fzf-complete-k8s-container)
     if [[ -z ${container_locator} ]]; then
         return
     fi
-    sh -c "sleep 0.2; tmux send-keys 'kubectl logs ${container_locator} | vim -' Enter" >/dev/null 2>&1 &|
+    send-command "kubectl logs ${container_locator} | ${@:-${EDITOR:-$(command -v vim vi less | head -1)} -}"
 }
