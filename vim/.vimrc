@@ -200,6 +200,13 @@ let g:highlightedyank_highlight_duration = 250
 " eregex.vim
 let g:eregex_default_enable = 0
 
+" vim-jsonpath
+augroup __json__
+    autocmd!
+    autocmd FileType json setlocal keywordprg=:call\ jsonpath#echo()\|Nop
+augroup END
+command -nargs=* Nop
+
 " vim-lsc
 let g:lsc_auto_map = v:false
 let g:lsc_enable_autocomplete = v:false

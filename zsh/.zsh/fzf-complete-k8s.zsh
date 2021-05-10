@@ -118,5 +118,5 @@ Klc() {
     if [[ -z ${container_locator} ]]; then
         return
     fi
-    send-command "kubectl logs ${container_locator} | ${@:-${EDITOR:-$(command -v vim vi less | head -1)} -}"
+    send-command "kubectl logs ${container_locator} | ${@:-${EDITOR:-$(which vim vi less | head -1)} -}"
 }

@@ -29,7 +29,7 @@ INSERT INTO cur_dir(dummy, id) VALUES(0, 1);
         local dir=$(realpath ${1})
         eval ${update_cur_dir_script}
     fi
-    if command -v bat >/dev/null 2>&1; then
+    if which bat >/dev/null 2>&1; then
         local cat_cmd='bat --color=always --style=numbers'
     else
         local cat_cmd='cat'
@@ -88,6 +88,6 @@ ${show_cur_dir_script}
         fi
     else
         local file=${cur_dir}/${name}
-        ${EDITOR:-$(command -v vim vi less | head -1)} ${file}
+        ${EDITOR:-$(which vim vi less | head -1)} ${file}
     fi
 }
