@@ -91,3 +91,4 @@ ${show_cur_dir_script}
         ${EDITOR:-$(which vim vi less | head -1)} ${file}
     fi
 }
+alias ee='e .'
