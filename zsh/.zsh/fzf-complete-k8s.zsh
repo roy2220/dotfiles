@@ -9,7 +9,7 @@ fzf-complete-k8s-resource() {
     #     '
     # "
     local etcdctl_cmd='
-        ETCDCTL_ENDPOINTS=192.168.134.133:2379
+        ETCDCTL_ENDPOINTS=127.0.0.1:2379
         ETCDCTL_CACERT=~/.config/pki/etcd/ca.crt
         ETCDCTL_CERT=~/.config/pki/etcd/client.crt
         ETCDCTL_KEY=~/.config/pki/etcd/client.key
