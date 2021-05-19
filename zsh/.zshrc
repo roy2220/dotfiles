@@ -2,7 +2,7 @@ if [[ -o login ]]; then
     if [[ -f ~/.ssh/keys.tar.gpg ]]; then
         git -C ~/.files pull --ff-only
         stow --dir ~/.files $(ls ~/.files)
-        find ~ -mindepth 1 -maxdepth 1 -type l -exec test ! -e {} \; -delete
+        find ~ -type l -exec test ! -e {} \; -delete
         until gpg -o- ~/.ssh/keys.tar.gpg | tar x -C ~/.ssh; do done
         rm ~/.ssh/keys.tar.gpg
         git -C ~/.files remote set-url origin git@github.com:roy2220/dotfiles.git
