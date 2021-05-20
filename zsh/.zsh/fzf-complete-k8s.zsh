@@ -1,13 +1,4 @@
 fzf-complete-k8s-resource() {
-    # local etcdctl_cmd="
-    #     kubectl exec --namespace=kube-system pod/etcd-docker-desktop -- sh -c '
-    #         ETCDCTL_CACERT=/run/config/pki/etcd/ca.crt
-    #         ETCDCTL_CERT=/run/config/pki/etcd/server.crt
-    #         ETCDCTL_KEY=/run/config/pki/etcd/server.key
-    #         ETCDCTL_API=3
-    #         etcdctl get /registry/ --prefix --keys-only
-    #     '
-    # "
     local etcdctl_cmd='
         ETCDCTL_ENDPOINTS=127.0.0.1:2379
         ETCDCTL_CACERT=~/.config/pki/etcd/ca.crt
