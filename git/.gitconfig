@@ -1,3 +1,5 @@
 [user]
 	email = roy2220@outlook.com
 	name = Roy O'Young
+[pull]
+	ff = only
