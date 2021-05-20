@@ -13,7 +13,6 @@ if [[ -o login ]]; then
     export EDITOR=$(which vim)
     export PATH=${PATH:+${PATH}:}$(go env GOPATH)/bin:${HOME}/.local/bin
     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}${HOME}/.local/lib
-    exec tmux new-session -A -s $(id --user --name)
 fi
 
 setopt histreduceblanks
@@ -57,3 +56,5 @@ for file in ~/.zsh/*.zsh; do
     source ${file}
 done
 unset file
+
+[[ -o login ]] && exec tmux new-session -A -s $(id --user --name)
