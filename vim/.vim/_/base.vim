@@ -67,7 +67,7 @@ set cinoptions=:0,l1,g0,N-s,(0,Ws
 
 set scrolloff=5 sidescrolloff=5
 
-set timeoutlen=1000 ttimeoutlen=1000
+set timeoutlen=1000 ttimeoutlen=0
 set updatetime=500
 
 set splitbelow splitright
