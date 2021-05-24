@@ -30,7 +30,7 @@ bindkey -M vicmd ',' execute-named-cmd
 
 eval "$(direnv hook zsh)"
 
-export FZF_DEFAULT_OPTS='--height=40% --reverse --bind '\''ctrl-y:execute-silent(echo -n {} | pbcopy; tmux set-buffer {})+abort'\'
+export FZF_DEFAULT_OPTS='--height=40% --reverse --info=inline --bind '\''ctrl-y:execute-silent(echo -n {} | pbcopy; tmux set-buffer {})+abort'\'
 
 test -f ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ${HOME}/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.zplug/init.zsh
