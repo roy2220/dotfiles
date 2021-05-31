@@ -57,4 +57,7 @@ for file in ~/.zsh/*.zsh; do
 done
 unset file
 
-[[ -o login ]] && exec tmux new-session -A -s $(id --user --name)
+if [[ -o login ]]; then
+    ls -1 ~/.local/src/start-*.bash | xargs --replace={} bash {}
+    exec tmux new-session -A -s $(id --user --name)
+fi
