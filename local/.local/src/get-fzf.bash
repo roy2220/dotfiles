@@ -18,5 +18,5 @@ print download_url
 ')
 TEMP_DIR=$(mktemp --directory)
 curl --silent --show-error --fail --request GET --location "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"
-install -D "${TEMP_DIR}/fzf" fzf
+install "${TEMP_DIR}/fzf" fzf
 rm --force --recursive "${TEMP_DIR}"

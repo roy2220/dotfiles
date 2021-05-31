@@ -18,5 +18,5 @@ print download_url
 ')
 TEMP_DIR=$(mktemp --directory)
 curl --silent --show-error --fail --request GET --location "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"
-install -D "${TEMP_DIR}/linux-amd64/helm" helm
+install "${TEMP_DIR}/linux-amd64/helm" helm
 rm --force --recursive "${TEMP_DIR}"
