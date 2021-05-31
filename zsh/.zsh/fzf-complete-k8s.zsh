@@ -1,13 +1,12 @@
 fzf-complete-k8s-resource() {
-    local etcdctl_cmd='
-        ETCDCTL_ENDPOINTS=127.0.0.1:2379
-        ETCDCTL_CACERT=~/.config/pki/etcd/ca.crt
-        ETCDCTL_CERT=~/.config/pki/etcd/client.crt
-        ETCDCTL_KEY=~/.config/pki/etcd/client.key
-        ETCDCTL_API=3
-        etcdctl get /registry/ --prefix --keys-only
-    '
-    local resource_locator=$(eval ${=etcdctl_cmd} | python2 -c '\
+    local resource_locator=$( \
+        ETCDCTL_ENDPOINTS=127.0.0.1:2379 \
+        ETCDCTL_CACERT=~/.config/pki/etcd/ca.crt \
+        ETCDCTL_CERT=~/.config/pki/etcd/client.crt \
+        ETCDCTL_KEY=~/.config/pki/etcd/client.key \
+        ETCDCTL_API=3 \
+        etcdctl get /registry/ --prefix --keys-only \
+        | python2 -c '\
 import re
 import sys
 
@@ -64,7 +63,7 @@ Kdr() {
     if [[ -z ${resource_locator} ]]; then
         return
     fi
-    send-command "kubectl describe ${@:+${@:q} }${resource_locator}"
+    send-command "kubectl describe ${@:+${@:q} }${resource_locator} | ${EDITOR:q} -"
 }
 Ker() {
     local resource_locator=$(fzf-complete-k8s-resource)
@@ -97,17 +96,17 @@ for line in lines:
 }
 zle -N fzf-complete-k8s-container
 bindkey '^xkc' fzf-complete-k8s-container
+Klc() {
+    local container_locator=$(fzf-complete-k8s-container)
+    if [[ -z ${container_locator} ]]; then
+        return
+    fi
+    send-command "kubectl logs ${@:+${@:q} }${container_locator} | ${EDITOR:q} -"
+}
 Kec() {
     local container_locator=$(fzf-complete-k8s-container)
     if [[ -z ${container_locator} ]]; then
         return
     fi
     send-command "kubectl exec -it ${container_locator} -- ${@:-sh}"
-}
-Klc() {
-    local container_locator=$(fzf-complete-k8s-container)
-    if [[ -z ${container_locator} ]]; then
-        return
-    fi
-    send-command "kubectl logs ${container_locator} | ${@:-${EDITOR:-$(which vim vi less | head -1)} -}"
 }
