@@ -72,6 +72,17 @@ Ker() {
     fi
     send-command "kubectl edit ${@:+${@:q} }${resource_locator}"
 }
+Krr() {
+    local resource_locator=$(fzf-complete-k8s-resource)
+    if [[ -z ${resource_locator} ]]; then
+        return
+    fi
+    if [[ $(basename ${EDITOR}) == vim ]]; then
+        send-command "kubectl get --output=yaml ${@:+${@:q} }${resource_locator} | ${EDITOR:q} +'set buftype=nofile filetype=yaml' -"
+    else
+        send-command "kubectl get --output=yaml ${@:+${@:q} }${resource_locator} | ${EDITOR:q} -"
+    fi
+}
 fzf-complete-k8s-container() {
     local container_locator=$(kubectl get pods --all-namespaces --output=jsonpath='{range .items[*]}{.metadata.namespace}{" "}{.metadata.name}{range .spec.containers[*]}{" "}{.name}{end}{"\n"}{end}' | python2 -c '\
 import sys
