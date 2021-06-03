@@ -21,3 +21,12 @@ if executable('shfmt')
         call winrestview(view)
     endfunction
 endif
+
+vnoremap <silent> \\b :<C-U>call <SID>bash()<CR>
+func! s:bash() abort
+    let script = GetVisualSelection()
+    let output = system("bash -euxo pipefail -", script)
+    vnew
+    set buftype=nofile
+    0put =output
+endfunction
