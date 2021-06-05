@@ -42,6 +42,15 @@ if executable('go')
     endfunction
 
     function! s:go_test_func(q_args) abort
+        let test_func_name = s:get_test_func_name()
+        if test_func_name == ''
+            echohl Error | redraw | echo 'Not in test function' | echohl NONE
+            return
+        endif
+        call s:command('go test -run=^'.test_func_name.'$ '.a:q_args, v:true)
+    endfunction
+
+    function! s:get_test_func_name() abort
         let tag = GetCurrentTag()
         if tag == {}
             return ''
@@ -52,7 +61,7 @@ if executable('go')
         if tag.name !~# '^\(Example\|Test\)'
             return ''
         endif
-        call s:command('go test -run=^'.tag.name.'$ '.a:q_args, v:true)
+        return tag.name
     endfunction
 
     if executable('dlv')
@@ -60,17 +69,12 @@ if executable('go')
         command -nargs=* DlvTestFunc call s:dlv_test_func(<q-args>)
 
         function! s:dlv_test_func(q_args) abort
-            let tag = GetCurrentTag()
-            if tag == {}
-                return ''
+            let test_func_name = s:get_test_func_name()
+            if test_func_name == ''
+                echohl Error | redraw | echo 'Not in test function' | echohl NONE
+                return
             endif
-            if tag.kind !=# 'func'
-                return ''
-            endif
-            if tag.name !~# '^\(Example\|Test\)'
-                return ''
-            endif
-            call s:command('dlv test -- -test.run=^'.tag.name.'$ '.a:q_args, v:false)
+            call s:command('dlv test -- -test.run=^'.test_func_name.'$ '.a:q_args, v:false)
         endfunction
     endif
 endif
