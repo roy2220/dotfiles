@@ -19,10 +19,16 @@ call plug#begin('~/.vim/plugged')
     Plug 'lifepillar/vim-mucomplete'
     Plug 'natebosch/vim-lsc', { 'do': '
     \    git apply ~/.vim/_/vim-lsc.patch &&
-    \    GO111MODULE=on go get golang.org/x/tools/gopls@latest golang.org/x/tools/cmd/goimports@master github.com/go-delve/delve/cmd/dlv@latest &&
-    \    npm install -g pyright && pip install black isort &&
-    \    npm install -g bash-language-server && GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt@latest &&
-    \    npm install -g yaml-language-server && pip install openapi2jsonschema && ~/.vim/_/yaml/schemas/download
+    \    GO111MODULE=on go get golang.org/x/tools/gopls@latest
+    \        && GO111MODULE=on go get golang.org/x/tools/cmd/goimports@master
+    \        && GO111MODULE=on go get github.com/go-delve/delve/cmd/dlv@latest &&
+    \    npm install -g pyright
+    \        && pip install black isort &&
+    \    npm install -g bash-language-server
+    \        && GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt@latest &&
+    \    npm install -g yaml-language-server
+    \        && pip install openapi2jsonschema
+    \        && ~/.vim/_/yaml/schemas/download
     \', 'for': ['go', 'python', 'sh', 'yaml'] }
     Plug 'othree/eregex.vim'
     Plug 'preservim/nerdtree'
