@@ -6,7 +6,7 @@ fzf-complete-k8s-resource() {
         ETCDCTL_KEY=~/.config/pki/etcd/client.key \
         ETCDCTL_API=3 \
         etcdctl get /registry/ --prefix --keys-only \
-        | python2 -c '\
+        | python3 -c '\
 import re
 import sys
 
@@ -84,7 +84,7 @@ Krr() {
     fi
 }
 fzf-complete-k8s-container() {
-    local container_locator=$(kubectl get pods --all-namespaces --output=jsonpath='{range .items[*]}{.metadata.namespace}{" "}{.metadata.name}{range .spec.containers[*]}{" "}{.name}{end}{"\n"}{end}' | python2 -c '\
+    local container_locator=$(kubectl get pods --all-namespaces --output=jsonpath='{range .items[*]}{.metadata.namespace}{" "}{.metadata.name}{range .spec.containers[*]}{" "}{.name}{end}{"\n"}{end}' | python3 -c '\
 import sys
 
 lines = sys.stdin.read().rstrip().split("\n")

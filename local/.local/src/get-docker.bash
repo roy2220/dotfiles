@@ -1,6 +1,6 @@
 set -o errexit -o nounset -o pipefail # -o xtrace
 
-DOWNLOAD_URL=$(curl --silent --show-error --fail --request GET --location 'https://api.github.com/repos/docker/cli/tags' | python2 -c '
+DOWNLOAD_URL=$(curl --silent --show-error --fail --request GET --location 'https://api.github.com/repos/docker/cli/tags' | python3 -c '
 import json
 import re
 import sys
@@ -12,9 +12,9 @@ for tag in tags:
         download_url = "https://download.docker.com/linux/static/stable/x86_64/docker-{}.tgz".format(tag["name"][1:])
         break
 if download_url is None:
-    print >> sys.stderr, "download url not found"
+    print("download url not found", file=sys.stderr)
     sys.exit(1)
-print download_url
+print(download_url)
 ')
 TEMP_DIR=$(mktemp --directory)
 curl --silent --show-error --fail --request GET --location "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"

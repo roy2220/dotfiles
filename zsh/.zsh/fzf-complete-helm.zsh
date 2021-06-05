@@ -1,5 +1,5 @@
 fzf-complete-helm-release() {
-    local release_locator=$(helm list --all-namespaces --output=json | python2 -c '\
+    local release_locator=$(helm list --all-namespaces --output=json | python3 -c '\
 import json
 import sys
 
