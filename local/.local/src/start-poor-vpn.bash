@@ -7,8 +7,13 @@ PROXY_PORT=TODO
 PROXY_AUTH=TODO
 
 tun2socks -loglevel silent -device tun://tun0 -proxy "socks5://${PROXY_AUTH:+${PROXY_AUTH}@}${PROXY_HOST}${PROXY_PORT:+:${PROXY_PORT}}" >/dev/null 2>&1 &
-while ! ip link set tun0 up; do
-    sleep 1
+for N in {1..3}; do
+	if [[ ${N} -ge 2 ]]; then
+		sleep 1
+	fi
+	if ip link set tun0 up; then
+		break
+	fi
 done
 ip addr add 1.2.3.4/32 dev tun0
 # ip route add 10.0.0.0/24 via 1.2.3.4
