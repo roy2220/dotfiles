@@ -25,11 +25,8 @@ call plug#begin('~/.vim/plugged')
     \    npm install -g pyright
     \        && pip install black isort &&
     \    npm install -g bash-language-server
-    \        && GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt@latest &&
-    \    npm install -g yaml-language-server
-    \        && pip install openapi2jsonschema
-    \        && ~/.vim/_/yaml/schemas/download
-    \', 'for': ['go', 'python', 'sh', 'yaml'] }
+    \        && GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt@latest
+    \', 'for': ['go', 'python', 'sh'] }
     Plug 'othree/eregex.vim'
     Plug 'preservim/nerdtree'
     Plug 'psliwka/vim-smoothie'
@@ -221,7 +218,6 @@ let g:lsc_server_commands = {}
 source ~/.vim/_/go.vim
 source ~/.vim/_/python.vim
 source ~/.vim/_/sh.vim
-source ~/.vim/_/yaml.vim
 
 if len(g:lsc_server_commands) >= 1
     augroup __lsc__
