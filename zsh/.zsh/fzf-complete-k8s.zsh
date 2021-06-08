@@ -63,7 +63,11 @@ Kdr() {
     if [[ -z ${resource_locator} ]]; then
         return
     fi
-    send-command "kubectl describe ${@:+${@:q} }${resource_locator} | ${EDITOR:q} -"
+    if [[ $(basename ${EDITOR}) == vim ]]; then
+        send-command "kubectl describe ${@:+${@:q} }${resource_locator} | ${EDITOR:q} +'set buftype=nofile' -"
+    else
+        send-command "kubectl describe ${@:+${@:q} }${resource_locator} | ${EDITOR:q} -"
+    fi
 }
 Ker() {
     local resource_locator=$(fzf-complete-k8s-resource)
@@ -112,7 +116,11 @@ Klc() {
     if [[ -z ${container_locator} ]]; then
         return
     fi
-    send-command "kubectl logs ${@:+${@:q} }${container_locator} | ${EDITOR:q} -"
+    if [[ $(basename ${EDITOR}) == vim ]]; then
+        send-command "kubectl logs ${@:+${@:q} }${container_locator} | ${EDITOR:q} +'set buftype=nofile' -"
+    else
+        send-command "kubectl logs ${@:+${@:q} }${container_locator} | ${EDITOR:q} -"
+    fi
 }
 Kec() {
     local container_locator=$(fzf-complete-k8s-container)
