@@ -24,5 +24,9 @@ Hgr() {
     if [[ -z ${release_locator} ]]; then
         return
     fi
-    send-command "helm get all ${@:+${@:q} }${release_locator} | ${EDITOR:q} -"
+    if [[ $(basename ${EDITOR}) == vim ]]; then
+        send-command "helm get all ${@:+${@:q} }${release_locator} | ${EDITOR:q} +'set buftype=nofile' -"
+    else
+        send-command "helm get all ${@:+${@:q} }${release_locator} | ${EDITOR:q} -"
+    fi
 }
