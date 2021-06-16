@@ -101,19 +101,26 @@ endfunction
 vnoremap / o<ESC>/\V\C<C-R>=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')<CR>
 vnoremap ? o<ESC>?\V\C<C-R>=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')<CR>
 
-nnoremap \\s :%s/\V\C<C-R>=expand('<cword>')<CR>//g<left><left>
 nnoremap \\s :let g:tmp = expand('<cword>')<CR>
-    \q:i%s/\V\C<C-R>=g:tmp<CR>/<C-O>m'<C-R>=g:tmp<CR>/g<ESC>`'v$3h
-    \:<C-U>unlet g:tmp<CR>gvo
-vnoremap \\s :<C-U>let g:tmp = escape(GetVisualSelection(), '/\')<CR>
-    \q:i%s/\V\C<C-R>=substitute(g:tmp, "\n", '\\n', 'g')<CR>/<C-O>m'<C-R>=substitute(g:tmp, "\n", '\\r', 'g')<CR>/g<ESC>`'v$3h
-    \:<C-U>unlet g:tmp<CR>gvo
+    \q::$put! =printf('%%s/\V\C%s/%s/g', g:tmp, g:tmp)<CR>
+    \:execute printf('normal! J%dhv%dl', 2 + strchars(g:tmp), strchars(g:tmp) - 1)<CR>
+    \:<C-U>unlet g:tmp<CR>gv
+vnoremap \\s :<C-U>let g:tmp = [escape(GetVisualSelection(), '/\'), v:none, v:none]<CR>
+    \:let g:tmp[1] = substitute(g:tmp[0], "\n", '\\n', 'g')<CR>
+    \:let g:tmp[2] = substitute(escape(g:tmp[0], "&~"), "\n", '\\r', 'g')<CR>
+    \q::$put! =printf('%%s/\V\C%s/%s/g', g:tmp[1], g:tmp[2])<CR>
+    \:execute printf('normal! J%dhv%dl', 2 + strchars(g:tmp[2]), strchars(g:tmp[2]) - 1)<CR>
+    \:<C-U>unlet g:tmp<CR>gv
 nnoremap \\e :let g:tmp = expand('%:p')<CR>
-    \q:ie <C-R>=g:tmp<CR><ESC>T/v$h
-    \:<C-U>unlet g:tmp<CR>gvo
+    \:let g:tmp = printf('e %s', g:tmp)<CR>
+    \q::$put! =g:tmp<CR>
+    \JT/v$h
+    \:<C-U>unlet g:tmp<CR>gv
 nnoremap \\w :let g:tmp = expand('%:p')<CR>
-    \q:iw <C-R>=g:tmp<CR><ESC>T/v$h
-    \:<C-U>unlet g:tmp<CR>gvo
+    \:let g:tmp = printf('w %s', g:tmp)<CR>
+    \q::$put! =g:tmp<CR>
+    \JT/v$h
+    \:<C-U>unlet g:tmp<CR>gv
 
 augroup __systemclipboard__
     autocmd!
