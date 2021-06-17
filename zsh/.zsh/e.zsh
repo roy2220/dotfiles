@@ -13,8 +13,9 @@ REPLACE INTO cur_dir(dummy, id) SELECT 0, id FROM dir ORDER BY id DESC LIMIT 1;
 fi
 "
     local show_cur_dir_script='
-echo "Current Directory: ${cur_dir}\nCTRL-]: move into directory, CTRL-O: move back, CTRL-I: move forward"
-ls --all --dereference --group-directories-first --indicator-style=slash -1 ${cur_dir} 2>/dev/null || true
+echo "Current Directory: ${cur_dir}\n<CTRL-]>: move into directory    <ENTER>: change directory / edit file \n<CTRL-O>: move back              <CTRL-I>: move forward"
+ls --all --dereference --group-directories-first --indicator-style=slash -1 ${cur_dir} 2>/dev/null |
+    sed --regexp-extended '\''s/(.+)\/$/📁 \1/'\'' || true
 '
     if [[ ! -e ${E_DB_FILE} ]]; then
         sqlite3 ${E_DB_FILE} '
@@ -36,8 +37,8 @@ INSERT INTO cur_dir(dummy, id) VALUES(0, 1);
     fi
     export PREVIEW_FILE_SCRIPT="
 local cur_dir=\$(sqlite3 \${E_DB_FILE} ${get_cur_dir_sql:q})
-if [[ \${name[-1]} == / ]]; then
-    local dir=\${cur_dir}/\${name}
+if [[ \${name[1]} == 📁 ]]; then
+    local dir=\${cur_dir}/\${name:2}
     ls --all --format=long --group-directories-first --human-readable --indicator-style=classify \${dir} --color
 else
     local file=\${cur_dir}/\${name}
@@ -50,8 +51,8 @@ fi
 "
     export MOVE_INTO_DIR_SCRIPT="
 local cur_dir=\$(sqlite3 \${E_DB_FILE} ${get_cur_dir_sql:q})
-if [[ \${name[-1]} == / ]]; then
-    local dir=\$(realpath \${cur_dir}/\${name})
+if [[ \${name[1]} == 📁 ]]; then
+    local dir=\$(realpath \${cur_dir}/\${name:2})
     ${update_cur_dir_script}
 fi
 ${show_cur_dir_script}
@@ -71,8 +72,8 @@ ${get_cur_dir_sql};
 ${show_cur_dir_script}
 "
     local name=$(eval ${show_cur_dir_script} |
-        SHELL=${ZSH_ARGZERO} fzf --height=100% --reverse \
-        --header-lines=2 \
+        SHELL=${ZSH_ARGZERO} fzf --bind=ctrl-z:ignore --height=100% --reverse \
+        --header-lines=3 \
         --preview='name={}; eval ${PREVIEW_FILE_SCRIPT}' \
         --bind='ctrl-]:reload(name={}; eval ${MOVE_INTO_DIR_SCRIPT})+clear-query+first' \
         --bind='ctrl-o:reload(eval ${MOVE_INTO_PREV_DIR_SCRIPT})+clear-query+first' \
@@ -81,14 +82,14 @@ ${show_cur_dir_script}
         return
     fi
     cur_dir=$(sqlite3 ${E_DB_FILE} ${get_cur_dir_sql})
-    if [[ ${name[-1]} == / ]]; then
-        local dir=$(realpath ${cur_dir}/${name})
+    if [[ ${name[1]} == 📁 ]]; then
+        local dir=$(realpath ${cur_dir}/${name:2})
         if [[ ${dir} != ${PWD} ]]; then
             cd ${dir}
         fi
     else
         local file=${cur_dir}/${name}
-        ${EDITOR:-$(which vim vi less | head -1)} ${file}
+        ${EDITOR:-$(which vim vi nano | head -1)} ${file}
     fi
 }
 alias ee='e .'
