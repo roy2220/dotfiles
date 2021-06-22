@@ -17,7 +17,7 @@ for N in {1..3}; do
 done
 ip addr add 1.2.3.4/32 dev tun0
 # ip route add 10.0.0.0/24 via 1.2.3.4
-# socat tcp-listen:80,fork,reuseport tcp4-connect:10.0.0.101:80 >/dev/null 2>&1 &
-# socat tcp-listen:80,fork,reuseport tcp4-connect:10.0.0.102:80 >/dev/null 2>&1 &
-# socat tcp-listen:443,fork,reuseport tcp4-connect:10.0.0.101:443 >/dev/null 2>&1 &
-# socat tcp-listen:443,fork,reuseport tcp4-connect:10.0.0.102:443 >/dev/null 2>&1 &
+# ip route add 10.42.0.0/16 via 1.2.3.4
+# ip route add 10.43.0.0/16 via 1.2.3.4
+# socat tcp-listen:80,fork,reuseaddr tcp4-connect:10.43.0.1:80 >/dev/null 2>&1 &
+# socat tcp-listen:443,fork,reuseaddr tcp4-connect:10.43.0.1:443 >/dev/null 2>&1 &
