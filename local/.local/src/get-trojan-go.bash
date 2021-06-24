@@ -1,13 +1,13 @@
 set -o errexit -o nounset -o pipefail # -o xtrace
 
-DOWNLOAD_URL=$(curl --silent --show-error --fail --location https://api.github.com/repos/xjasonlyu/tun2socks/releases/latest | python3 -c '
+DOWNLOAD_URL=$(curl --silent --show-error --fail --location https://api.github.com/repos/p4gefau1t/trojan-go/releases/latest | python3 -c '
 import json
 import sys
 
 release = json.loads(sys.stdin.read())
 download_url = None
 for asset in release["assets"]:
-    if asset["name"] == "tun2socks-linux-amd64.zip":
+    if asset["name"] == "trojan-go-linux-amd64.zip":
         download_url = asset["browser_download_url"]
         break
 if download_url is None:
@@ -17,5 +17,5 @@ print(download_url)
 ')
 TEMP_FILE=$(mktemp)
 curl --silent --show-error --fail --location --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
-unzip -p "${TEMP_FILE}" | install /dev/stdin tun2socks
+unzip -p "${TEMP_FILE}" trojan-go | install /dev/stdin trojan-go
 rm --force "${TEMP_FILE}"

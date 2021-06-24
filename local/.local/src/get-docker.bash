@@ -1,6 +1,6 @@
 set -o errexit -o nounset -o pipefail # -o xtrace
 
-DOWNLOAD_URL=$(curl --silent --show-error --fail --request GET --location 'https://api.github.com/repos/docker/cli/tags' | python3 -c '
+DOWNLOAD_URL=$(curl --silent --show-error --fail --location 'https://api.github.com/repos/docker/cli/tags' | python3 -c '
 import json
 import re
 import sys
@@ -17,6 +17,6 @@ if download_url is None:
 print(download_url)
 ')
 TEMP_DIR=$(mktemp --directory)
-curl --silent --show-error --fail --request GET --location "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"
+curl --silent --show-error --fail --location "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"
 install "${TEMP_DIR}/docker/docker" docker
 rm --force --recursive "${TEMP_DIR}"

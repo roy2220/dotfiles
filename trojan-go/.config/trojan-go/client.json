@@ -1,0 +1,16 @@
+{
+  "run_type": "client",
+  "log_level": 5,
+  "local_addr": "127.0.0.1",
+  "local_port": 1080,
+  "remote_addr": TODO,
+  "remote_port": TODO,
+  "password": [TODO],
+  "ssl": {
+    "cert": "t.cn.pem",
+    "sni": "t.cn"
+  },
+  "mux": {
+    "enabled": true
+  }
+}

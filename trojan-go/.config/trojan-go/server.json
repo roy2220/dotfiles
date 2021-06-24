@@ -1,0 +1,14 @@
+{
+  "run_type": "server",
+  "log_level": 5,
+  "local_addr": "127.0.0.1",
+  "local_port": 8443,
+  "remote_addr": "t.cn",
+  "remote_port": 80,
+  "password": [TODO],
+  "ssl": {
+    "cert": "t.cn.pem",
+    "key": "t.cn-key.pem",
+    "sni": "t.cn"
+  }
+}

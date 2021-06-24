@@ -1,6 +1,6 @@
 set -o errexit -o nounset -o pipefail # -o xtrace
 
-DOWNLOAD_URL=$(curl --silent --show-error --fail --request GET --location https://api.github.com/repos/direnv/direnv/releases/latest | python3 -c '
+DOWNLOAD_URL=$(curl --silent --show-error --fail --location https://api.github.com/repos/direnv/direnv/releases/latest | python3 -c '
 import json
 import sys
 
@@ -16,7 +16,7 @@ if download_url is None:
 print(download_url)
 ')
 TEMP_FILE=$(mktemp)
-curl --silent --show-error --fail --request GET --location "${DOWNLOAD_URL}" --output "${TEMP_FILE}"
+curl --silent --show-error --fail --location --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
 chmod +x "${TEMP_FILE}"
 install "${TEMP_FILE}" direnv
 rm --force "${TEMP_FILE}"
