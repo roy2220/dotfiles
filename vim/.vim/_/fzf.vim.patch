@@ -1,12 +1,14 @@
 diff --git a/autoload/fzf/vim.vim b/autoload/fzf/vim.vim
-index 4f7003f..061993a 100644
+index 6ae9817..61b16c5 100644
 --- a/autoload/fzf/vim.vim
 +++ b/autoload/fzf/vim.vim
-@@ -615,7 +615,6 @@ function! fzf#vim#gitfiles(args, ...)
+@@ -631,8 +631,7 @@ function! fzf#vim#gitfiles(args, ...)
+   endif
    if a:args != '?'
      return s:fzf('gfiles', {
-     \ 'source':  'git ls-files '.a:args.(s:is_win ? '' : ' | uniq'),
+-    \ 'source':  'git ls-files '.a:args.(s:is_win ? '' : ' | uniq'),
 -    \ 'dir':     root,
++    \ 'source':  'git -c core.quotepath=off ls-files '.a:args.(s:is_win ? '' : ' | uniq'),
      \ 'options': '-m --prompt "GitFiles> "'
      \}, a:000)
    endif
