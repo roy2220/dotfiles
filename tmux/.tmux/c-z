@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PANE_IDS=$(tmux list-panes -F '#{pane_id}')
+readarray -t PANE_IDS <<<"${PANE_IDS}"
+
+if [[ ${#PANE_IDS[@]} -eq 1 ]]; then
+	PANE_PID=$(tmux display-message -p '#{pane_pid}')
+	COMMANDS=$(ps --no-headers --format=cmd --ppid "${PANE_PID}" || true)
+	SSH_COMMAND=$(sed --regexp-extended --silent 's/^ssh .*$/\0/p' <<<"${COMMANDS}")
+	if [[ -z ${SSH_COMMAND} ]]; then
+		START_DIR=$(tmux display-message -p '#{pane_current_path}')
+		tmux split-window -l 62% -c "${START_DIR}"
+	else
+		tmux split-window -l 62% "${SSH_COMMAND}"
+	fi
+else
+	WINDOW_ZOOMED_FLAG=$(tmux display-message -p '#{window_zoomed_flag}')
+	if [[ ${WINDOW_ZOOMED_FLAG} -eq 0 ]]; then
+		tmux select-pane -t "${PANE_IDS[0]}"\; resize-pane -Z
+	else
+		tmux last-pane
+	fi
+fi

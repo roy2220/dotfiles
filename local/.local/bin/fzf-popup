@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eu${DEBUG+x}o pipefail
+
+CLEANUPS=()
+trap 'for ((I = ${#CLEANUPS[@]} - 1; I >= 0; I--)); do eval "${CLEANUPS[$I]}"; done' EXIT
+
+OUTPUT_FILE=$(mktemp)
+CLEANUPS+=("rm ${OUTPUT_FILE@Q}")
+
+tmux display-popup -E -B -w62% -h62% -- sh -c "fzf --no-height --border=rounded ${*@Q} </proc/$$/fd/0 >${OUTPUT_FILE@Q}"
+cat "${OUTPUT_FILE}"

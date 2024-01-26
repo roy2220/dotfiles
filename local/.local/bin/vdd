@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC2016
+CMD='vimdiff '\''+call DirDiff(argv(0), argv(1))'\'' "${LOCAL}" "${REMOTE}"'
+
+exec git -c difftool.vim-dir-diff.cmd="${CMD}" difftool --dir-diff --no-symlinks --tool=vim-dir-diff "${@}"

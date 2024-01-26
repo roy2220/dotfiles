@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssh-server-for-sshuttle
+  labels:
+    app: ssh-server-for-sshuttle
+spec:
+  type: NodePort
+  ports:
+  - port: 22
+    protocol: TCP
+    nodePort: 30022
+  selector:
+    app: ssh-server-for-sshuttle
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ssh-server-for-sshuttle
+  labels:
+    app: ssh-server-for-sshuttle
+spec:
+  containers:
+  - name: ssh-server-for-sshuttle
+    image: docker.io/corbinu/ssh-server
+    imagePullPolicy: IfNotPresent
+    lifecycle:
+      postStart:
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - >-
+            passwd --delete root &&
+            sed --in-place
+            --expression='s|^PasswordAuthentication no$|PasswordAuthentication yes|g'
+            --expression='s|^PermitEmptyPasswords no$|PermitEmptyPasswords yes|g'
+            --expression='s|^PermitRootLogin without-password$|PermitRootLogin yes|g'
+            --expression='s|^UsePAM yes$|UsePAM no|g'
+            /etc/ssh/sshd_config &&
+            kill -s HUP $(pidof sshd)

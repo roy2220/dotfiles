@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import json
+import sys
+
+
+def jsort(j):
+    if isinstance(j, dict):
+        for v in j.values():
+            jsort(v)
+        kvs = sorted(j.items(), key=lambda x: str(x[0]))
+        j.clear()
+        for k, v in kvs:
+            j[k] = v
+    elif isinstance(j, list):
+        for v in j:
+            jsort(v)
+        ks = tuple(json.dumps(v, separators=(",", ":")) for v in j)
+        ivs = sorted(enumerate(j), key=lambda x: ks[x[0]])
+        j.clear()
+        for _, v in ivs:
+            j.append(v)
+
+
+j = json.load(sys.stdin)
+jsort(j)
+json.dump(j, sys.stdout, indent=2)

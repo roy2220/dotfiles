@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+xxd -r -p -c0 | ProtobufJson ToJson --proto_path="${1}" "${2}" "${3}"

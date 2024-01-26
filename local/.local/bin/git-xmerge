@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+EXIT_CODE=$(git merge "${@}" || echo "${?}")
+if [[ -z ${EXIT_CODE} ]]; then
+	exit
+fi
+FILES=$(git --no-pager diff --name-only --diff-filter=U)
+if [[ -z ${FILES} ]]; then
+	exit "${EXIT_CODE}"
+fi
+readarray -t FILES <<<"${FILES}"
+git add "${FILES[@]/#/:/}"
+git merge --continue

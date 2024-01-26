@@ -1,0 +1,107 @@
+diff --git a/autoload/lsp/internal/diagnostics/document_diagnostics_command.vim b/autoload/lsp/internal/diagnostics/document_diagnostics_command.vim
+index cc43b94..71c6c48 100644
+--- a/autoload/lsp/internal/diagnostics/document_diagnostics_command.vim
++++ b/autoload/lsp/internal/diagnostics/document_diagnostics_command.vim
+@@ -29,12 +29,5 @@ function! lsp#internal#diagnostics#document_diagnostics_command#do(options) abor
+         endif
+     endfor
+ 
+-    if empty(l:result)
+-        call lsp#utils#error('No diagnostics results')
+-        return
+-    else
+-        call setloclist(0, l:result)
+-        echo 'Retrieved diagnostics results'
+-        botright lopen
+-    endif
++    call ShowQuickfix(l:result)
+ endfunction
+diff --git a/autoload/lsp/ui/vim.vim b/autoload/lsp/ui/vim.vim
+index 53309e5..1fb4cd6 100644
+--- a/autoload/lsp/ui/vim.vim
++++ b/autoload/lsp/ui/vim.vim
+@@ -269,15 +269,7 @@ function! s:handle_symbol(server, last_command_id, type, data) abort
+     endif
+ 
+     let l:list = lsp#ui#vim#utils#symbols_to_loc_list(a:server, a:data)
+-
+-    call lsp#ui#vim#utils#setqflist(l:list, a:type)
+-
+-    if empty(l:list)
+-        call lsp#utils#error('No ' . a:type .' found')
+-    else
+-        echo 'Retrieved ' . a:type
+-        botright copen
+-    endif
++    call ShowQuickfix(l:list)
+ endfunction
+ 
+ function! s:handle_location(ctx, server, type, data) abort "ctx = {counter, list, last_command_id, jump_if_one, mods, in_preview}
+@@ -313,9 +305,7 @@ function! s:handle_location(ctx, server, type, data) abort "ctx = {counter, list
+                     let l:level = count(l:parent[l:pos-1].text, g:lsp_tree_incoming_prefix)
+                     let a:ctx['list'] = extend(l:parent, map(a:ctx['list'], 'extend(v:val, {"text": repeat("' . g:lsp_tree_incoming_prefix . '", l:level+1) . v:val.text})'), l:pos)
+                 endif
+-                call lsp#ui#vim#utils#setqflist(a:ctx['list'], a:type)
+-                echo 'Retrieved ' . a:type
+-                botright copen
++                call ShowQuickfix(a:ctx['list'])
+                 if get(a:ctx, 'add_tree', v:false)
+                     " move the cursor to the newly added item
+                     execute l:pos + 1
+@@ -533,9 +523,7 @@ function! s:handle_call_hierarchy(ctx, server, type, data) abort
+                 let l:level = count(l:parent[l:pos-1].text, g:lsp_tree_incoming_prefix)
+                 let a:ctx['list'] = extend(l:parent, map(a:ctx['list'], 'extend(v:val, {"text": repeat("' . g:lsp_tree_incoming_prefix . '", l:level+1) . v:val.text})'), l:pos)
+             endif
+-            call lsp#ui#vim#utils#setqflist(a:ctx['list'], a:type)
+-            echo 'Retrieved ' . a:type
+-            botright copen
++            call ShowQuickfix(a:ctx['list'])
+             if get(a:ctx, 'add_tree', v:false)
+                 " move the cursor to the newly added item
+                 execute l:pos + 1
+diff --git a/autoload/lsp/ui/vim/output.vim b/autoload/lsp/ui/vim/output.vim
+index 5914a1d..9352300 100644
+--- a/autoload/lsp/ui/vim/output.vim
++++ b/autoload/lsp/ui/vim/output.vim
+@@ -144,7 +144,8 @@ function! lsp#ui#vim#output#floatingpreview(data) abort
+     elseif s:use_vim_popup
+         let l:options = {
+             \ 'moved': 'any',
+-            \ 'border': [1, 1, 1, 1],
++            \ 'padding': [1, 1, 1, 1],
++            \ 'border': [0, 0, 0, 0],
+             \ 'callback': function('s:vim_popup_closed')
+             \ }
+ 
+diff --git a/autoload/lsp/utils/workspace_edit.vim b/autoload/lsp/utils/workspace_edit.vim
+index 5dafd26..bfc35bf 100644
+--- a/autoload/lsp/utils/workspace_edit.vim
++++ b/autoload/lsp/utils/workspace_edit.vim
+@@ -12,10 +12,7 @@ function! lsp#utils#workspace_edit#apply_workspace_edit(workspace_edit) abort
+         endfor
+     endif
+ 
+-    if g:lsp_show_workspace_edits
+-        call setloclist(0, l:loclist_items, 'r')
+-        execute 'lopen'
+-    endif
++    call ShowQuickfix(l:loclist_items)
+ endfunction
+ 
+ "
+diff --git a/autoload/vital/_lsp/VS/Vim/Window/FloatingWindow.vim b/autoload/vital/_lsp/VS/Vim/Window/FloatingWindow.vim
+index fa1f888..b2723f8 100644
+--- a/autoload/vital/_lsp/VS/Vim/Window/FloatingWindow.vim
++++ b/autoload/vital/_lsp/VS/Vim/Window/FloatingWindow.vim
+@@ -408,9 +408,8 @@ else
+     \   'minheight': l:style.height,
+     \   'tabpage': 0,
+     \   'firstline': l:style.topline,
+-    \   'padding': [0, 0, 0, 0],
+-    \   'border': has_key(l:style, 'border') ? [1, 1, 1, 1] : [0, 0, 0, 0],
+-    \   'borderchars': get(l:style, 'border', []),
++    \   'padding': [1, 1, 1, 1],
++    \   'border': [0, 0, 0, 0],
+     \   'fixed': v:true,
+     \ }
+   endfunction

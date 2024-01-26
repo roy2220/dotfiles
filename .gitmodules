@@ -1,0 +1,12 @@
+[submodule "vim/.vim/autoload"]
+	path = vim/.vim/autoload
+	url = https://github.com/junegunn/vim-plug.git
+[submodule "zsh/.zplug"]
+	path = zsh/.zplug
+	url = https://github.com/zplug/zplug.git
+[submodule "tmux/.tmux/plugins/tpm"]
+	path = tmux/.tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm.git
+[submodule "local/.local/share/words"]
+	path = local/.local/share/words
+	url = https://github.com/roy2220/words.git

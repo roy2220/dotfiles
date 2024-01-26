@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PATCH=$(autoflake "${@}" /dev/stdin)
+if [[ -z ${PATCH} ]]; then
+	cat /dev/stdin
+	exit 0
+fi
+TEMP_FILE=$(mktemp --suffix=.py)
+cp /dev/stdin "${TEMP_FILE}"
+(
+	echo -n "--- ${TEMP_FILE}"$'\n'"+++ ${TEMP_FILE}"$'\n'
+	tail --lines=+3 <<< "${PATCH}"
+) | (
+	cd /
+	patch --strip=0 --input=- --output=- 2>/dev/null || cat /dev/stdin
+)
+rm "${TEMP_FILE}"

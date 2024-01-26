@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+
+import json
+import sys
+
+import yaml
+
+yaml.dump(json.load(sys.stdin), sys.stdout)

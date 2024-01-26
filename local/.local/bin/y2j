@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+import json
+import sys
+
+import yaml
+
+y = tuple(yaml.safe_load_all(sys.stdin))
+json.dump(y[0] if len(y) == 1 else y, sys.stdout)

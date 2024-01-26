@@ -1,0 +1,16 @@
+diff --git a/plugin/smartpairs.vim b/plugin/smartpairs.vim
+index 1fae794..6565f82 100644
+--- a/plugin/smartpairs.vim
++++ b/plugin/smartpairs.vim
+@@ -148,7 +148,10 @@ endfunction
+ autocmd FileType * :call SmartPairsInitialize()
+ 
+ if get(g:, 'smartpairs_hijack_return', 1)
+-  imap <script><expr> <CR> <SID>CarriageReturn()
++  function! s:CarriageReturnWrap() abort
++    return (pumvisible() ? "\<C-Y>" : '')..s:CarriageReturn()
++  endfunction
++  imap <script><expr> <CR> <SID>CarriageReturnWrap()
+ endif
+ 
+ if get(g:, 'smartpairs_hijack_backspace', 1)

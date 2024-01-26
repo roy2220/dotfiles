@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+LOCAL_PORT=${1}
+REMOTE_PORT=${2:-${LOCAL_PORT}}
+ssh -R "${REMOTE_PORT}:127.0.0.1:${LOCAL_PORT}" -N -f "${DOCKER_USER}@192.168.65.2"

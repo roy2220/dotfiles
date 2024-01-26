@@ -1,0 +1,19 @@
+[user]
+	email = roy2220@outlook.com
+	name = Roy O'Young
+[pull]
+	ff = only
+[merge]
+	ff = only
+	conflictstyle = diff3
+[diff]
+	colorMoved = default
+[core]
+	pager = delta
+	quotepath = false
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true  # use n and N to move between diff sections
+	side-by-side = true
+	syntax-theme = gruvbox-dark

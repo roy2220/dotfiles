@@ -1,0 +1,15 @@
+diff --git a/autoload/lightline/bufferline.vim b/autoload/lightline/bufferline.vim
+index d500adb..42fc79b 100644
+--- a/autoload/lightline/bufferline.vim
++++ b/autoload/lightline/bufferline.vim
+@@ -197,6 +197,10 @@ function! s:order_comparator(first, second) abort
+   return s:get_order(a:first) - s:get_order(a:second)
+ endfunction
+ 
++function! lightline#bufferline#filtered_buffers()
++  return s:filtered_buffers()
++endfunction
++
+ function! s:filtered_buffers(...)
+   let l:category = get(a:, 1, s:buffer_category(bufnr('%')))
+   if l:category == ''
