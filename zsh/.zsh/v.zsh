@@ -2,7 +2,7 @@
 
 v() {
     local file=$(
-        sed --regexp-extended --silent 's|^> (.+)$|\1|p' ~/.viminfo |
+        sed --regexp-extended --silent 's|^> (.+)$|\1|p' /workspace/.viminfo |
         python3 -c '
 import sys
 import os
