@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: socks5-server
+  labels:
+    app: socks5-server
+spec:
+  containers:
+  - name: trojan-go
+    image: p4gefau1t/trojan-go
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - mountPath: /etc/trojan-go
+      name: trojan-go
+    workingDir: /etc/trojan-go
+  - name: frpc
+    image: natfrp/frpc
+    imagePullPolicy: IfNotPresent
+    args: ["-f", "TODO"]
+  volumes:
+  - name: trojan-go
+    configMap:
+      name: trojan-go
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trojan-go
+data:
+  config.json: |-
+    {
+      "run_type": "server",
+      "log_level": 1,
+      "local_addr": "127.0.0.1",
+      "local_port": 443,
+      "remote_addr": "t.cn",
+      "remote_port": 80,
+      "password": ["TODO"],
+      "ssl": {
+        "cert": "domain.pem",
+        "key": "domain-key.pem",
+        "sni": "frp-leg.top"
+      }
+    }
+  domain.pem: |-
+    -----BEGIN CERTIFICATE-----
+    MIIEDjCCAnagAwIBAgIQaUsrcC9HEtFCHOOjwS9dMTANBgkqhkiG9w0BAQsFADBf
+    MR4wHAYDVQQKExVta2NlcnQgZGV2ZWxvcG1lbnQgQ0ExGjAYBgNVBAsMEXJvb3RA
+    bXktZGV2LWJveC0wMSEwHwYDVQQDDBhta2NlcnQgcm9vdEBteS1kZXYtYm94LTAw
+    HhcNMjQwMjA0MTcwMzU0WhcNMjYwNTA0MTcwMzU0WjBFMScwJQYDVQQKEx5ta2Nl
+    cnQgZGV2ZWxvcG1lbnQgY2VydGlmaWNhdGUxGjAYBgNVBAsMEXJvb3RAbXktZGV2
+    LWJveC0wMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAulpEVwbkefYA
+    ivd5o6k7/5xsXi0h7FHtUOzbPeatJKg+Klkfxn99dJAt/1T4TwMt2bT1BV4ou6sp
+    21h91+eHs7pmNH2c5KLvIcTpbXQQlsAoQjA+iO/ostFGmt4MggL8WqhB0d/6hDDg
+    +G5E6Q5uxJXXLgwA+Kcsmmxjp66/kvlIjq1knHTmeZnjUVXGfv7YevBfcX0qVFNn
+    Ix631fAWWCKcnfJjv7+xAtLOXVfIJ6VPUjD7mKSbmXIdDuhAytjqjXXNkVKKPuw1
+    PTie3PGQ43K118ZF94WWntovgKeR/msT/zt16xjut2MCZo0qlDZomUB5MslWWsO+
+    XxMhByLIDwIDAQABo2AwXjAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYB
+    BQUHAwEwHwYDVR0jBBgwFoAUGpsGbwpHlQR2LWMqosGmDvN0Cp8wFgYDVR0RBA8w
+    DYILZnJwLWxlZy50b3AwDQYJKoZIhvcNAQELBQADggGBAIb8RuGL+ruOyCMiSaMS
+    HHdLhjKENhmEVFVXUHE4TXM8bSD03xmZ7JIQ6fM+o47IZx4J9V71P1LB4LUfLy7V
+    n/CocbZIRuqiImKN/wtMrCvdkVnkPJTQXFGnjrcSJiZBJ8rsaU4Dum+MkzdKcNRq
+    MyD52NyE6kk7yex4xHPxB8OIGDVBdI5TCwL3bkUsRXQ9MKTu9ijcDIc+Tet0lb0I
+    ngTlv4vrhNiDdlbhidbagCy7rtjcGThKDAde1IPzUKiUGpiPVliVPFJ/1MvxEu0H
+    2EwFJLLqjK9UPb0+wB3UdzuNfHpbCX8epjcqtng8PK6j9PQlc2FmemvlsdWp9OmW
+    CWusaInirOJMb3FiYPBMML/4A/+PdGZb28m0gRCWeP32OhVv8tddoU7KU4V6FWD1
+    DzCkbO03mdT4erjup0fAGCy84QLwj3Sv+1qK9FZj5njDQHtaAqz/KGlHgDEB1j7s
+    TNbYC9nuhIl0J7opEFbiiOaWYic4n5V1i9XoRc75g6Ia/Q==
+    -----END CERTIFICATE-----
+  domain-key.pem: |-
+    -----BEGIN PRIVATE KEY-----
+    MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC6WkRXBuR59gCK
+    93mjqTv/nGxeLSHsUe1Q7Ns95q0kqD4qWR/Gf310kC3/VPhPAy3ZtPUFXii7qynb
+    WH3X54ezumY0fZzkou8hxOltdBCWwChCMD6I7+iy0Uaa3gyCAvxaqEHR3/qEMOD4
+    bkTpDm7EldcuDAD4pyyabGOnrr+S+UiOrWScdOZ5meNRVcZ+/th68F9xfSpUU2cj
+    HrfV8BZYIpyd8mO/v7EC0s5dV8gnpU9SMPuYpJuZch0O6EDK2OqNdc2RUoo+7DU9
+    OJ7c8ZDjcrXXxkX3hZae2i+Ap5H+axP/O3XrGO63YwJmjSqUNmiZQHkyyVZaw75f
+    EyEHIsgPAgMBAAECggEASaYVLkPWFnFoA4QM+eaPhNUgaxPxPUGfxgTmHQ/GzB8F
+    +pygl0WZonC9DRVa0XdTLqB62bU96fWapErT6Xliw2Betk4SrLXMRo9ZJd3iFII7
+    JvWEMYCHeeyFt/0b+mINtBKdeMHJc2cR8n06FNWUZ3NEyLkLxTnkwd8mf4Xrxry8
+    DV/WPHLkqXVIRKAFtGZ3TldQg2cB9AYUpMEciBelK5His2Fbk7WELOQVaB43EuX7
+    xltnpmrUFu2TvP9+W4ucGYdPLgqdIofPoptWrWTXhMQskDYBxqI07NNXK/bFzyyv
+    As9aSv7ulG/uRfuEvCNJxyGvbASoIiTQm41C/Qz6OQKBgQDc4hp5wQJX4VUNv2Uu
+    HHnDGoNk94b24OmRjwVFuuLiPhR69fBeO/pX5SeGKTZyw9NUSZxhuBSgFV4jrryz
+    yauCUl1DsXXlmRu+FNqR1ZKpzpzAxIILcgGzHBH4cNz/Nim9EoWwjVaLIQ/07JjC
+    i/kd8xXvZebTEHAl81ihwGjA/QKBgQDX+saIzqWOZ04eKtvirVaked7NM5qQmvA3
+    sk6CSxXFKfzAyuMgD9pXqLEe0/6M9JjvQjD48PR0wLz15pjkQh/C2ps0g7y09uQ9
+    xK4Ej5+c2R73MkvFIqXYCRSTx0tU644lBsKW1v3dLIX3hn1KLTltiOLEQYhSYJ/4
+    SjlH9CDQ+wKBgQCXIHxM4angxuOSzGlF62XD/9f2tQU61Rf554kL9JpXgXIxzyPu
+    1cqraLZqLLh8PU/SU6sTkQdLoFMQxvWFbW5TdFcrgbfQp7k7jLkfHqmCVUMbAViY
+    zCAtk/8XpOEQHNbh7lJaQdn8x1pLkbXTJkIEI9XWPjp4Hr8cuCrkQOlrYQKBgCQW
+    5Gvh0+o6uuPxl3KGMm8jaiZx1AcLzM4RvmqpL0cV4AU7Ib6ux3ZUWtxi4isdiBya
+    u+ItKTwFJM4WLUAfCH2f18VrqfG3O6ZSoh1i/nHQGguGXQDg7ENwKP8UkzLqdYMc
+    YRGhdSQrF2uoDnGBoxH5iKLwrF3PhYuQo4exdHZXAoGBALrbg2iLVisf1pg5ZaFI
+    YrOs0tn/6FS/CUr4fEbbpS7t8MbxPwwt7k0ebdNiEWjPsgfjbGSH0nj8OhqBoQyZ
+    VINkkTW10DjPHHQoT0SO2wgRpYzoPB7d8qEcpvShAOe3FI+6x/0ifDbo/Ubj2qlV
+    e5JcUFd6w/McdpCsF6pjN4SK
+    -----END PRIVATE KEY-----
