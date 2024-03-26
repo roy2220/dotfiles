@@ -1,22 +1,38 @@
 #!/usr/bin/env bash
-chatgpt -q '任务: 请严格遵循要求, 将代码部分由原始格式调整为目标格式, 不要在回复中添加任何markdown标记(例: ```).
 
-原始格式:
-```
-expr-1(
-	expr-2,
-	expr-3,
-	expr-4,
+if [[ -z ${VIM_FILETYPE} ]]; then
+	PL_HINT=''
+else
+	PL_HINT=" (vim filetype=${VIM_FILETYPE})"
+fi
+
+QUERY=$(
+	cat <<EOF
+请严格遵循要求, 将代码由原始格式调整为目标格式, 然后完整输出调整后的代码.
+注意输出的代码需要保留原始缩进.
+
+>>>>> 开始: 原始格式 <<<<<
+EXPR1 (
+	EXPR2 ,
+	EXPR3 ,
+	EXPR4 ,
 )
-```
+>>>>> 结束: 原始格式 <<<<<
 
-目标格式:
-```
-expr-1(expr-2, expr-3, expr-4)
-```
+>>>>> 开始: 目标格式 <<<<<
+EXPR1 ( EXPR2 , EXPR3 , EXPR4 )
+>>>>> 结束: 目标格式 <<<<<
 
-代码:
-```
-'"$(</dev/stdin)"'
-```
-'
+>>>>> 开始: 代码片段${PL_HINT} <<<<<
+$(</dev/stdin)
+>>>>> 结束: 代码片段${PL_HINT} <<<<<
+EOF
+)
+
+RESULT=$(chatgpt -q "${QUERY}")
+
+if [[ ${RESULT:0:3} == '```' ]]; then
+	sed -e '1d' -e '$d' <<<"${RESULT}"
+else
+	cat <<<"${RESULT}"
+fi

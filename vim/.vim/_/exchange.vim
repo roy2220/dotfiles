@@ -22,7 +22,7 @@ function! s:exchange_v(command) abort
 endfunction
 
 function! s:systemx(command, input) abort
-    let lines = systemlist(a:command, a:input)
+    let lines = systemlist(printf('VIM_FILETYPE=%s %s', &filetype, a:command), a:input)
     if v:shell_error != 0
         throw 'Failed to execute: '..a:command
     endif
