@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+chatgpt -q '任务: 请严格遵循要求, 将代码部分由原始格式调整为目标格式, 不要在回复中添加任何markdown标记(例: ```).
+
+原始格式:
+```
+expr-1(
+	expr-2,
+	expr-3,
+	expr-4,
+)
+```
+
+目标格式:
+```
+expr-1(expr-2, expr-3, expr-4)
+```
+
+代码:
+```
+'"$(</dev/stdin)"'
+```
+'

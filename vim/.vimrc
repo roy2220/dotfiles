@@ -106,6 +106,7 @@ source ~/.vim/_/workflow.vim
 source ~/.vim/_/quickfix.vim
 source ~/.vim/_/ag.vim
 source ~/.vim/_/exchange.vim
+let $PATH = $HOME.'/.vim/_/chatgpt:'.$PATH
 
 " Tagbar
 let g:tagbar_position = 'left'
