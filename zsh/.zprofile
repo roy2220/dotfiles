@@ -29,6 +29,8 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_DEFAULT_OPTS='--history='\'${HOME}'/.fzf_history'\'' --height=38% --reverse --info=inline --bind '\''ctrl-y:execute-silent(echo -n {} | pbcopy; tmux set-buffer {})+abort'\'
 # for ossutil
 export OSSUTIL_CONFIG_FILE=~/.secrets/ossutil/config
+# for rclone
+export RCLONE_CONFIG_FILE=~/.secrets/rclone/rclone.conf
 export HISTFILE=/workspace/.zsh_history
 export ZSHZ_DATA=/workspace/.z
 

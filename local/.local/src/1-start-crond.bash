@@ -1,7 +1,7 @@
 set -eu${DEBUG+x}o pipefail
 
 crontab - <<'EOF'
-30 * * * * gzip --stdout "${HISTFILE}" > "/s3/${HOSTNAME}/.zsh_history.gz"
+30 * * * * mkdir -p "/oss/${HOSTNAME}" && gzip --stdout "${HISTFILE}" > "/oss/${HOSTNAME}/.zsh_history.gz"
 EOF
 
 crond
