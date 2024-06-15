@@ -14,8 +14,27 @@ if [[ ! -d ~/.secrets ]]; then
     mkdir ~/.secrets
 fi
 
-until ~/go/bin/gocryptfs -nosyslog ~/.files/local/.local/share/secrets ~/.secrets; do done
-chmod --recursive g=,o= ~/.secrets
+while true; do
+    read -rs 'PASSWORD?Password: '
+    PASSWORD=$(~/.local/bin/_rclone obscure - <<<${PASSWORD})
+    ~/.local/bin/_rclone mount --daemon \
+        --dir-perms=0700 \
+        --file-perms=0600 \
+        :crypt: \
+        --crypt-remote=/root/.local/share/secrets \
+        --crypt-filename-encryption=standard \
+        --crypt-directory-name-encryption=true \
+        --crypt-password=${PASSWORD} \
+        --crypt-strict-names \
+        ~/.secrets
+    unset PASSWORD
+
+    if ls -1 ~/.secrets >/dev/null; then
+        break
+    fi
+
+    fusermount -u ~/.secrets
+done
 
 export TERM=xterm-256color
 export SHELL=${0}
