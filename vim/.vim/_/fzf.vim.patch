@@ -1,8 +1,8 @@
 diff --git a/autoload/fzf/vim.vim b/autoload/fzf/vim.vim
-index 4b3dfa5..c458da9 100755
+index 79956ba..b48d296 100755
 --- a/autoload/fzf/vim.vim
 +++ b/autoload/fzf/vim.vim
-@@ -859,7 +859,7 @@ function! fzf#vim#ag_raw(command_suffix, ...)
+@@ -900,7 +900,7 @@ function! fzf#vim#ag_raw(command_suffix, ...)
    if !executable('ag')
      return s:warn('ag is not found')
    endif
@@ -10,4 +10,4 @@ index 4b3dfa5..c458da9 100755
 +  return call('fzf#vim#grep', extend(['ag --nogroup --color '.a:command_suffix, 1], a:000))
  endfunction
  
- " command (string), [spec (dict)], [fullscreen (bool)]
+ function! s:grep_multi_line(opts)
