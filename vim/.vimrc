@@ -2,6 +2,7 @@ source ~/.vim/_/base.vim | set viminfofile=/workspace/.viminfo
 source ~/.vim/_/tmux-clipboard.vim
 
 " vim-plug
+let g:plug_timeout=1200
 call plug#begin('~/.vim/plugged')
     if &diff != 1
         Plug '~/.zplug/repos/junegunn/fzf'

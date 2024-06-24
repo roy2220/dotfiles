@@ -16,8 +16,10 @@ fi
 
 while true; do
     read -rs 'PASSWORD?Password: '
+    echo
     PASSWORD=$(~/.local/bin/_rclone obscure - <<<${PASSWORD})
-    ~/.local/bin/_rclone mount --daemon \
+    echo 'mounting secrets...'
+    ~/.local/bin/_rclone --config=/dev/null mount --daemon \
         --dir-perms=0700 \
         --file-perms=0600 \
         :crypt: \
@@ -29,11 +31,11 @@ while true; do
         ~/.secrets
     unset PASSWORD
 
-    if ls -1 ~/.secrets >/dev/null; then
+    if ls -1 ~/.secrets >/dev/null 2>&1; then
         break
     fi
 
-    fusermount -u ~/.secrets
+    fusermount3 -u ~/.secrets
 done
 
 export TERM=xterm-256color
