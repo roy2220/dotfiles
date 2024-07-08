@@ -26,7 +26,8 @@ call plug#begin('~/.vim/plugged')
         \    npm install -g pyright
         \        && pip install autoflake black isort &&
         \    npm install -g bash-language-server
-        \        && go install mvdan.cc/sh/v3/cmd/shfmt@latest
+        \        && go install mvdan.cc/sh/v3/cmd/shfmt@latest &&
+        \    go install github.com/lasorda/protobuf-language-server@latest
         \' }
         Plug 'othree/eregex.vim'
         Plug 'preservim/nerdtree'
@@ -316,4 +317,5 @@ augroup END
 source ~/.vim/_/go.vim
 source ~/.vim/_/python.vim
 source ~/.vim/_/sh.vim
+source ~/.vim/_/proto.vim
 source ~/.vim/_/dir-diff.vim
