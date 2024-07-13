@@ -97,6 +97,7 @@ function! s:delete_buffer(pseudo_bufnr) abort
     endif
     let bufnr1 = bufnrs[a:pseudo_bufnr-1]
     execute 'bdelete'.bufnr1
+    execute "normal! \<C-l>"
 endfunction
 
 function! s:delete_other_buffers(pseudo_bufnr) abort
