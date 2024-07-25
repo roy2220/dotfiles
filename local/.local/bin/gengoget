@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+printf 'go get %q' "$(go list -m)@$(git describe --tags --exact-match 2>/dev/null || git symbolic-ref --short HEAD)"
