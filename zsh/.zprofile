@@ -23,6 +23,7 @@ while true; do
         --dir-perms=0700 \
         --file-perms=0600 \
         :crypt: \
+        --devname=crypt: \
         --crypt-remote=/root/.local/share/secrets \
         --crypt-filename-encryption=standard \
         --crypt-directory-name-encryption=true \

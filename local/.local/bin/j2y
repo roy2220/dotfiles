@@ -5,4 +5,4 @@ import sys
 
 import yaml
 
-yaml.dump(json.load(sys.stdin), sys.stdout)
+yaml.dump(json.load(sys.stdin), sys.stdout, sort_keys=False)
