@@ -13,22 +13,7 @@ aarch64)
 	;;
 esac
 
-DOWNLOAD_URL=$(curl -SsLf https://api.github.com/repos/aliyun/ossutil/releases/latest | python3 -c '
-import json
-import re
-import sys
-
-release = json.loads(sys.stdin.read())
-download_url = None
-for asset in release["assets"]:
-    if re.match(r"ossutil-[^-]+-linux-'${ARCH}'\.zip$", asset["name"]) is not None:
-        download_url = asset["browser_download_url"]
-        break
-if download_url is None:
-    print("download url not found", file=sys.stderr)
-    sys.exit(1)
-print(download_url)
-')
+DOWNLOAD_URL=$(curl -SsLf 'https://www.alibabacloud.com/help/en/oss/developer-reference/install-ossutil' | grep --perl-regexp --only-matching "https://gosspublic.alicdn.com/ossutil/[^/]+/ossutil-v[^-]+-linux-${ARCH}.zip" | head -1)
 TEMP_FILE=$(mktemp)
 curl -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
 unzip -p "${TEMP_FILE}" "$(basename "${DOWNLOAD_URL}" .zip)/ossutil" | install /dev/stdin "${HOME}/.local/bin/_ossutil"
