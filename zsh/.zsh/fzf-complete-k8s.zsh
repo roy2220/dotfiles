@@ -8,7 +8,12 @@ _fzf-complete-k8s() {
         resource_name=$(kubectl get ${resource_kind} --output=custom-columns=':.metadata.name' --no-headers | fzf-popup --prompt="K8s:${resource_kind}> ")
         lbuffer=${LBUFFER[0,-2]}/
     else
-        local pod_of_containers=$(grep --perl-regexp --only-matching '(?<=pod(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
+        local service_of_containers=$(grep --perl-regexp --only-matching '(?<=svc(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
+        if [[ ! -z ${service_of_containers} && ${service_of_containers} != -* ]]; then
+            local pod_of_containers=$(kubectl get endpoints/${service_of_containers} --output=jsonpath='{.subsets[0].addresses[0].targetRef.name}')
+	else
+	    local pod_of_containers=$(grep --perl-regexp --only-matching '(?<=pod(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
+        fi
         if [[ ! -z ${pod_of_containers} && ${pod_of_containers} != -* ]]; then
             resource_name=$(kubectl get pod/${pod_of_containers} --output=jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}' | fzf-popup --prompt='K8s:container> ')
             lbuffer=${LBUFFER}
