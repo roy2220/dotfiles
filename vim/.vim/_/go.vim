@@ -53,7 +53,11 @@ if executable('go')
             echohl Error | redraw | echo 'Not in test function' | echohl NONE
             return
         endif
-        call s:command('go test -run=^'.test_func_name.'$ '.a:q_args, v:true)
+        if test_func_name[:len('Benchmark')-1] ==# 'Benchmark'
+            call s:command('go test -run=^$ -bench=^'.test_func_name.'$ '.a:q_args, v:true)
+        else
+            call s:command('go test -run=^'.test_func_name.'$ '.a:q_args, v:true)
+        endif
     endfunction
 
     function! s:get_test_func_name() abort
@@ -64,7 +68,7 @@ if executable('go')
         if tag.kind !=# 'func'
             return ''
         endif
-        if tag.name !~# '^\(Example\|Test\)'
+        if tag.name !~# '^\(Example\|Test\|Benchmark\)'
             return ''
         endif
         return tag.name
@@ -81,7 +85,11 @@ if executable('go')
                 echohl Error | redraw | echo 'Not in test function' | echohl NONE
                 return
             endif
-            call s:command('dlv test -- -test.run=^'.test_func_name.'$ '.a:q_args, v:false)
+            if test_func_name[:len('Benchmark')-1] ==# 'Benchmark'
+                call s:command('dlv test -- -test.run=^$ -test.bench=^'.test_func_name.'$ '.a:q_args, v:false)
+            else
+                call s:command('dlv test -- -test.run=^'.test_func_name.'$ '.a:q_args, v:false)
+            endif
         endfunction
     endif
 endif
