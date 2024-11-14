@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
 import json
+import re
 import sys
 
-json.dump(json.load(sys.stdin), sys.stdout, indent=2)
+data = sys.stdin.read()
+object = json.loads(data)
+
+if (prefix := re.search(r"[ \t]*", data).group(0)) == "":
+    json.dump(object, sys.stdout, indent=2)
+else:
+    sys.stdout.write(prefix + json.dumps(object, indent=2).replace("\n", "\n" + prefix))
