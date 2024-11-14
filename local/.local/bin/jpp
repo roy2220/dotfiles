@@ -7,7 +7,8 @@ import sys
 data = sys.stdin.read()
 object = json.loads(data)
 
-if (prefix := re.search(r"[ \t]*", data).group(0)) == "":
+if (prefix := re.search(r"^[ \t]*", data).group(0)) == "":
     json.dump(object, sys.stdout, indent=2)
 else:
-    sys.stdout.write(prefix + json.dumps(object, indent=2).replace("\n", "\n" + prefix))
+    data = json.dumps(object, indent=2)
+    sys.stdout.write(prefix + data.replace("\n", "\n" + prefix))

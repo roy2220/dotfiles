@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 
 import json
+import re
 import sys
 
 import yaml
 
-yaml.dump(json.load(sys.stdin), sys.stdout, sort_keys=False)
+data = sys.stdin.read()
+object = json.loads(data)
+
+if (prefix := re.search(r"^[ \t]*", data).group(0)) == "":
+    yaml.dump(object, sys.stdout, sort_keys=False)
+else:
+    data = yaml.dump(object, sort_keys=False)
+    sys.stdout.write(prefix + data.replace("\n", "\n" + prefix))
