@@ -565,7 +565,7 @@ function! s:do_go_to_tag(tag_stack, tagnr) abort
 endfunction
 
 function! s:show_tag_numbers(tagnr, num_tags, warn) abort
-    let tag_numbers = printf('Tag list (%d/%d)', a:tagnr, a:num_tags)
+    let tag_numbers = printf('Tag (%d/%d)', a:tagnr, a:num_tags)
     if a:warn
         echohl WarningMsg | redraw | echo tag_numbers | echohl NONE
     else
