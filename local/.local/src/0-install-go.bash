@@ -18,21 +18,24 @@ VERSION_1=$(grep '^1\.21\.' <<<"${ALL_VERSIONS}" | tail -1)
 VERSION_2=$(grep '^1\.22\.' <<<"${ALL_VERSIONS}" | tail -1)
 VERSION_3=$(grep '^1\.23\.' <<<"${ALL_VERSIONS}" | tail -1)
 
-curl -SsLf "https://dl.google.com/go/go${VERSION_1}.linux-${ARCH}.tar.gz" |
+ curl -SsLf "https://dl.google.com/go/go${VERSION_1}.linux-${ARCH}.tar.gz" |
 	tar xz --directory /usr/local
 
 mkdir --parents "${HOME}/sdk"
-ln --symbolic --no-target-directory /usr/local/go "${HOME}/sdk/$(/usr/local/go/bin/go env GOVERSION)"
+ln --symbolic --no-target-directory /usr/local/go "${HOME}/sdk/go${VERSION_1}"
+ln --symbolic --no-target-directory /usr/local/go "${HOME}/sdk/go$(cut --delimiter=. --fields=1,2 <<<"${VERSION_1}")"
 
 /usr/local/go/bin/go install "golang.org/dl/go${VERSION_2}@latest"
 "${HOME}/go/bin/go${VERSION_2}" download
 rm "${HOME}/go/bin/go${VERSION_2}"
 rm "${HOME}/sdk/go${VERSION_2}/go"*'.tar.gz'
+ln --symbolic --no-target-directory "${HOME}/sdk/go${VERSION_2}" "${HOME}/sdk/go$(cut --delimiter=. --fields=1,2 <<<"${VERSION_2}")"
 
 /usr/local/go/bin/go install "golang.org/dl/go${VERSION_3}@latest"
 "${HOME}/go/bin/go${VERSION_3}" download
 rm "${HOME}/go/bin/go${VERSION_3}"
 rm "${HOME}/sdk/go${VERSION_3}/go"*'.tar.gz'
+ln --symbolic --no-target-directory "${HOME}/sdk/go${VERSION_3}" "${HOME}/sdk/go$(cut --delimiter=. --fields=1,2 <<<"${VERSION_3}")"
 
 install /dev/stdin "${HOME}/go/bin/go" <<'EOF'
 #!/usr/bin/env sh
