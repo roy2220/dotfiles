@@ -38,7 +38,7 @@ nnoremap <silent> [T :call <SID>go_to_first_tag()<CR>
 nnoremap <silent> ]T :call <SID>go_to_last_tag()<CR>
 nnoremap <silent> <BS>t :<C-U>call <SID>delete_all_tags()<CR>
 
-" ==============================================================================
+"===================================================================================================
 
 function! s:go_to_buffer(pseudo_bufnr, new_window) abort
     if a:pseudo_bufnr < 1
@@ -120,7 +120,7 @@ function! s:delete_other_buffers(pseudo_bufnr) abort
     execute "normal! \<C-l>"
 endfunction
 
-" ==============================================================================
+"===================================================================================================
 
 function! s:go_to_window(winnr) abort
     if a:winnr < 1
@@ -188,7 +188,7 @@ function! s:close_other_windows(winnr) abort
     execute a:winnr.'wincmd o'
 endfunction
 
-" ==============================================================================
+"===================================================================================================
 
 function! s:go_to_qf(qfnr) abort
     let num_qfs = s:qfnr('$')
@@ -300,7 +300,7 @@ function! s:show_qf_numbers(qfnr, num_qfs, warn) abort
     endif
 endfunction
 
-" ==============================================================================
+"===================================================================================================
 
 function! s:go_to_error(errnr, new_window) abort
     let num_errors = s:errnr('$')
@@ -457,7 +457,7 @@ function! s:show_error_numbers(errnr, num_errors, warn) abort
     endif
 endfunction
 
-" ==============================================================================
+"===================================================================================================
 
 function! s:go_to_tag(tagnr) abort
     let tag_stack = s:get_tag_stack()

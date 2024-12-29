@@ -28,7 +28,7 @@ endfunction
 
 augroup __bracketsjump__
     autocmd!
-    autocmd BufReadPost,BufWritePost * call s:setup()
+    autocmd BufEnter,BufWrite * call s:setup()
 augroup END
 
 let s:file_type_2_language = {}
@@ -111,7 +111,7 @@ function! s:brackets_jump(visual_mode, language, choose_line, compare_line, num_
         let i += 1
     endwhile
     if line != cur_line
-        execute printf('normal! %dG', line)
+        execute printf('normal! %dG0', line)
         call search('\V\C\<'.(nearest_tag.name).'\>', 'c', line)
         redraw | echo s:tag_info(nearest_tag)
     endif
@@ -210,3 +210,4 @@ function! s:tag_info(tag) abort
     let tag_info .= a:tag.name
     return tag_info
 endfunction
+

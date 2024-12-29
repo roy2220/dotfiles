@@ -22,7 +22,7 @@ function! s:ag(pattern, pattern_is_fixed) abort
     endif
     let command .= '-- ' . shellescape(a:pattern)
     if &buftype == 'quickfix'
-        let file_names = keys(reduce(getqflist({'items': v:none}).items, {acc, val -> extend(acc, {bufname(val.bufnr): v:none})}, {}))
+        let file_names = keys(reduce(getqflist({'items': 0}).items, {acc, val -> extend(acc, {bufname(val.bufnr): 0})}, {}))
         if len(file_names) == 0
             return
         endif

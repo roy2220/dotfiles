@@ -11,7 +11,7 @@ alias kg='kubectl get'
 alias kd='kubectl describe'
 alias ke='kubectl exec'
 alias kl='kubectl logs'
-alias ydiff='ydiff --side-by-side --width=0 --wrap --'
+alias vim=nvim
 
 bindkey -v
 bindkey -M vicmd ':' vi-rev-repeat-find

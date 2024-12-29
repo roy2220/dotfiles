@@ -100,7 +100,7 @@ function! s:rearrange_windows(bufnr) abort
             return
         endif
 
-        let qf_info = getqflist({'idx': 0, 'qfbufnr': 0, 'winid': 0, 'items': v:none})
+        let qf_info = getqflist({'idx': 0, 'qfbufnr': 0, 'winid': 0, 'items': 0})
         let qf_item_info = qf_info.items[qf_info.idx-1]
         let s:left_bufnr = qf_item_info.bufnr
         let left_winids = win_findbuf(s:left_bufnr)

@@ -1,67 +1,58 @@
-source ~/.vim/_/base.vim | set viminfofile=/workspace/.viminfo
-source ~/.vim/_/tmux-clipboard.vim
+source ~/.config/nvim/basic.vim
+set shadafile=/workspace/.shada
 
+source ~/.config/nvim/brackets-jump.vim
+source ~/.config/nvim/quickfix.vim
+source ~/.config/nvim/workflow.vim
+source ~/.config/nvim/bang.vim
+source ~/.config/nvim/the-silver-searcher.vim
+source ~/.config/nvim/tmux-clipboard.vim
+source ~/.config/nvim/ai-complete.vim
+
+source ~/.config/nvim/ft-go.vim
+source ~/.config/nvim/ft-python.vim
+source ~/.config/nvim/ft-sh.vim
+source ~/.config/nvim/ft-proto.vim
+
+source ~/.config/nvim/dir-diff.vim
+
+"===================================================================================================
 " vim-plug
-let g:plug_timeout=1200
-call plug#begin('~/.vim/plugged')
-    if &diff != 1
-        Plug '~/.zplug/repos/junegunn/fzf'
-        Plug 'junegunn/fzf.vim', { 'do': 'git apply ~/.vim/_/fzf.vim.patch' }
-        Plug 'AndrewRadev/linediff.vim'
-        Plug 'arthurxavierx/vim-caser'
-        Plug 'airblade/vim-gitgutter'
-        Plug 'chrisbra/NrrwRgn'
-        Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply ~/.vim/_/vim-smartpairs.patch' }
-        Plug 'hrsh7th/vim-vsnip'
-        Plug 'junegunn/gv.vim'
-        Plug 'majutsushi/tagbar', { 'do': 'go install github.com/jstemmer/gotags@master' }
-        Plug 'mg979/vim-visual-multi'
-        Plug 'mogelbrod/vim-jsonpath'
-        Plug 'lifepillar/vim-mucomplete'
-        Plug 'prabirshrestha/vim-lsp', { 'do': '
-        \    git apply ~/.vim/_/vim-lsp.patch &&
-        \    go install golang.org/x/tools/gopls@latest
-        \        && go install golang.org/x/tools/cmd/goimports@master
-        \        && go install github.com/go-delve/delve/cmd/dlv@latest &&
-        \    npm install -g pyright
-        \        && pip install autoflake black isort &&
-        \    npm install -g bash-language-server
-        \        && go install mvdan.cc/sh/v3/cmd/shfmt@latest &&
-        \    go install github.com/lasorda/protobuf-language-server@latest
-        \' }
-        Plug 'othree/eregex.vim'
-        Plug 'preservim/nerdtree'
-        Plug 'tommcdo/vim-exchange'
-        Plug 'tpope/vim-commentary'
-        Plug 'tpope/vim-fugitive'
-        Plug 'tpope/vim-repeat'
-        Plug 'tpope/vim-sleuth'
-        Plug 'tpope/vim-surround'
-    endif
-
-    Plug '~/.tmux/plugins/easyjump.tmux'
+call plug#begin()
     Plug 'sainnhe/gruvbox-material'
     Plug 'itchyny/lightline.vim'
-    Plug 'Yggdroot/indentLine'
-    Plug 'mengelbrecht/lightline-bufferline', { 'do': 'git apply ~/.vim/_/lightline-bufferline.patch' }
+    Plug 'mengelbrecht/lightline-bufferline', { 'do': 'git apply ~/.config/nvim/plugin-patches/lightline-bufferline.diff' }
     Plug 'psliwka/vim-smoothie'
+    Plug 'Yggdroot/indentLine'
+    Plug 'tpope/vim-sleuth'
     Plug 'machakann/vim-highlightedyank'
-    Plug 'tmux-plugins/vim-tmux-focus-events'
+    Plug '~/.zplug/repos/junegunn/fzf' | Plug 'junegunn/fzf.vim', { 'do': 'git apply ~/.config/nvim/plugin-patches/fzf.vim.diff' }
+    Plug '~/.tmux/plugins/easyjump.tmux'
+    Plug 'othree/eregex.vim'
+    if &diff != 1
+        Plug 'tpope/vim-fugitive'
+        Plug 'airblade/vim-gitgutter'
+        Plug 'lifepillar/vim-mucomplete'
+        Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply ~/.config/nvim/plugin-patches/vim-smartpairs.diff' }
+        Plug 'tpope/vim-surround'
+        Plug 'arthurxavierx/vim-caser'
+        Plug 'tommcdo/vim-exchange'
+        Plug 'chrisbra/NrrwRgn'
+        Plug 'AndrewRadev/linediff.vim'
+        Plug 'hrsh7th/vim-vsnip'
+        Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
+    endif
 call plug#end()
+let g:plug_timeout=1200
 
-" easyjump.vim
-let g:easyjump_text_attrs = "\e[0m\e[90m"
-let g:easyjump_label_attrs = "\e[1m\e[31m"
-
-" gruvbox8
+"===================================================================================================
+" gruvbox-material
 let g:gruvbox_material_better_performance = 1
 set background=dark
 colorscheme gruvbox-material
 
+"===================================================================================================
 " lightline.vim
-set laststatus=2
-set showtabline=2
-
 function! s:lightline_winnr() abort
     return [
     \   '‹1›', '‹2›', '‹3›', '‹4›', '‹5›', '‹6›', '‹7›', '‹8›', '‹9›', '‹10›',
@@ -104,48 +95,23 @@ let g:lightline = {
 let g:lightline#bufferline#show_number = 2
 let g:lightline#bufferline#unnamed = '[No Name]'
 
-source ~/.vim/_/workflow.vim
-source ~/.vim/_/quickfix.vim
-source ~/.vim/_/ag.vim
-source ~/.vim/_/exchange.vim
-source ~/.vim/_/ai-complete.vim
-let $PATH = $HOME.'/.vim/_/chatgpt:'.$PATH
+set showtabline=2
 
-" Tagbar
-let g:tagbar_position = 'left'
-let g:tagbar_width = 40
-let g:tagbar_sort = 0
-let g:tagbar_autofocus = 1
-let g:tagbar_silent = 1
+"===================================================================================================
+" indentLine
+let g:indentLine_first_char = '┊'
+let g:indentLine_char = g:indentLine_first_char
+execute "set list lcs=tab:\\".g:indentLine_first_char."\\ "
+let g:indentLine_showFirstIndentLevel = 1
+let g:indentLine_bufTypeExclude = ['help', 'terminal']
 
-nnoremap <silent> <F8> :call <SID>toggle_tagbar()<CR>
-function! s:toggle_tagbar() abort
-    NERDTreeClose
-    TagbarToggle
-endfunction
+"===================================================================================================
+" vim-highlightedyank
+let g:highlightedyank_highlight_duration = 250
+highlight HighlightedyankRegion cterm=reverse gui=reverse
 
-source ~/.vim/_/brackets-jump.vim
-
-" NERDTree
-let g:NERDTreeWinPos = g:tagbar_position
-let g:NERDTreeWinSize = g:tagbar_width
-let g:NERDTreeMouseMode = 3
-
-nnoremap <silent> <F9> :call <SID>toggle_nerd_tree()<CR>
-function! s:toggle_nerd_tree() abort
-    TagbarClose
-    if g:NERDTree.IsOpen()
-        NERDTreeClose
-    else
-        if expand('%:p') =~# '^\V'.getcwd().(getcwd() == '/' ? '' : '/') && filereadable(expand('%'))
-            NERDTreeFind
-        else
-            NERDTree
-        endif
-    endif
-endfunction
-
-" fzf
+"===================================================================================================
+" fzf.vim
 let g:fzf_colors = {}
 let g:fzf_layout = {'tmux': '-p62%,62%'}
 let g:fzf_preview_window = []
@@ -165,67 +131,22 @@ nnoremap <silent> <leader>o :History<CR>
 nnoremap <silent> <leader>, :History:<CR>
 nnoremap <silent> <leader>/ :History/<CR>
 
-" fugitive.vim
+"===================================================================================================
+" easyjump.tmux
+let g:easyjump_text_attrs = "\e[0m\e[90m"
+let g:easyjump_label_attrs = "\e[1m\e[31m"
+
+"===================================================================================================
+" eregex.vim
+let g:eregex_default_enable = 0
+
+"===================================================================================================
+" vim-fugitive
 nnoremap <silent> <C-W>g :Git<CR>:execute printf('resize %d', float2nr(&lines*0.382))<CR>
 cabbrev G Git
 
-" smartpairs.vim
-let g:smartpairs_jumps_enabled = 0
-
-" caser.vim
-let g:caser_no_mappings = 1
-" * camelCase
-nmap gsc <Plug>CaserCamelCase
-xmap gsc <Plug>CaserVCamelCase
-" * PascalCase
-nmap gsp <Plug>CaserMixedCase
-xmap gsp <Plug>CaserVMixedCase
-" * snake_case
-nmap gss <Plug>CaserSnakeCase
-xmap gss <Plug>CaserVSnakeCase
-" * SCREAMING_SNAKE_CASE
-nmap gsS <Plug>CaserUpperCase
-xmap gsS <Plug>CaserVUpperCase
-" * kebab-case
-nmap gsk <Plug>CaserKebabCase
-xmap gsk <Plug>CaserVKebabCase
-" * HTTP-Header-Case
-nmap gsh <Plug>CaserTitleKebabCase
-xmap gsh <Plug>CaserVTitleKebabCase
-" * Title Case
-nmap gst <Plug>CaserTitleCase
-xmap gst <Plug>CaserVTitleCase
-" * space case
-nmap gs<space> <Plug>CaserSpaceCase
-xmap gs<space> <Plug>CaserVSpaceCase
-
-" indentLine
-let g:indentLine_showFirstIndentLevel = 1
-let g:indentLine_first_char = '┊'
-let g:indentLine_char = g:indentLine_first_char
-let g:indentLine_indentLevel = 24
-let g:indentLine_fileTypeExclude = ['nerdtree', 'tagbar', 'gitcommit']
-let g:indentLine_bufTypeExclude = ['help', 'terminal']
-execute "set list lcs=tab:\\".g:indentLine_first_char."\\ "
-
-" commentary.vim
-set commentstring=#\ %s
-augroup __commentary__
-    autocmd!
-    autocmd FileType c setlocal commentstring=//\ %s
-    autocmd FileType cpp setlocal commentstring=//\ %s
-    autocmd FileType vim setlocal commentstring=\"\ %s
-augroup END
-
-" vim-exchange
-nmap gx <Plug>(Exchange)
-xmap gx <Plug>(Exchange)
-nmap gxg <Plug>(ExchangeClear)
-nmap gxx <Plug>(ExchangeLine)
-
-" MUcomplete
-set shortmess+=c
-set belloff+=ctrlg
+"===================================================================================================
+" vim-mucomplete
 let g:mucomplete#enable_auto_at_startup = 1
 let g:mucomplete#no_mappings = 1
 let g:mucomplete#chains = {}
@@ -235,39 +156,57 @@ let g:mucomplete#chains.default = [
 \    'path',
 \]
 
-" vim-visual-multi
-let g:VM_maps = {
-\    'Find Under': '<leader>n',
-\    'Find Subword Under': '<leader>n',
-\}
+"===================================================================================================
+" vim-smartpairs
+let g:smartpairs_jumps_enabled = 0
 
+"===================================================================================================
+" vim-caser
+let g:caser_no_mappings = 1
+" for camelCase
+nmap gsc <Plug>CaserCamelCase
+xmap gsc <Plug>CaserVCamelCase
+" for PascalCase
+nmap gsp <Plug>CaserMixedCase
+xmap gsp <Plug>CaserVMixedCase
+" for snake_case
+nmap gss <Plug>CaserSnakeCase
+xmap gss <Plug>CaserVSnakeCase
+" for SCREAMING_SNAKE_CASE
+nmap gsS <Plug>CaserUpperCase
+xmap gsS <Plug>CaserVUpperCase
+" for kebab-case
+nmap gsk <Plug>CaserKebabCase
+xmap gsk <Plug>CaserVKebabCase
+" for HTTP-Header-Case
+nmap gsh <Plug>CaserTitleKebabCase
+xmap gsh <Plug>CaserVTitleKebabCase
+" for Title Case
+nmap gst <Plug>CaserTitleCase
+xmap gst <Plug>CaserVTitleCase
+" for space case
+nmap gs<space> <Plug>CaserSpaceCase
+xmap gs<space> <Plug>CaserVSpaceCase
+
+"===================================================================================================
+" vim-exchange
+nmap gx <Plug>(Exchange)
+xmap gx <Plug>(Exchange)
+nmap gxg <Plug>(ExchangeClear)
+nmap gxx <Plug>(ExchangeLine)
+
+"===================================================================================================
 " NrrwRgn
 let g:nrrw_rgn_nohl = 1
 let g:nrrw_topbot_leftright = 'botright'
 xmap <leader><leader> <Plug>NrrwrgnDo
 
-" vim-highlightedyank
-let g:highlightedyank_highlight_duration = 250
-highlight HighlightedyankRegion cterm=reverse gui=reverse
-
-" eregex.vim
-let g:eregex_default_enable = 0
-
-" vim-jsonpath
-augroup __json__
-    autocmd!
-    autocmd FileType json setlocal keywordprg=:call\ jsonpath#echo()\|Nop
-augroup END
-command -nargs=* Nop
-
+"===================================================================================================
 " vim-vsnip
 let g:vsnip_extra_mapping = v:false
 
+"===================================================================================================
 " vim-lsp
-set maxmem=2000000
-set maxmemtot=2000000
-set maxmempattern=2000000
-let g:lsp_use_native_client = 1
 let g:lsp_diagnostics_signs_enabled = 0
 let g:lsp_diagnostics_virtual_text_delay = 0
 let g:lsp_diagnostics_virtual_text_prefix = '👈 '
@@ -299,7 +238,7 @@ function! s:on_lsp_buffer_enabled() abort
     nnoremap <buffer> <silent> gR :call <SID>restart_lsp_server()<CR>
     setlocal keywordprg=:LspHover<CR>
     setlocal completefunc=lsp#complete
-    inoremap <buffer> <Tab> <C-X><C-U>
+    inoremap <buffer> <expr> <Tab> pumvisible() && len(v:completed_item) >= 1 ? "\<C-Y>" : "\<C-X>\<C-U>"
 endfunction
 
 function! s:restart_lsp_server() abort
@@ -313,9 +252,3 @@ augroup lsp_install
     autocmd!
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
-
-source ~/.vim/_/go.vim
-source ~/.vim/_/python.vim
-source ~/.vim/_/sh.vim
-source ~/.vim/_/proto.vim
-source ~/.vim/_/dir-diff.vim

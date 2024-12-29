@@ -94,7 +94,7 @@ ${show_cur_dir_script}
             cd ${dir}
         fi
     else
-        (cd ${cur_dir}; ${EDITOR:-$(which vim vi nano | head -1)} ${name})
+        (cd ${cur_dir}; ${EDITOR:-$(which nvim vi nano | head -1)} ${name})
     fi
 }
 
