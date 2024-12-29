@@ -10,7 +10,7 @@ ee() {
 if [[ \${dir} != \${cur_dir} ]]; then
     sqlite3 \${E_DB_FILE} '
 DELETE FROM dir WHERE id > (SELECT id FROM cur_dir);
-INSERT INTO dir(id, abs_path) VALUES(NULL, \"'\${dir}'\");
+INSERT INTO dir(id, abs_path) VALUES(NULL, '\\'\${dir}\\'');
 DELETE FROM dir WHERE id <= (SELECT id FROM dir ORDER BY id DESC LIMIT 1 OFFSET 100);
 REPLACE INTO cur_dir(dummy, id) SELECT 0, id FROM dir ORDER BY id DESC LIMIT 1;
 '
@@ -26,7 +26,7 @@ ls --all --dereference --group-directories-first --indicator-style=slash -1 ${cu
         mkdir --parents "$(dirname ${E_DB_FILE})"
         sqlite3 ${E_DB_FILE} '
 CREATE TABLE dir(id INTEGER PRIMARY KEY, abs_path INTEGER);
-INSERT INTO dir(id, abs_path) VALUES(1, "/");
+INSERT INTO dir(id, abs_path) VALUES(1, '\''/'\'');
 CREATE TABLE cur_dir(dummy INTEGER PRIMARY KEY, id INTEGER);
 INSERT INTO cur_dir(dummy, id) VALUES(0, 1);
 '

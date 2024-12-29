@@ -215,6 +215,7 @@ let g:lsp_diagnostics_virtual_text_padding_left = 2
 let g:lsp_document_code_action_signs_enabled = 0
 let g:lsp_document_highlight_delay = 0
 let g:lsp_signature_help_delay = 0
+let g:lsp_completion_documentation_enabled = 0
 function! s:lsp_get_supported_capabilities(server_info) abort
     let capabilities = lsp#default_get_supported_capabilities(a:server_info)
     let capabilities.textDocument.completion.completionItem.snippetSupport = v:true
