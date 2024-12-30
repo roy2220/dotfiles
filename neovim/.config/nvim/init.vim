@@ -41,6 +41,7 @@ call plug#begin()
         Plug 'AndrewRadev/linediff.vim'
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
+        Plug 'github/copilot.vim'
     endif
 call plug#end()
 let g:plug_timeout=1200
@@ -253,3 +254,8 @@ augroup lsp_install
     autocmd!
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
+
+"===================================================================================================
+" copilot.vim
+imap <silent><script><expr> <C-L> copilot#Accept('')
+let g:copilot_no_tab_map = v:true
