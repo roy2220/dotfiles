@@ -18,7 +18,7 @@ REPLACE INTO cur_dir(dummy, id) SELECT 0, id FROM dir ORDER BY id DESC LIMIT 1;
 fi
 "
     local show_cur_dir_script='
-echo "Current Directory: ${cur_dir}\n<CTRL-]>: move into directory    <ENTER>: change directory / edit file \n<CTRL-O>: move back              <CTRL-I>: move forward"
+echo "Location: ${cur_dir}\n <Enter>: go to directory / open file    <Ctrl-]>: go into directory\n<Ctrl-O>: go back                        <Ctrl-I>: go forward"
 ls --all --dereference --group-directories-first --indicator-style=slash -1 ${cur_dir} 2>/dev/null |
     sed --regexp-extended '\''s/(.+)\/$/📁 \1/'\'' || true
 '
@@ -55,7 +55,18 @@ else
     fi
 fi
 "
-    export E_MOVE_INTO_DIR_SCRIPT="
+    export E_OPEN="
+local cur_dir=\$(sqlite3 \${E_DB_FILE} ${get_cur_dir_sql:q})
+if [[ \${name[1]} == 📁 ]]; then
+    local dir=\$(realpath \${cur_dir}/\${name:2})
+    ${update_cur_dir_script}
+else
+    tmux new-window -c \${cur_dir} \${EDITOR} \${name}
+    echo tmux new-window -c \${cur_dir} \${EDITOR} \${name} > /root/a.log
+fi
+${show_cur_dir_script}
+"
+    export E_GO_TO_DIR_SCRIPT="
 local cur_dir=\$(sqlite3 \${E_DB_FILE} ${get_cur_dir_sql:q})
 if [[ \${name[1]} == 📁 ]]; then
     local dir=\$(realpath \${cur_dir}/\${name:2})
@@ -63,39 +74,31 @@ if [[ \${name[1]} == 📁 ]]; then
 fi
 ${show_cur_dir_script}
 "
-    export E_MOVE_INTO_PREV_DIR_SCRIPT="
+    export E_GO_TO_PREV_DIR_SCRIPT="
 local cur_dir=\$(sqlite3 \${E_DB_FILE} '
 REPLACE INTO cur_dir(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN cur_dir ON dir.id < cur_dir.id ORDER BY dir.id DESC LIMIT 1;
 ${get_cur_dir_sql};
 ')
 ${show_cur_dir_script};
 "
-    export E_MOVE_INTO_NEXT_DIR_SCRIPT="
+    export E_GO_TO_NEXT_DIR_SCRIPT="
 local cur_dir=\$(sqlite3 \${E_DB_FILE} '
 REPLACE INTO cur_dir(dummy, id) SELECT 0, dir.id FROM dir INNER JOIN cur_dir ON dir.id > cur_dir.id ORDER BY dir.id ASC LIMIT 1;
 ${get_cur_dir_sql};
 ')
 ${show_cur_dir_script}
 "
-    local name=$(eval ${show_cur_dir_script} |
-        SHELL=${ZSH_ARGZERO} fzf --bind=ctrl-z:ignore --height=100% --reverse \
+    export EDITOR=${EDITOR:-$(which nvim vim vi nano less 2>&1 | head -1)}
+    eval ${show_cur_dir_script} |
+        SHELL=${ZSH_ARGZERO} fzf --bind=ctrl-z:ignore --height=100% --margin=1,2 --reverse \
         --header-lines=3 \
         --preview='name={}; eval ${E_PREVIEW_FILE_SCRIPT}' \
-        --bind='ctrl-]:reload(name={}; eval ${E_MOVE_INTO_DIR_SCRIPT})+clear-query+first' \
-        --bind='ctrl-o:reload(eval ${E_MOVE_INTO_PREV_DIR_SCRIPT})+clear-query+first' \
-        --bind='ctrl-i:reload(eval ${E_MOVE_INTO_NEXT_DIR_SCRIPT})+clear-query+first')
-    if [[ -z ${name} ]]; then
-        return
-    fi
-    cur_dir=$(sqlite3 ${E_DB_FILE} ${get_cur_dir_sql})
-    if [[ ${name[1]} == 📁 ]]; then
-        local dir=$(realpath ${cur_dir}/${name:2})
-        if [[ ${dir} != ${PWD} ]]; then
-            cd ${dir}
-        fi
-    else
-        (cd ${cur_dir}; ${EDITOR:-$(which nvim vi nano | head -1)} ${name})
-    fi
+        --bind='enter:reload(name={}; eval ${E_OPEN})+clear-query+first' \
+        --bind='double-click:reload(name={}; eval ${E_OPEN})+clear-query+first' \
+        --bind='ctrl-]:reload(name={}; eval ${E_GO_TO_DIR_SCRIPT})+clear-query+first' \
+        --bind='ctrl-o:reload(eval ${E_GO_TO_PREV_DIR_SCRIPT})+clear-query+first' \
+        --bind='ctrl-i:reload(eval ${E_GO_TO_NEXT_DIR_SCRIPT})+clear-query+first'
+    cd $(sqlite3 ${E_DB_FILE} ${get_cur_dir_sql})
 }
 
 }
