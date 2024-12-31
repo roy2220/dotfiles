@@ -55,7 +55,7 @@ nnoremap <silent> <Esc>@h :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlse
 
 "===================================================================================================
 
-let g:ctrl_g_format = ' ✦ %s:%d:%d'
+let g:ctrl_g_format = '▶ %s:%d:%d'
 let g:ctrl_g_args = ['expand(''%'')', 'line(''.'')', 'virtcol(''.'')']
 nnoremap <silent> <C-G> :<C-U>echomsg call('printf', [g:ctrl_g_format] + map(copy(g:ctrl_g_args), {_, arg -> eval(arg)}))<CR>
 

@@ -49,6 +49,7 @@ let g:plug_timeout=1200
 "===================================================================================================
 " gruvbox-material
 let g:gruvbox_material_better_performance = 1
+let g:gruvbox_material_diagnostic_virtual_text = 'highlighted'
 set background=dark
 colorscheme gruvbox-material
 
@@ -210,7 +211,7 @@ let g:vsnip_extra_mapping = v:false
 " vim-lsp
 let g:lsp_diagnostics_signs_enabled = 0
 let g:lsp_diagnostics_virtual_text_delay = 0
-let g:lsp_diagnostics_virtual_text_prefix = '👈 '
+let g:lsp_diagnostics_virtual_text_prefix = '◀ '
 let g:lsp_diagnostics_virtual_text_align = 'after'
 let g:lsp_diagnostics_virtual_text_padding_left = 2
 let g:lsp_document_code_action_signs_enabled = 0
@@ -257,5 +258,5 @@ augroup END
 
 "===================================================================================================
 " copilot.vim
-imap <silent><script><expr> <C-L> copilot#Accept('')
+imap <silent><script><expr> <C-L> pumvisible() ? "\<C-E>" : copilot#Accept('')
 let g:copilot_no_tab_map = v:true
