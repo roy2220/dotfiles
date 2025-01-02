@@ -24,6 +24,9 @@ set splitright
 
 set updatetime=500
 
+let g:vim_json_conceal = 0
+let g:markdown_syntax_conceal = 0
+
 augroup __rstrip__
     autocmd!
     autocmd BufWritePre * retab|%s/\s\+$//e
