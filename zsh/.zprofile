@@ -55,6 +55,9 @@ export OSSUTIL_CONFIG_FILE=~/.secrets/ossutil/config
 export RCLONE_CONFIG_FILE=~/.secrets/rclone/rclone.conf
 export HISTFILE=/workspace/.zsh_history
 export ZSHZ_DATA=/workspace/.z
+# for chatgpt-cli
+export OPENAI_CONFIG_HOME=~/.secrets/chatgpt-cli
+export OPENAI_DATA_HOME=~/.local/share/chatgpt-cli
 
 [[ -f /tmp/zprofile ]] && source /tmp/zprofile
 
