@@ -91,7 +91,7 @@ let g:lightline = {
 \    'component_type': {
 \        'buffers': 'tabsel',
 \    },
-\    'subseparator': { 'left': '│', 'right': '│' },
+\    'subseparator': { 'left': '︙', 'right': '︙' },
 \}
 
 let g:lightline#bufferline#show_number = 2
