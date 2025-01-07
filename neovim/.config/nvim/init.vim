@@ -32,6 +32,7 @@ call plug#begin()
     if &diff != 1
         Plug 'tpope/vim-fugitive'
         Plug 'airblade/vim-gitgutter'
+        Plug 'knsh14/vim-github-link'
         Plug 'lifepillar/vim-mucomplete'
         Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply ~/.config/nvim/plugin-patches/vim-smartpairs.diff' }
         Plug 'tpope/vim-surround'
