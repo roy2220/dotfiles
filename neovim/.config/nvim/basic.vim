@@ -6,6 +6,7 @@ set number
 set nowrap
 set colorcolumn=101
 set virtualedit=onemore
+set cursorline
 
 set scrolloff=10
 set sidescrolloff=10

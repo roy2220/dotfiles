@@ -239,13 +239,26 @@ function! s:on_lsp_buffer_enabled() abort
     nnoremap <buffer> <leader>r <plug>(lsp-rename)
     nnoremap <buffer> [r <plug>(lsp-previous-reference)
     nnoremap <buffer> ]r <plug>(lsp-next-reference)
-    nnoremap <buffer> <silent> gR :call <SID>restart_lsp_server()<CR>
+    nnoremap <buffer> <silent> gR :call <SID>lsp_restart_server()<CR>
     setlocal keywordprg=:LspHover<CR>
     setlocal completefunc=lsp#complete
-    inoremap <buffer> <expr> <Tab> pumvisible() && len(v:completed_item) >= 1 ? "\<C-Y>" : "\<C-X>\<C-U>"
+    inoremap <buffer> <script><expr> <Tab> <SID>lsp_complete_or_select()
 endfunction
 
-function! s:restart_lsp_server() abort
+function! s:lsp_complete_or_select() abort
+    if !pumvisible()
+        return "\<C-X>\<C-U>"
+    else
+        if empty(v:completed_item)
+            return "\<C-X>\<C-U>"
+        else
+            call timer_start(0, {_ -> feedkeys("\<C-X>\<C-U>")})
+            return "\<C-Y>"
+        endif
+    endif
+endfunction
+
+function! s:lsp_restart_server() abort
     let ft=&filetype
     set filetype=
     execute 'autocmd User lsp_server_exit ++once set filetype='.ft
@@ -259,5 +272,24 @@ augroup END
 
 "===================================================================================================
 " copilot.vim
-imap <silent><script><expr> <C-L> pumvisible() ? "\<C-E>" : copilot#Accept('')
+let g:copilot_filetypes = {'*': v:false}
 let g:copilot_no_tab_map = v:true
+
+inoremap <script><expr> <C-L> <SID>copilot_suggest_or_accept()
+function! s:copilot_suggest_or_accept() abort
+    if pumvisible()
+        " retry
+        call timer_start(0, {_ -> s:copilot_suggest_or_accept()})
+        if empty(v:completed_item)
+            return "\<C-E>"
+        else
+            return "\<C-Y>"
+        endif
+    endif
+
+    if !exists('b:_copilot.suggestions')
+        return copilot#Suggest()
+    else
+        return copilot#Accept('')
+    endif
+endfunction
