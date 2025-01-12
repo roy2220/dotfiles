@@ -245,24 +245,20 @@ function! s:on_lsp_buffer_enabled() abort
     inoremap <buffer> <script><expr> <Tab> <SID>lsp_complete_or_select()
 endfunction
 
-function! s:lsp_complete_or_select() abort
-    if !pumvisible()
-        return "\<C-X>\<C-U>"
-    else
-        if empty(v:completed_item)
-            return "\<C-X>\<C-U>"
-        else
-            call timer_start(0, {_ -> feedkeys("\<C-X>\<C-U>")})
-            return "\<C-Y>"
-        endif
-    endif
-endfunction
-
 function! s:lsp_restart_server() abort
     let ft=&filetype
     set filetype=
     execute 'autocmd User lsp_server_exit ++once set filetype='.ft
     call lsp#stop_server(ft)
+endfunction
+
+function! s:lsp_complete_or_select() abort
+    if !pumvisible() || empty(v:completed_item)
+        return "\<C-X>\<C-U>"
+    else
+        call timer_start(0, {_ -> feedkeys("\<C-X>\<C-U>")})
+        return "\<C-Y>"
+    endif
 endfunction
 
 augroup lsp_install
