@@ -64,5 +64,5 @@ export OPENAI_DATA_HOME=~/.local/share/chatgpt-cli
 paleta <~/.local/share/palettes/gruvbox-dark
 source ~/.zplug/repos/fnune/base16-fzf/bash/base16-gruvbox-dark-medium.config
 
-find ~/.local/src -mindepth 1 -maxdepth 1 -type f -name '*-start-*.bash' -print0 | sort --zero-terminated | xargs --null --max-lines=1 -- bash
+find -H ~/.local/src -mindepth 1 -maxdepth 1 -type f -name '*-start-*.bash' -print0 | sort --zero-terminated | xargs --null --max-lines=1 -- bash
 exec tmux new-session -A -s $(id --user --name)
