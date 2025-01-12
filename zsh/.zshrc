@@ -1,5 +1,7 @@
 () {
 
+paleta <~/.local/share/palettes/gruvbox-dark
+
 test -f ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.p10k.zsh
 
