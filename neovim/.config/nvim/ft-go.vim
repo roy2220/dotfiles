@@ -67,8 +67,8 @@ function! s:command(command, keep_focus) abort
             execute term_winnr.'wincmd w'
         endif
     endif
-    call term_start(['bash', '-c', 'echo '.shellescape(expand('%:p:h').'> '.a:command).'; '.a:command],
-    \    {'term_name': a:command, 'curwin': v:true})
+    setlocal shell=sh
+    execute 'terminal exec '.a:command
     if term_winnr != cur_winnr && a:keep_focus
         execute cur_winnr.'wincmd w'
     endif
