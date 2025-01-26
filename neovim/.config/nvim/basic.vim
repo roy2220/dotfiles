@@ -4,13 +4,15 @@ set shada='10000
 set termguicolors
 set number
 set nowrap
-set colorcolumn=101
 set virtualedit=onemore
+
 set cursorline
 set cursorlineopt=line
+set colorcolumn=101
 
 set scrolloff=10
 set sidescrolloff=10
+set startofline
 
 set ignorecase
 set smartcase
