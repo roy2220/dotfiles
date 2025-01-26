@@ -185,9 +185,9 @@ function! s:do_get_tags(language) abort
             continue
         endif
         let line_end = str2nr(parts[3])
-        if line_start == line_end
-            continue
-        endif
+        "if line_start == line_end
+        "    continue
+        "endif
         let struct_name = parts[4]
         let tag = {
         \    'name': name,
