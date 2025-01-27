@@ -43,6 +43,8 @@ call plug#begin()
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
         Plug 'github/copilot.vim'
+        Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdateSync \| :TSInstallSync go python bash'}
+        Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     endif
 call plug#end()
 let g:plug_timeout=1200
@@ -167,42 +169,42 @@ let g:smartpairs_jumps_enabled = 0
 " vim-caser
 let g:caser_no_mappings = 1
 " for camelCase
-nmap gsc <Plug>CaserCamelCase
-xmap gsc <Plug>CaserVCamelCase
+nmap <Esc>@cc <Plug>CaserCamelCase
+vmap <Esc>@cc <Plug>CaserVCamelCase
 " for PascalCase
-nmap gsp <Plug>CaserMixedCase
-xmap gsp <Plug>CaserVMixedCase
+nmap <Esc>@cp <Plug>CaserMixedCase
+vmap <Esc>@cp <Plug>CaserVMixedCase
 " for snake_case
-nmap gss <Plug>CaserSnakeCase
-xmap gss <Plug>CaserVSnakeCase
+nmap <Esc>@cs <Plug>CaserSnakeCase
+vmap <Esc>@cs <Plug>CaserVSnakeCase
 " for SCREAMING_SNAKE_CASE
-nmap gsS <Plug>CaserUpperCase
-xmap gsS <Plug>CaserVUpperCase
+nmap <Esc>@cS <Plug>CaserUpperCase
+vmap <Esc>@cS <Plug>CaserVUpperCase
 " for kebab-case
-nmap gsk <Plug>CaserKebabCase
-xmap gsk <Plug>CaserVKebabCase
+nmap <Esc>@ck <Plug>CaserKebabCase
+vmap <Esc>@ck <Plug>CaserVKebabCase
 " for HTTP-Header-Case
-nmap gsh <Plug>CaserTitleKebabCase
-xmap gsh <Plug>CaserVTitleKebabCase
+nmap <Esc>@ch <Plug>CaserTitleKebabCase
+vmap <Esc>@ch <Plug>CaserVTitleKebabCase
 " for Title Case
-nmap gst <Plug>CaserTitleCase
-xmap gst <Plug>CaserVTitleCase
+nmap <Esc>@ct <Plug>CaserTitleCase
+vmap <Esc>@ct <Plug>CaserVTitleCase
 " for space case
-nmap gs<space> <Plug>CaserSpaceCase
-xmap gs<space> <Plug>CaserVSpaceCase
+nmap <Esc>@c<Space> <Plug>CaserSpaceCase
+vmap <Esc>@c<Space> <Plug>CaserVSpaceCase
 
 "===================================================================================================
 " vim-exchange
-nmap gx <Plug>(Exchange)
-xmap gx <Plug>(Exchange)
-nmap gxg <Plug>(ExchangeClear)
-nmap gxx <Plug>(ExchangeLine)
+nmap <Esc>@x <Plug>(Exchange)
+vmap <Esc>@x <Plug>(Exchange)
+nmap <Esc>@xc <Esc> <Plug>(ExchangeClear)
+nmap <Esc>@X <Plug>(ExchangeLine)
 
 "===================================================================================================
 " NrrwRgn
 let g:nrrw_rgn_nohl = 1
 let g:nrrw_topbot_leftright = 'botright'
-xmap <leader><leader> <Plug>NrrwrgnDo
+vmap <leader><leader> <Plug>NrrwrgnDo
 
 "===================================================================================================
 " vim-vsnip
@@ -289,3 +291,61 @@ function! s:copilot_suggest_or_accept() abort
         return copilot#Accept('')
     endif
 endfunction
+
+"===================================================================================================
+" nvim-treesitter
+lua << EOF
+require "nvim-treesitter.configs".setup {
+    auto_install = false,
+    highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+    },
+}
+EOF
+
+"===================================================================================================
+" nvim-treesitter-textobjects
+lua <<EOF
+require "nvim-treesitter.configs".setup {
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+                ["aa"] = "@parameter.outer",
+                ["ia"] = "@parameter.inner",
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["as"] = "@statement.outer",
+            },
+            selection_modes = "v",
+            include_surrounding_whitespace = false,
+        },
+        move = {
+            enable = true,
+            set_jumps = true,
+            goto_previous_start = {
+                ["[a"] = "@parameter.inner",
+                ["[f"] = "@function.outer",
+                ["[s"] = "@statement.outer",
+            },
+            goto_next_start = {
+                ["]a"] = "@parameter.inner",
+                ["]f"] = "@function.outer",
+                ["]s"] = "@statement.outer",
+            },
+            goto_previous_end = {
+                ["[A"] = "@parameter.inner",
+                ["[F"] = "@function.outer",
+                ["[S"] = "@statement.outer",
+            },
+            goto_next_end = {
+                ["]A"] = "@parameter.inner",
+                ["]F"] = "@function.outer",
+                ["]S"] = "@statement.outer",
+            },
+        },
+    },
+}
+EOF

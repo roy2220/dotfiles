@@ -68,8 +68,8 @@ nnoremap <silent> <C-G> :<C-U>echomsg call('printf', [g:ctrl_g_format] + map(cop
 
 "===================================================================================================
 
-vnoremap / o<ESC>/\V\C<C-R>=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')<CR>
-vnoremap ? o<ESC>?\V\C<C-R>=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')<CR>
+vnoremap <silent> / :<C-U>let @/=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
+vnoremap <silent> ? :<C-U>let @/=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
 
 function! GetVisualSelection() abort
     " Why is this not a built-in Vim script function?!
