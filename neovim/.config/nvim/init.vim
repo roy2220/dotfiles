@@ -248,10 +248,15 @@ function! s:on_lsp_buffer_enabled() abort
 endfunction
 
 function! s:lsp_restart_server() abort
-    let ft=&filetype
-    set filetype=
-    execute 'autocmd User lsp_server_exit ++once set filetype='.ft
-    call lsp#stop_server(ft)
+    let servers = filter(lsp#get_allowed_servers(), {_, name -> lsp#is_server_running(name)})
+    if empty(servers)
+        return
+    endif
+
+    execute 'autocmd User lsp_server_exit ++once set filetype= | set filetype='.&filetype
+    for server in servers
+        call lsp#stop_server(server)
+    endfor
 endfunction
 
 function! s:lsp_complete_or_select() abort
@@ -318,6 +323,7 @@ require "nvim-treesitter.configs".setup {
                 ["af"] = "@function.outer",
                 ["if"] = "@function.inner",
                 ["as"] = "@statement.outer",
+                ["is"] = "@statement.outer",
             },
             selection_modes = "v",
             include_surrounding_whitespace = false,
