@@ -43,7 +43,7 @@ call plug#begin()
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
         Plug 'github/copilot.vim'
-        Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdateSync \| :TSInstallSync go python bash'}
+        Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdateSync \| :TSInstallSync go python bash proto'}
         Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     endif
 call plug#end()
@@ -305,6 +305,15 @@ require "nvim-treesitter.configs".setup {
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
+    },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = false,
+            scope_incremental = false,
+            node_incremental = "<C-I>",
+            node_decremental = "<C-O>",
+        },
     },
 }
 EOF
