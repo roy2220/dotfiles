@@ -43,7 +43,11 @@ call plug#begin()
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
         Plug 'github/copilot.vim'
-        Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdateSync \| :TSInstallSync go python bash proto'}
+        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':'..join([
+        \    'TSUpdateSync',
+        \    'TSInstallSync go python bash proto',
+        \    'silent !git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff',
+        \], '\|') }
         Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     endif
 call plug#end()
@@ -81,7 +85,7 @@ let g:lightline = {
 \    },
 \    'component': {
 \        'lineinfo': '%l/%L',
-\        'winnr': '%{'.get(function('s:lightline_winnr'), 'name').'()}',
+\        'winnr': '%{'..get(function('s:lightline_winnr'), 'name')..'()}',
 \    },
 \    'tabline': {
 \        'left': [['buffers']],
@@ -106,7 +110,7 @@ set showtabline=2
 " indentLine
 let g:indentLine_first_char = '┊'
 let g:indentLine_char = g:indentLine_first_char
-execute "set list lcs=tab:\\".g:indentLine_first_char."\\ "
+execute "set list lcs=tab:\\"..g:indentLine_first_char.."\\ "
 let g:indentLine_showFirstIndentLevel = 1
 let g:indentLine_bufTypeExclude = ['help', 'terminal']
 
@@ -253,7 +257,7 @@ function! s:lsp_restart_server() abort
         return
     endif
 
-    execute 'autocmd User lsp_server_exit ++once set filetype= | set filetype='.&filetype
+    execute 'autocmd User lsp_server_exit ++once set filetype= | set filetype='..&filetype
     for server in servers
         call lsp#stop_server(server)
     endfor
@@ -298,9 +302,15 @@ function! s:copilot_suggest_or_accept() abort
 endfunction
 
 "===================================================================================================
-" nvim-treesitter
+" nvim-treesitter & nvim-treesitter-textobjects
 lua << EOF
-require "nvim-treesitter.configs".setup {
+local ok, module = pcall(require, "nvim-treesitter.configs")
+if not ok then
+    return
+end
+
+module.setup {
+    -- nvim-treesitter
     auto_install = false,
     highlight = {
         enable = true,
@@ -315,13 +325,8 @@ require "nvim-treesitter.configs".setup {
             node_decremental = "<C-O>",
         },
     },
-}
-EOF
 
-"===================================================================================================
-" nvim-treesitter-textobjects
-lua <<EOF
-require "nvim-treesitter.configs".setup {
+    -- nvim-treesitter-textobjects
     textobjects = {
         select = {
             enable = true,

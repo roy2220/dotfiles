@@ -33,7 +33,7 @@ END
 endfunction
 
 function! s:chatgpt(query) abort
-    let lines = systemlist('chatgpt -q '.shellescape(a:query))
+    let lines = systemlist('chatgpt -q '..shellescape(a:query))
     if v:shell_error != 0
         throw 'Failed to execute: '..a:command
     endif

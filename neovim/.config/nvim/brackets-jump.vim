@@ -7,10 +7,10 @@ function! s:additional_tag_info() abort
     if tag == {}
         return ''
     endif
-    return ' <'.s:tag_info(tag).'>'
+    return ' <'..s:tag_info(tag)..'>'
 endfunction
-let g:ctrl_g_format .= '%s'
-let g:ctrl_g_args += [get(function('s:additional_tag_info'), 'name').'()']
+let g:ctrl_g_format ..= '%s'
+let g:ctrl_g_args += [get(function('s:additional_tag_info'), 'name')..'()']
 
 function! GetCurrentTag() abort
     let language = get(s:file_type_2_language, &filetype, '')
@@ -41,33 +41,33 @@ function! s:setup() abort
     if has_key(s:file_type_2_language, &filetype)
         return
     endif
-    let language = matchstr(system('ctags --print-language '.shellescape(expand('%'))),': \zs[^ ]\+\ze\n$')
+    let language = matchstr(system('ctags --print-language '..shellescape(expand('%'))),': \zs[^ ]\+\ze\n$')
     if language == 'NONE'
         let language = ''
     endif
     let s:file_type_2_language[&filetype] = language
     if language != ''
         call s:init(language)
-        execute 'augroup __bracketsjump_'.&filetype.'__'
+        execute 'augroup __bracketsjump_'..&filetype..'__'
             autocmd!
-            execute 'autocmd FileType '.&filetype.' call s:init('.string(language).')'
+            execute 'autocmd FileType '..&filetype..' call s:init('..string(language)..')'
         augroup END
     endif
 endfunction
 
 function! s:init(language) abort
-    execute 'nnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:true, '.string(a:language).', v:count)<CR>'
-    execute 'nnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:true, '.string(a:language).', v:count)<CR>'
-    execute 'nnoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:true, '.string(a:language).', v:count)<CR>'
-    execute 'nnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:false, '.string(a:language).', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:true, '.string(a:language).', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
 endfunction
 
 function! s:ll_brackets_jump(visual_mode, language, num_times) abort
@@ -112,7 +112,7 @@ function! s:brackets_jump(visual_mode, language, choose_line, compare_line, num_
     endwhile
     if line != cur_line
         execute printf('normal! %dG0', line)
-        call search('\V\C\<'.(nearest_tag.name).'\>', 'c', line)
+        call search('\V\C\<'..(nearest_tag.name)..'\>', 'c', line)
         redraw | echo s:tag_info(nearest_tag)
     endif
 endfunction
@@ -161,7 +161,7 @@ function! s:purge_cache(timer_id, bufnr) abort
 endfunction
 
 function! s:do_get_tags(language) abort
-    let command_prefix = 'ctags --language-force='.a:language.' -x --_xformat=''%N,%K,%n,%e,%s'' '
+    let command_prefix = 'ctags --language-force='..a:language..' -x --_xformat=''%N,%K,%n,%e,%s'' '
     let file_name = expand('%')
     if filereadable(file_name) && &modified == 0
         let results = systemlist(command_prefix.shellescape(file_name))
@@ -203,11 +203,11 @@ function! s:do_get_tags(language) abort
 endfunction
 
 function! s:tag_info(tag) abort
-    let tag_info = a:tag.kind.' '
+    let tag_info = a:tag.kind..' '
     if a:tag.struct_name != ''
-        let tag_info .= a:tag.struct_name.'.'
+        let tag_info ..= a:tag.struct_name..'.'
     endif
-    let tag_info .= a:tag.name
+    let tag_info ..= a:tag.name
     return tag_info
 endfunction
 

@@ -22,10 +22,10 @@ function! DirDiff(left_dir_path, right_dir_path) abort
 
         if left_file_path ==# '/dev/null'
             let file_rel_path = right_file_path[len(a:right_dir_path)+1:]
-            let left_file_path = a:left_dir_path.'/'.file_rel_path
+            let left_file_path = a:left_dir_path..'/'..file_rel_path
         else
             let file_rel_path = left_file_path[len(a:left_dir_path)+1:]
-            let right_file_path = a:right_dir_path.'/'.file_rel_path
+            let right_file_path = a:right_dir_path..'/'..file_rel_path
         endif
 
         while i < len(lines)

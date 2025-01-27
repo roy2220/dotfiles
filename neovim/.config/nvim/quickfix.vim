@@ -43,7 +43,7 @@ endfunction
 
 function! s:keep_errors(pattern, match_file_name, pattern_is_fixed) abort
     let MatchError = {_, error -> match(
-    \    a:match_file_name ? expand('#'.error.bufnr.':.') : error.text,
+    \    a:match_file_name ? expand('#'..error.bufnr..':.') : error.text,
     \    (a:pattern_is_fixed ? '\V' : '').a:pattern
     \) >= 0}
     call setqflist(filter(getqflist(), MatchError), 'r')
@@ -51,7 +51,7 @@ endfunction
 
 function! s:drop_errors(pattern, match_file_name, pattern_is_fixed) abort
     let MatchError = {_, error -> match(
-    \    a:match_file_name ? expand('#'.error.bufnr.':.') : error.text,
+    \    a:match_file_name ? expand('#'..error.bufnr..':.') : error.text,
     \    (a:pattern_is_fixed ? '\V' : '').a:pattern
     \) < 0}
     call setqflist(filter(getqflist(), MatchError), 'r')

@@ -10,23 +10,23 @@ function! s:ag(pattern, pattern_is_fixed) abort
     let command = 'ag --vimgrep '
     if &ignorecase
         if &smartcase
-            let command .= '--smart-case '
+            let command ..= '--smart-case '
         else
-            let command .= '--ignore-case '
+            let command ..= '--ignore-case '
         endif
     else
-        let command .= '--case-sensitive '
+        let command ..= '--case-sensitive '
     endif
     if a:pattern_is_fixed
-        let command .= '--fixed-strings '
+        let command ..= '--fixed-strings '
     endif
-    let command .= '-- ' . shellescape(a:pattern)
+    let command ..= '-- '..shellescape(a:pattern)
     if &buftype == 'quickfix'
         let file_names = keys(reduce(getqflist({'items': 0}).items, {acc, val -> extend(acc, {bufname(val.bufnr): 0})}, {}))
         if len(file_names) == 0
             return
         endif
-        let result = systemlist('xargs --delimiter=\\n -- ' . command, join(file_names, "\n"))
+        let result = systemlist('xargs --delimiter=\\n -- '..command, join(file_names, "\n"))
     else
         let result = systemlist(command)
     endif
@@ -39,7 +39,7 @@ function! s:ag(pattern, pattern_is_fixed) abort
     let qf = map(result, 's:ag_result_to_quickfix(v:val)')
     call ShowQuickfix(qf)
     if a:pattern_is_fixed
-        let escaped_pattern = '\V'.substitute(escape(a:pattern, '/\'), "\n", '\\n', 'g')
+        let escaped_pattern = '\V'..substitute(escape(a:pattern, '/\'), "\n", '\\n', 'g')
     else
         let escaped_pattern = E2v(a:pattern)
     endif
@@ -56,13 +56,13 @@ function! s:ag_result_to_quickfix(result) abort
 \   }
 endfunction
 
-nnoremap <silent> ga :let g:_ = 'Ag '.expand('<cword>')
+nnoremap <silent> ga :let g:_ = 'Ag '..expand('<cword>')
     \\|execute g:_
     \\|call histadd('cmd', g:_)
     \\|unlet g:_
     \\|set hlsearch<CR>
 
-vnoremap <silent> ga :<C-U>let g:_ = 'Ag '.GetVisualSelection()
+vnoremap <silent> ga :<C-U>let g:_ = 'Ag '..GetVisualSelection()
     \\|execute g:_
     \\|call histadd('cmd', g:_)
     \\|unlet g:_

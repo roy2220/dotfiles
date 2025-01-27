@@ -59,7 +59,7 @@ function! s:go_to_buffer(pseudo_bufnr, new_window) abort
     if a:new_window
         vnew
     end
-    execute 'buffer'.bufnr1
+    execute 'buffer'..bufnr1
 endfunction
 
 function! s:go_to_previous_buffer(num_times) abort
@@ -67,7 +67,7 @@ function! s:go_to_previous_buffer(num_times) abort
     if num_times < 1
         let num_times = 1
     endif
-    execute num_times.'bprevious'
+    execute num_times..'bprevious'
 endfunction
 
 function! s:go_to_next_buffer(num_times) abort
@@ -75,7 +75,7 @@ function! s:go_to_next_buffer(num_times) abort
     if num_times < 1
         let num_times = 1
     endif
-    execute num_times.'bnext'
+    execute num_times..'bnext'
 endfunction
 
 function! s:go_to_first_buffer() abort
@@ -96,7 +96,7 @@ function! s:delete_buffer(pseudo_bufnr) abort
         return
     endif
     let bufnr1 = bufnrs[a:pseudo_bufnr-1]
-    execute 'bdelete'.bufnr1
+    execute 'bdelete'..bufnr1
     execute "normal! \<C-l>"
 endfunction
 
@@ -115,7 +115,7 @@ function! s:delete_other_buffers(pseudo_bufnr) abort
         if other_bufnr == bufnr1
             continue
         endif
-        execute 'bdelete'.other_bufnr
+        execute 'bdelete'..other_bufnr
     endfor
     execute "normal! \<C-l>"
 endfunction
@@ -135,7 +135,7 @@ function! s:go_to_window(winnr) abort
         endif
         let winnr1 = a:winnr
     endif
-    execute winnr1.'wincmd w'
+    execute winnr1..'wincmd w'
 endfunction
 
 function! s:go_to_previous_window(num_times) abort
@@ -145,7 +145,7 @@ function! s:go_to_previous_window(num_times) abort
     endif
     let num_windows = winnr('$')
     let winnr1 = (winnr() - num_times - num_windows) % num_windows + num_windows
-    execute winnr1.'wincmd w'
+    execute winnr1..'wincmd w'
 endfunction
 
 function! s:go_to_next_window(num_times) abort
@@ -155,7 +155,7 @@ function! s:go_to_next_window(num_times) abort
     endif
     let num_windows = winnr('$')
     let winnr1 = (winnr() + num_times - 1) % num_windows + 1
-    execute winnr1.'wincmd w'
+    execute winnr1..'wincmd w'
 endfunction
 
 function! s:go_to_first_window() abort
@@ -174,7 +174,7 @@ function! s:close_window(winnr) abort
     if a:winnr > num_windows
         return
     endif
-    execute a:winnr.'wincmd q'
+    execute a:winnr..'wincmd q'
 endfunction
 
 function! s:close_other_windows(winnr) abort
@@ -185,7 +185,7 @@ function! s:close_other_windows(winnr) abort
     if a:winnr > num_windows
         return
     endif
-    execute a:winnr.'wincmd o'
+    execute a:winnr..'wincmd o'
 endfunction
 
 "===================================================================================================
@@ -207,7 +207,7 @@ function! s:go_to_qf(qfnr) abort
         let qfnr = a:qfnr
     endif
     call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'.qfnr
+    silent execute 'chistory'..qfnr
     call s:go_to_current_error()
     call s:show_qf_numbers(qfnr, num_qfs, v:false)
 endfunction
@@ -224,7 +224,7 @@ function! s:go_to_previous_qf(num_times) abort
     let qfnr = s:qfnr()
     let prev_qfnr = (qfnr - num_times - num_qfs) % num_qfs + num_qfs
     call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'.prev_qfnr
+    silent execute 'chistory'..prev_qfnr
     call s:go_to_current_error()
     call s:show_qf_numbers(prev_qfnr, num_qfs, prev_qfnr > qfnr)
 endfunction
@@ -241,7 +241,7 @@ function! s:go_to_next_qf(num_times) abort
     let qfnr = s:qfnr()
     let next_qfnr = (qfnr + num_times - 1) % num_qfs + 1
     call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'.next_qfnr
+    silent execute 'chistory'..next_qfnr
     call s:go_to_current_error()
     call s:show_qf_numbers(next_qfnr, num_qfs, next_qfnr < qfnr)
 endfunction
@@ -263,7 +263,7 @@ function! s:go_to_last_qf() abort
         return
     endif
     call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'.num_qfs
+    silent execute 'chistory'..num_qfs
     call s:go_to_current_error()
     call s:show_qf_numbers(num_qfs, num_qfs, v:false)
 endfunction
@@ -318,7 +318,7 @@ function! s:go_to_error(errnr, new_window) abort
     if a:new_window
         vnew
     end
-    silent execute 'cc'.errnr
+    silent execute 'cc'..errnr
     normal! zz
     call s:show_error_numbers(errnr, num_errors, v:false)
 endfunction
@@ -334,7 +334,7 @@ function! s:go_to_previous_error(num_times) abort
     endif
     let errnr = s:errnr()
     let prev_errnr = (errnr - num_times - num_errors) % num_errors + num_errors
-    silent execute 'cc'.prev_errnr
+    silent execute 'cc'..prev_errnr
     normal! zz
     call s:show_error_numbers(prev_errnr, num_errors, prev_errnr > errnr)
 endfunction
@@ -350,7 +350,7 @@ function! s:go_to_next_error(num_times) abort
     endif
     let errnr = s:errnr()
     let next_errnr = (errnr + num_times - 1) % num_errors + 1
-    silent execute 'cc'.next_errnr
+    silent execute 'cc'..next_errnr
     normal! zz
     call s:show_error_numbers(next_errnr, num_errors, next_errnr < errnr)
 endfunction
@@ -402,7 +402,7 @@ function! s:delete_error(errnr) abort
     if errnr > num_errors
         let errnr = num_errors
     endif
-    silent execute 'cc'.errnr
+    silent execute 'cc'..errnr
     normal! zz
     call s:show_error_numbers(errnr, num_errors, v:false)
 endfunction
@@ -559,7 +559,7 @@ function! s:do_go_to_tag(tag_stack, tagnr) abort
     let item = a:tag_stack.items[a:tagnr-1]
     let bufnr = item.from[0]
     normal! m'
-    execute 'buffer'.bufnr
+    execute 'buffer'..bufnr
     call cursor(item.from[1:])
     call settagstack(winnr(), {'curidx': a:tagnr}, 'a')
 endfunction

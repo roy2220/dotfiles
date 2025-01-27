@@ -1,0 +1,35 @@
+diff --git a/lua/nvim-treesitter/incremental_selection.lua b/lua/nvim-treesitter/incremental_selection.lua
+index 570f9ee..81a07a4 100644
+--- a/lua/nvim-treesitter/incremental_selection.lua
++++ b/lua/nvim-treesitter/incremental_selection.lua
+@@ -12,11 +12,22 @@ local M = {}
+ ---@type table<integer, table<TSNode|nil>>
+ local selections = {}
+ 
++local function auto_reset_selection(buf)
++  vim.api.nvim_create_autocmd("ModeChanged", {
++    pattern = "[vV\x16]*:[^vV\x16]*", -- When leaving visual mode
++    once = true,
++    callback = function(args)
++      selections[buf] = nil
++    end,
++  })
++end
++
+ function M.init_selection()
+   local buf = api.nvim_get_current_buf()
+   parsers.get_parser():parse { vim.fn.line "w0" - 1, vim.fn.line "w$" }
+   local node = ts_utils.get_node_at_cursor()
+   selections[buf] = { [1] = node }
++  auto_reset_selection(buf)
+   ts_utils.update_selection(buf, node)
+ end
+ 
+@@ -74,6 +85,7 @@ local function select_incremental(get_parent)
+         table.insert(selections[buf], node)
+       else
+         selections[buf] = { [1] = node }
++        auto_reset_selection(buf)
+       end
+       return
+     end

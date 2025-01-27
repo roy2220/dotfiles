@@ -68,8 +68,8 @@ nnoremap <silent> <C-G> :<C-U>echomsg call('printf', [g:ctrl_g_format] + map(cop
 
 "===================================================================================================
 
-vnoremap <silent> / :<C-U>let @/=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
-vnoremap <silent> ? :<C-U>let @/=substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
+vnoremap <silent> / :<C-U>let @/='\V\C'..substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
+vnoremap <silent> ? :<C-U>let @/='\V\C'..substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
 
 function! GetVisualSelection() abort
     " Why is this not a built-in Vim script function?!
@@ -88,7 +88,7 @@ function! GetVisualSelection() abort
     endif
     let lines[-1] = lines[-1][:j]
     if append_trailing_newline
-        let lines[-1] = lines[-1]."\n"
+        let lines[-1] = lines[-1].."\n"
     endif
     return join(lines, "\n")
 endfunction
@@ -105,16 +105,16 @@ function! s:super_s(mode) abort
         let word2 = substitute(word, "\n", '\\n', 'g')
         let word3 = substitute(escape(word, "&~"), "\n", '\\r', 'g')
         let n_chars = strchars(word)
-        let keys .= printf('i%%s/\V\C%s/%s/g', word2, word3)
-            \.printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
+        let keys ..= printf('i%%s/\V\C%s/%s/g', word2, word3)
+            \..printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
     else
         let word = expand('<cword>')
         if word ==# ''
             return
         endif
         let n_chars = strchars(word)
-        let keys .= printf('i%%s/\V\C\<%s\>/%s/g', word, word)
-            \.printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
+        let keys ..= printf('i%%s/\V\C\<%s\>/%s/g', word, word)
+            \..printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
     endif
     call feedkeys(keys, 'n')
 endfunction
@@ -130,16 +130,16 @@ function! s:super_d(mode) abort
         let word = escape(GetVisualSelection(), '/\')
         let word2 = substitute(word, "\n", '\\n', 'g')
         let n_chars = strchars(word)
-        let keys .= printf('ig/\V\C%s/d', word2)
-            \.printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
+        let keys ..= printf('ig/\V\C%s/d', word2)
+            \..printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
     else
         let word = expand('<cword>')
         if word ==# ''
             return
         endif
         let n_chars = strchars(word)
-        let keys .= printf('ig/\V\C\<%s\>/d', word)
-            \.printf("\<esc>%dhv", 3 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
+        let keys ..= printf('ig/\V\C\<%s\>/d', word)
+            \..printf("\<esc>%dhv", 3 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
     endif
     call feedkeys(keys, 'n')
 endfunction
@@ -155,16 +155,16 @@ function! s:super_k(mode) abort
         let word = escape(GetVisualSelection(), '/\')
         let word2 = substitute(word, "\n", '\\n', 'g')
         let n_chars = strchars(word)
-        let keys .= printf('ig!/\V\C%s/d', word2)
-            \.printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
+        let keys ..= printf('ig!/\V\C%s/d', word2)
+            \..printf("\<esc>%dhv", 1 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
     else
         let word = expand('<cword>')
         if word ==# ''
             return
         endif
         let n_chars = strchars(word)
-        let keys .= printf('ig!/\V\C\<%s\>/d', word)
-            \.printf("\<esc>%dhv", 3 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
+        let keys ..= printf('ig!/\V\C\<%s\>/d', word)
+            \..printf("\<esc>%dhv", 3 + n_chars).(n_chars >= 2 ? printf('%dl', n_chars - 1) : '')
     endif
     call feedkeys(keys, 'n')
 endfunction
@@ -176,15 +176,15 @@ nnoremap <silent> \\w :call <SID>super_w()<CR>
 
 function! s:super_e() abort
     let keys = 'q:'
-        \.printf('ie %s', expand('%:p'))
-        \."\<esc>T/v$h"
+        \..printf('ie %s', expand('%:p'))
+        \.."\<esc>T/v$h"
     call feedkeys(keys, 'n')
 endfunction
 
 function! s:super_w() abort
     let keys = 'q:'
-        \.printf('iw %s', expand('%:p'))
-        \."\<esc>T/v$h"
+        \..printf('iw %s', expand('%:p'))
+        \.."\<esc>T/v$h"
     call feedkeys(keys, 'n')
 endfunction
 
@@ -212,7 +212,7 @@ function! s:goto_end_of_match(mode) abort
     let pattern = getreg('/')
     let [line_num, col_num] = searchpos(pattern, 'cenW')
     if line_num == 0 && col_num == 0
-        throw 'Pattern not found: '.pattern
+        throw 'Pattern not found: '..pattern
     endif
     call cursor(line_num, col_num + (a:mode ==# 'v' ? 0 : 1))
 endfunction
