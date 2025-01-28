@@ -25,13 +25,13 @@ mkdir --parents "${HOME}/sdk"
 ln --symbolic --no-target-directory /usr/local/go "${HOME}/sdk/go${VERSION_1}"
 ln --symbolic --no-target-directory /usr/local/go "${HOME}/sdk/go$(cut --delimiter=. --fields=1,2 <<<"${VERSION_1}")"
 
-/usr/local/go/bin/go install "golang.org/dl/go${VERSION_2}@latest"
+CGO_ENABLED=0 /usr/local/go/bin/go install "golang.org/dl/go${VERSION_2}@latest"
 "${HOME}/go/bin/go${VERSION_2}" download
 rm "${HOME}/go/bin/go${VERSION_2}"
 rm "${HOME}/sdk/go${VERSION_2}/go"*'.tar.gz'
 ln --symbolic --no-target-directory "${HOME}/sdk/go${VERSION_2}" "${HOME}/sdk/go$(cut --delimiter=. --fields=1,2 <<<"${VERSION_2}")"
 
-/usr/local/go/bin/go install "golang.org/dl/go${VERSION_3}@latest"
+CGO_ENABLED=0 /usr/local/go/bin/go install "golang.org/dl/go${VERSION_3}@latest"
 "${HOME}/go/bin/go${VERSION_3}" download
 rm "${HOME}/go/bin/go${VERSION_3}"
 rm "${HOME}/sdk/go${VERSION_3}/go"*'.tar.gz'
