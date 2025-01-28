@@ -1,11 +1,5 @@
 () {
 
-if [[ ! -f ~/.cache/current-palette ]]; then
-    mkdir --parents ~/.cache
-    paleta <~/.local/share/palettes/gruvbox-material-soft-dark >~/.cache/current-palette
-fi
-<~/.cache/current-palette
-
 test -f ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.p10k.zsh
 

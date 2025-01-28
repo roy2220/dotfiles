@@ -1,3 +1,5 @@
+[[ -f /tmp/zprofile ]] && source /tmp/zprofile
+
 DOCKER_HOST_IP=$(dig +short host.docker.internal)
 echo "${DOCKER_HOST_IP} host.docker.internal" >>/etc/hosts
 RULE="OUTPUT -t nat -p udp -d 1.1.1.1 --dport 53 -j DNAT --to ${DOCKER_HOST_IP}:1053"
@@ -59,9 +61,9 @@ export ZSHZ_DATA=/workspace/.z
 export OPENAI_CONFIG_HOME=~/.secrets/chatgpt-cli
 export OPENAI_DATA_HOME=~/.local/share/chatgpt-cli
 
+find -H ~/.local/src -mindepth 1 -maxdepth 1 -type f -name '*-start-*.bash' -print0 | sort --zero-terminated | xargs --null --max-lines=1 -- bash
+
+paleta <~/.local/share/palettes/gruvbox-material-soft-dark
 source ~/.zplug/repos/fnune/base16-fzf/bash/base16-gruvbox-dark-soft.config
 
-[[ -f /tmp/zprofile ]] && source /tmp/zprofile
-
-find -H ~/.local/src -mindepth 1 -maxdepth 1 -type f -name '*-start-*.bash' -print0 | sort --zero-terminated | xargs --null --max-lines=1 -- bash
 exec tmux new-session -A -s $(id --user --name)
