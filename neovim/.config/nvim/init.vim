@@ -56,6 +56,7 @@ let g:plug_timeout=1200
 "===================================================================================================
 " gruvbox-material
 let g:gruvbox_material_better_performance = 1
+let g:gruvbox_material_background = 'soft'
 let g:gruvbox_material_diagnostic_virtual_text = 'highlighted'
 set background=dark
 colorscheme gruvbox-material
@@ -142,7 +143,7 @@ nnoremap <silent> <leader>/ :History/<CR>
 
 "===================================================================================================
 " easyjump.tmux
-let g:easyjump_text_attrs = "\e[0m\e[90m"
+let g:easyjump_text_attrs = "\e[0m\e[38;5;245m"
 let g:easyjump_label_attrs = "\e[1m\e[31m"
 
 "===================================================================================================

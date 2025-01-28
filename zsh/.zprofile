@@ -59,7 +59,7 @@ export ZSHZ_DATA=/workspace/.z
 export OPENAI_CONFIG_HOME=~/.secrets/chatgpt-cli
 export OPENAI_DATA_HOME=~/.local/share/chatgpt-cli
 
-source ~/.zplug/repos/fnune/base16-fzf/bash/base16-gruvbox-dark-medium.config
+source ~/.zplug/repos/fnune/base16-fzf/bash/base16-gruvbox-dark-soft.config
 
 [[ -f /tmp/zprofile ]] && source /tmp/zprofile
 
