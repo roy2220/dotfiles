@@ -1,7 +1,7 @@
 let g:ToolInstallCommands = get(g:, 'ToolInstallCommands', []) + [
-\    'go install golang.org/x/tools/gopls@latest',
-\    'go install golang.org/x/tools/cmd/goimports@master',
-\    'go install github.com/go-delve/delve/cmd/dlv@latest',
+\    'CGO_ENABLED=0 go install golang.org/x/tools/gopls@latest',
+\    'CGO_ENABLED=0 go install golang.org/x/tools/cmd/goimports@master',
+\    'CGO_ENABLED=0 go install github.com/go-delve/delve/cmd/dlv@latest',
 \]
 
 augroup __go__

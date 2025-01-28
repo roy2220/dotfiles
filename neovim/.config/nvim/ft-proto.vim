@@ -1,5 +1,5 @@
 let g:ToolInstallCommands = get(g:, 'ToolInstallCommands', []) + [
-\    'go install github.com/lasorda/protobuf-language-server@latest',
+\    'CGO_ENABLED=0 go install github.com/lasorda/protobuf-language-server@latest',
 \]
 
 augroup __proto__

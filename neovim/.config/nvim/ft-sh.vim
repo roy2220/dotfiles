@@ -1,6 +1,6 @@
 let g:ToolInstallCommands = get(g:, 'ToolInstallCommands', []) + [
 \    'npm install -g bash-language-server',
-\    'go install mvdan.cc/sh/v3/cmd/shfmt@latest',
+\    'CGO_ENABLED=0 go install mvdan.cc/sh/v3/cmd/shfmt@latest',
 \]
 
 augroup __sh__
