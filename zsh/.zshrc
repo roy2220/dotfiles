@@ -5,7 +5,7 @@ source ~/.p10k.zsh
 
 source ~/.zplug/init.zsh
 {
-    zplug "romkatv/powerlevel10k", as:"theme", depth:1
+    zplug "romkatv/powerlevel10k", as:"theme", hook-build:"./gitstatus/install", depth:1
 
     zplug "fnune/base16-fzf", depth:1
     zplug "junegunn/fzf", use:"bin/fzf-tmux", as:"command", depth:1
