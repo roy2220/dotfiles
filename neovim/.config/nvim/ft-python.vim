@@ -15,7 +15,6 @@ augroup __python__
     \    'config': {'filter': {'name': 'none'}},
     \})
 
-    autocmd FileType python setlocal shiftwidth=4 softtabstop=4 expandtab
     autocmd FileType python call s:on_python_buf()
 augroup END
 
@@ -25,6 +24,9 @@ function! s:on_python_buf() abort
         autocmd BufWritePre <buffer> call s:black()
         autocmd BufWritePre <buffer> call s:isort()
     augroup END
+
+    setlocal shiftwidth=4 softtabstop=4 expandtab
+    inoremap <buffer> <expr> <c-x>i <SID>complete_import()
 endfunction
 
 function! s:black() abort
@@ -37,6 +39,12 @@ function! s:isort() abort
     let view = winsaveview()
     execute 'keepjumps %!isort --profile=black - 2>/dev/null || cat /dev/stdin'
     call winrestview(view)
+endfunction
+
+let s:list_python_imports_cmd = expand('<sfile>:p:h')..'/scripts/list-python-imports'
+
+function! s:complete_import() abort
+    return fzf#vim#complete(s:list_python_imports_cmd)
 endfunction
 
 command -nargs=0 Autoflake call s:autoflake()

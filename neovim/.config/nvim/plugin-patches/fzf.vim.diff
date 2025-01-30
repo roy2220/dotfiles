@@ -1,8 +1,8 @@
 diff --git a/autoload/fzf/vim.vim b/autoload/fzf/vim.vim
-index 79956ba..b48d296 100755
+index 4ef4919..8dacd16 100755
 --- a/autoload/fzf/vim.vim
 +++ b/autoload/fzf/vim.vim
-@@ -900,7 +900,7 @@ function! fzf#vim#ag_raw(command_suffix, ...)
+@@ -930,7 +930,7 @@ function! fzf#vim#ag_raw(command_suffix, ...)
    if !executable('ag')
      return s:warn('ag is not found')
    endif
@@ -11,3 +11,12 @@ index 79956ba..b48d296 100755
  endfunction
  
  function! s:grep_multi_line(opts)
+@@ -1745,7 +1745,7 @@ function! s:complete_insert(lines)
+   if mode() =~ 't'
+     call feedkeys('a', 'n')
+   elseif has('nvim')
+-    execute "normal! \<esc>la"
++    execute "normal! \<esc>l"
+   else
+     call feedkeys("\<Plug>(-fzf-complete-finish)")
+   endif

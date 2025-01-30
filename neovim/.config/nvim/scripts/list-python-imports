@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -eu${DEBUG+x}o pipefail
+
+find . -not \( -type d -name venv -prune \) -type f -name '*.py' |
+	xargs grep --no-filename --perl-regexp --only-matching --null-data '(?<=^|\n)(from +[^ ]+ +)?import +(\([^\)]+\)|[^\n]+)(?=\n)' |
+	sed --regexp-extended --null-data \
+		--expression 's/[\n ]*,[\n ]*/,/g' \
+		--expression 's/\([\n ]*//g' \
+		--expression 's/[\n ]*(,)?\)//g' |
+	tr '\0' '\n' |
+	sed --regexp-extended 's/^from +([^ ]+) +import .*/\0\nimport \1/' |
+	awk '{
+	if (/,/) {
+		gsub( ",", "\n" substr( $0, 1, match($0, " +import +")) "import " )
+	}
+	print
+}' |
+	sort --unique

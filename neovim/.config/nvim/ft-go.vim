@@ -17,9 +17,7 @@ augroup __go__
     \    },
     \})
 
-    autocmd FileType go setlocal shiftwidth=8 softtabstop=8 noexpandtab
     autocmd FileType go call s:on_go_buf()
-    execute 'autocmd FileType go inoremap <buffer> <expr> <c-x><c-x> fzf#vim#complete('''..expand('<sfile>:p:h')..'/scripts/list-go-imports'..''')'
 augroup END
 
 function! s:on_go_buf() abort
@@ -27,12 +25,21 @@ function! s:on_go_buf() abort
         autocmd! * <buffer>
         autocmd BufWritePre <buffer> call s:goimports()
     augroup END
+
+    setlocal shiftwidth=8 softtabstop=8 noexpandtab
+    inoremap <buffer> <expr> <c-x>i <SID>complete_import()
 endfunction
 
 function! s:goimports() abort
     let view = winsaveview()
     execute 'keepjumps %!goimports -srcdir '..shellescape(expand('%:p:h'))..' 2>/dev/null || cat /dev/stdin'
     call winrestview(view)
+endfunction
+
+let s:list_go_imports_cmd = expand('<sfile>:p:h')..'/scripts/list-go-imports'
+
+function! s:complete_import() abort
+    return fzf#vim#complete(s:list_go_imports_cmd)
 endfunction
 
 command -nargs=* GoRun call s:command('go run '..<q-args>, v:true)

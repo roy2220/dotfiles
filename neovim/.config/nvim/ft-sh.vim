@@ -13,7 +13,6 @@ augroup __sh__
     \    'config': {'filter': {'name': 'none'}},
     \})
 
-    autocmd FileType sh setlocal shiftwidth=8 softtabstop=8 noexpandtab
     autocmd FileType sh call s:on_sh_buf()
 augroup END
 
@@ -22,6 +21,8 @@ function! s:on_sh_buf() abort
         autocmd! * <buffer>
         autocmd BufWritePre <buffer> call s:shfmt()
     augroup END
+
+    setlocal shiftwidth=8 softtabstop=8 noexpandtab
 endfunction
 
 function! s:shfmt() abort
