@@ -11,8 +11,9 @@ find . -not \( -type d -name venv -prune \) -type f -name '*.py' |
 	tr '\0' '\n' |
 	sed --regexp-extended 's/^from +([^ ]+) +import .*/\0\nimport \1/' |
 	awk '{
-	if (/,/) {
-		gsub( ",", "\n" substr( $0, 1, match($0, " +import +")) "import " )
+	pos = match($0, " import +[^,]+,")
+	if (pos) {
+		gsub(",", "\n" substr($0, 1, pos - 1) " import ")
 	}
 	print
 }' |
