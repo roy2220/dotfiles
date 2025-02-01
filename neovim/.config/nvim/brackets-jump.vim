@@ -3,8 +3,8 @@ if !executable('ctags')
 endif
 
 function! s:additional_tag_info() abort
-    let tag = GetCurrentTag()
-    if tag == {}
+    let [tag, ok] = GetCurrentTag()
+    if !ok
         return ''
     endif
     return ' <'..s:tag_info(tag)..'>'
@@ -15,15 +15,15 @@ let g:ctrl_g_args += [get(function('s:additional_tag_info'), 'name')..'()']
 function! GetCurrentTag() abort
     let language = get(s:file_type_2_language, &filetype, '')
     if language == ''
-        return {}
+        return ['', v:false]
     endif
     let cur_line = line('.')
     for tag in s:get_tags(language)
         if tag.line_start <= cur_line && tag.line_end >= cur_line
-            return tag
+            return [tag, v:true]
         endif
     endfor
-    return {}
+    return ['', v:false]
 endfunction
 
 augroup __bracketsjump__

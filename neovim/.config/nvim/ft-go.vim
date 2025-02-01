@@ -108,8 +108,8 @@ function! s:dlv_test_func(q_args) abort
 endfunction
 
 function! s:get_test_func_name() abort
-    let tag = GetCurrentTag()
-    if tag == {}
+    let [tag, ok] = GetCurrentTag()
+    if !ok
         return ''
     endif
     if tag.kind !=# 'func'
