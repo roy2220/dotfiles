@@ -7,7 +7,7 @@ augroup __proto__
 
     autocmd User lsp_setup call lsp#register_server({
     \    'name': 'proto',
-    \    'cmd': {server_info->['protobuf-language-server']},
+    \    'cmd': {server_info->['protobuf-language-server', '-stdio', '-logs', '/dev/null']},
     \    'allowlist': ['proto'],
     \    'config': {'filter': {'name': 'none'}},
     \})
