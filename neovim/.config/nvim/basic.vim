@@ -146,7 +146,7 @@ endfunction
 
 "===================================================================================================
 
-nnoremap <silent> \\d :call <SID>super_k('n')<CR>
+nnoremap <silent> \\k :call <SID>super_k('n')<CR>
 vnoremap <silent> \\k :<C-U>call <SID>super_k('v')<CR>
 
 function! s:super_k(mode) abort
