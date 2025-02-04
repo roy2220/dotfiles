@@ -1,4 +1,4 @@
-nnoremap <silent> <Esc>@q :call <SID>toggle_qf()<CR>
+nnoremap <silent> <Esc>_#KB#A-Q<C-G> :call <SID>toggle_qf()<CR>
 function! s:toggle_qf()
     let winid = getqflist({'winid': 0}).winid
     if winid == 0

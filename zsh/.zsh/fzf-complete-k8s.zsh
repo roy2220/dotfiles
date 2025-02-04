@@ -11,8 +11,8 @@ _fzf-complete-k8s() {
         local service_of_containers=$(grep --perl-regexp --only-matching '(?<=svc(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
         if [[ ! -z ${service_of_containers} && ${service_of_containers} != -* ]]; then
             local pod_of_containers=$(kubectl get endpoints/${service_of_containers} --output=jsonpath='{.subsets[0].addresses[0].targetRef.name}')
-	else
-	    local pod_of_containers=$(grep --perl-regexp --only-matching '(?<=pod(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
+        else
+            local pod_of_containers=$(grep --perl-regexp --only-matching '(?<=pod(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
         fi
         if [[ ! -z ${pod_of_containers} && ${pod_of_containers} != -* ]]; then
             resource_name=$(kubectl get pod/${pod_of_containers} --output=jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}' | fzf-popup --prompt='K8s:container> ')
@@ -27,7 +27,7 @@ _fzf-complete-k8s() {
 }
 
 zle -N _fzf-complete-k8s
-bindkey '\e@k' _fzf-complete-k8s
+bindkey '\e_#KB#A-K\a' _fzf-complete-k8s
 
 Kcn() {
     local current_namespace=$(kubectl config get-contexts | grep --max-count=1 --perl-regexp '^\*' | awk '{ print $5 == "" ? "default" : $5 }')

@@ -28,6 +28,13 @@ set splitright
 
 set updatetime=500
 
+noremap : ,
+noremap , :
+noremap q: q,
+noremap q, q:
+
+let g:mapleader = ' '
+
 let g:vim_json_conceal = 0
 let g:markdown_syntax_conceal = 0
 
@@ -36,29 +43,22 @@ augroup __rstrip__
     autocmd BufWritePre * retab|%s/\s\+$//e
 augroup END
 
-let g:mapleader = ' '
+nnoremap <silent> <Esc>_#KB#A-H<C-G> :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
 
-noremap : ,
-noremap , :
-noremap q: q,
-noremap q, q:
-
-inoremap <Esc>@a <C-O>^
-cnoremap <Esc>@a <C-B>
-noremap <Esc>@a ^
-inoremap <Esc>@e <C-O>$
-cnoremap <Esc>@e <C-E>
-noremap <Esc>@e $
-inoremap <Esc>@b <C-O>h
-cnoremap <Esc>@b <Left>
-inoremap <Esc>@f <C-O>l
-cnoremap <Esc>@f <Right>
-inoremap <Esc>@B <C-O>b
-cnoremap <Esc>@B <C-Left>
-inoremap <Esc>@F <C-O>w
-cnoremap <Esc>@F <C-Right>
-
-nnoremap <silent> <Esc>@h :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
+inoremap <Esc>_#KB#A-A<C-G> <Home>
+cnoremap <Esc>_#KB#A-A<C-G> <Home>
+noremap <Esc>_#KB#A-A<C-G> <Home>
+inoremap <Esc>_#KB#A-E<C-G> <End>
+cnoremap <Esc>_#KB#A-E<C-G> <End>
+noremap <Esc>_#KB#A-E<C-G> <End>
+inoremap <Esc>_#KB#A-B<C-G> <Left>
+cnoremap <Esc>_#KB#A-B<C-G> <Left>
+inoremap <Esc>_#KB#A-F<C-G> <Right>
+cnoremap <Esc>_#KB#A-F<C-G> <Right>
+inoremap <Esc>_#KB#A-S-B<C-G> <S-Left>
+cnoremap <Esc>_#KB#A-S-B<C-G> <S-Left>
+inoremap <Esc>_#KB#A-S-F<C-G> <S-Right>
+cnoremap <Esc>_#KB#A-S-F<C-G> <S-Right>
 
 "===================================================================================================
 
