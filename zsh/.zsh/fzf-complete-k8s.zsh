@@ -1,29 +1,37 @@
 () {
 
 _fzf-complete-k8s() {
-    local resource_kind=$(grep --perl-regexp --only-matching '[^\s]+(?=(/|\s)$)' <<<${LBUFFER})
-    local resource_name
-    local lbuffer
+    local lbuffer resource
+    local resource_kind pod_of_containers workload_of_containers query
+
+    eval $(sed --regexp-extended --silent 's|^.* ([^ /]+)( +\|/)([^ /]*)$|\1\n\3|p' <<<${LBUFFER} |
+        xargs --no-run-if-empty -- printf 'resource_kind=%q query=%q')
     if [[ ! -z ${resource_kind} && ${resource_kind} != -* ]]; then
-        resource_name=$(kubectl get ${resource_kind} --output=custom-columns=':.metadata.name' --no-headers | fzf-popup --prompt="K8s:${resource_kind}> ")
-        lbuffer=${LBUFFER[0,-2]}/
+        lbuffer=${LBUFFER[0,-${#query}-1]}
+        resource=$(kubectl get ${resource_kind} --output=custom-columns=':.metadata.name' --no-headers |
+            fzf-popup --prompt="K8s:${resource_kind}... " --bind="load:change-prompt:K8s:${resource_kind}> " --query=${query})
     else
-        local service_of_containers=$(grep --perl-regexp --only-matching '(?<=svc(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
-        if [[ ! -z ${service_of_containers} && ${service_of_containers} != -* ]]; then
-            local pod_of_containers=$(kubectl get endpoints/${service_of_containers} --output=jsonpath='{.subsets[0].addresses[0].targetRef.name}')
-        else
-            local pod_of_containers=$(grep --perl-regexp --only-matching '(?<=pod(/|\s))[^\s]+(?=\s\-c\s?$)' <<<${LBUFFER})
-        fi
+        eval $(sed --regexp-extended --silent 's|^.* pod[s]?( +\|/)([^ /]+) +-c +([^ /]*)$|\2\n\3|p' <<<${LBUFFER} |
+            xargs --no-run-if-empty -- printf 'pod_of_containers=%q query=%q')
         if [[ ! -z ${pod_of_containers} && ${pod_of_containers} != -* ]]; then
-            resource_name=$(kubectl get pod/${pod_of_containers} --output=jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}' | fzf-popup --prompt='K8s:container> ')
-            lbuffer=${LBUFFER}
+            lbuffer=${LBUFFER[0,-${#query}-1]}
+            resource=$(kubectl get pod/${pod_of_containers} --output=jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}' |
+                fzf-popup --prompt='K8s:container... ' --bind='load:change-prompt:K8s:container> ' --query=${query})
+        else
+            eval $(sed --regexp-extended --silent 's|^.* ((deployment[s]?\|deploy\|statefulset[s]?\|sts\|daemonset[s]?\|ds\|cronjob[s]?\|cj\|job[s]?)( +\|/)[^ /]+) +-c +([^ /]*)$|\1\n\4|p' <<<${LBUFFER} |
+                xargs --no-run-if-empty -- printf 'workload_of_containers=%q query=%q')
+            if [[ ! -z ${workload_of_containers} && ${workload_of_containers} != -* ]]; then
+                lbuffer=${LBUFFER[0,-${#query}-1]}
+                resource=$(kubectl get ${workload_of_containers} --output=jsonpath='{range .spec.template.spec.containers[*]}{.name}{"\n"}{end}' |
+                        fzf-popup --prompt='K8s:container... ' --bind='load:change-prompt:K8s:container> ' --query=${query})
+            fi
         fi
     fi
     zle reset-prompt
-    if [[ -z ${resource_name} ]]; then
+    if [[ -z ${resource} ]]; then
         return
     fi
-    LBUFFER=${lbuffer}${resource_name}
+    LBUFFER=${lbuffer}${resource}
 }
 
 zle -N _fzf-complete-k8s
@@ -33,7 +41,7 @@ Kcn() {
     local current_namespace=$(kubectl config get-contexts | grep --max-count=1 --perl-regexp '^\*' | awk '{ print $5 == "" ? "default" : $5 }')
     local namespace=$(kubectl get namespace --output=custom-columns=':.metadata.name' --no-headers |
         grep --invert-match --fixed-strings ${current_namespace} |
-        fzf-popup --prompt="K8s:namespace(${current_namespace})> ")
+        fzf-popup --prompt="K8s:namespace(${current_namespace})... " --bind="load:change-prompt:K8s:namespace(${current_namespace})> ")
     if [[ -z ${namespace} ]]; then
         return
     fi
