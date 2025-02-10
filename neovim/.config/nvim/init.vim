@@ -46,7 +46,7 @@ call plug#begin()
         Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':'..join([
         \    'TSUpdateSync',
         \    'TSInstallSync go python bash proto',
-        \    'silent !git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff',
+        \    'call system(''git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff'')',
         \], '\|') }
         Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     endif
@@ -236,7 +236,7 @@ function! s:lsp_get_supported_capabilities(server_info) abort
     return capabilities
 endfunction
 let g:lsp_get_supported_capabilities = [function('s:lsp_get_supported_capabilities')]
-let g:lsp_snippet_expand = [{item -> vsnip#anonymous(item.snippet)}]
+let g:lsp_snippet_expand = [{ item -> vsnip#anonymous(item.snippet) }]
 
 function! s:on_lsp_buffer_enabled() abort
     nnoremap <buffer> gd <plug>(lsp-definition)
@@ -257,7 +257,7 @@ function! s:on_lsp_buffer_enabled() abort
 endfunction
 
 function! s:lsp_restart_server() abort
-    let servers = filter(lsp#get_allowed_servers(), {_, name -> lsp#is_server_running(name)})
+    let servers = filter(lsp#get_allowed_servers(), { _, name -> lsp#is_server_running(name) })
     if empty(servers)
         return
     endif
@@ -272,7 +272,7 @@ function! s:lsp_complete_or_select() abort
     if !pumvisible() || empty(v:completed_item)
         return "\<C-X>\<C-U>"
     else
-        call timer_start(0, {_ -> feedkeys("\<C-X>\<C-U>")})
+        call timer_start(0, { _ -> feedkeys("\<C-X>\<C-U>") })
         return "\<C-Y>"
     endif
 endfunction
@@ -291,7 +291,7 @@ inoremap <script><expr> <C-L> <SID>copilot_suggest_or_accept()
 function! s:copilot_suggest_or_accept() abort
     if pumvisible()
         " retry
-        call timer_start(0, {_ -> s:copilot_suggest_or_accept()})
+        call timer_start(0, { _ -> s:copilot_suggest_or_accept() })
         if empty(v:completed_item)
             return "\<C-E>"
         else

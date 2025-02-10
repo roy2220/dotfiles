@@ -1,7 +1,7 @@
-let g:ToolInstallCommands = get(g:, 'ToolInstallCommands', []) + [
+let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'npm install -g bash-language-server',
 \    'CGO_ENABLED=0 go install mvdan.cc/sh/v3/cmd/shfmt@latest',
-\]
+\])
 
 augroup __sh__
     autocmd!

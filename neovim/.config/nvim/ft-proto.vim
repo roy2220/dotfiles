@@ -1,6 +1,6 @@
-let g:ToolInstallCommands = get(g:, 'ToolInstallCommands', []) + [
+let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'CGO_ENABLED=0 go install github.com/lasorda/protobuf-language-server@latest',
-\]
+\])
 
 augroup __proto__
     autocmd!

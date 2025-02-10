@@ -1,9 +1,9 @@
-let g:ToolInstallCommands = get(g:, 'ToolInstallCommands', []) + [
+let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'npm install -g pyright',
 \    'pip install black',
 \    'pip install isort',
 \    'pip install autoflake',
-\]
+\])
 
 augroup __python__
     autocmd!

@@ -64,7 +64,7 @@ cnoremap <Esc>_#KB#A-S-F<C-G> <S-Right>
 
 let g:ctrl_g_format = '▶ %s:%d:%d'
 let g:ctrl_g_args = ['expand(''%'')', 'line(''.'')', 'virtcol(''.'')']
-nnoremap <silent> <C-G> :<C-U>echomsg call('printf', [g:ctrl_g_format] + map(copy(g:ctrl_g_args), {_, arg -> eval(arg)}))<CR>
+nnoremap <silent> <C-G> :<C-U>echomsg call('printf', [g:ctrl_g_format] + map(copy(g:ctrl_g_args), { _, arg -> eval(arg) }))<CR>
 
 "===================================================================================================
 
@@ -233,8 +233,8 @@ function! s:sync_clipboard_to_system(event) abort
         let data = data + ['']
     endif
     if has('win32')
-        call timer_start(0, {_ -> systemlist('clip', data)})
+        call timer_start(0, { _ -> systemlist('clip', data) })
     else
-        call timer_start(0, {_ -> systemlist('pbcopy', data)})
+        call timer_start(0, { _ -> systemlist('pbcopy', data) })
     endif
 endfunction
