@@ -71,19 +71,19 @@ function! s:init(language) abort
 endfunction
 
 function! s:ll_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, {tag -> tag.line_start}, {line1, line2 -> line1 < line2}, a:num_times)
+    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_start }, { line1, line2 -> line1 < line2 }, a:num_times)
 endfunction
 
 function! s:rr_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, {tag -> tag.line_start}, {line1, line2 -> line1 > line2}, a:num_times)
+    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_start }, { line1, line2 -> line1 > line2 }, a:num_times)
 endfunction
 
 function! s:lr_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, {tag -> tag.line_end}, {line1, line2 -> line1 < line2}, a:num_times)
+    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_end }, { line1, line2 -> line1 < line2 }, a:num_times)
 endfunction
 
 function! s:rl_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, {tag -> tag.line_end}, {line1, line2 -> line1 > line2}, a:num_times)
+    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_end }, { line1, line2 -> line1 > line2 }, a:num_times)
 endfunction
 
 function! s:brackets_jump(visual_mode, language, choose_line, compare_line, num_times) abort
@@ -148,7 +148,7 @@ function! s:get_tags(language) abort
     if cache_hit
         call timer_stop(cache.timer_id)
     endif
-    let cache.timer_id = timer_start(30*1000, {timer_id -> s:purge_cache(timer_id, bufnr)})
+    let cache.timer_id = timer_start(30*1000, { timer_id -> s:purge_cache(timer_id, bufnr) })
     return cache.tags
 endfunction
 
@@ -198,7 +198,7 @@ function! s:do_get_tags(language) abort
         \}
         call add(tags, tag)
     endfor
-    call sort(tags, {x, y -> (x.line_end - x.line_start) - (y.line_end - y.line_start)})
+    call sort(tags, { x, y -> (x.line_end - x.line_start) - (y.line_end - y.line_start) })
     return tags
 endfunction
 

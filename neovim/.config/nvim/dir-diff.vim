@@ -140,5 +140,5 @@ function! s:rearrange_windows(bufnr) abort
 endfunction
 
 function! s:on_buf_win_enter() abort
-    call timer_start(0, {_ -> s:rearrange_windows(bufnr())})
+    call timer_start(0, { _ -> s:rearrange_windows(bufnr()) })
 endfunction

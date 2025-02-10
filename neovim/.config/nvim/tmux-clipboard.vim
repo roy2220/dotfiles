@@ -16,7 +16,7 @@ function! s:sync_clipboard_to_tmux(event) abort
     if a:event.regtype ==# 'V'
         let data = data + ['']
     endif
-    call timer_start(0, {_ -> systemlist('tmux load-buffer -', data)})
+    call timer_start(0, { _ -> systemlist('tmux load-buffer -', data) })
 endfunction
 
 function! s:sync_clipboard_from_tmux() abort

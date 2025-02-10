@@ -196,7 +196,7 @@ function! s:go_to_qf(qfnr) abort
         return
     endif
     if a:qfnr < 1
-        let qfnr = s:last_accessed_qfnr()
+        let qfnr = GetLastAccessedQfnr()
         if qfnr == 0
             return
         endif
@@ -206,9 +206,7 @@ function! s:go_to_qf(qfnr) abort
         endif
         let qfnr = a:qfnr
     endif
-    call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'..qfnr
-    call s:go_to_current_error()
+    call SwitchToQuickfix(qfnr)
     call s:show_qf_numbers(qfnr, num_qfs, v:false)
 endfunction
 
@@ -223,9 +221,7 @@ function! s:go_to_previous_qf(num_times) abort
     endif
     let qfnr = s:qfnr()
     let prev_qfnr = (qfnr - num_times - num_qfs) % num_qfs + num_qfs
-    call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'..prev_qfnr
-    call s:go_to_current_error()
+    call SwitchToQuickfix(prev_qfnr)
     call s:show_qf_numbers(prev_qfnr, num_qfs, prev_qfnr > qfnr)
 endfunction
 
@@ -240,9 +236,7 @@ function! s:go_to_next_qf(num_times) abort
     endif
     let qfnr = s:qfnr()
     let next_qfnr = (qfnr + num_times - 1) % num_qfs + 1
-    call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'..next_qfnr
-    call s:go_to_current_error()
+    call SwitchToQuickfix(next_qfnr)
     call s:show_qf_numbers(next_qfnr, num_qfs, next_qfnr < qfnr)
 endfunction
 
@@ -251,9 +245,7 @@ function! s:go_to_first_qf() abort
     if num_qfs == 0
         return
     endif
-    call SaveLastAccessedQuickfixID()
-    silent chistory 1
-    call s:go_to_current_error()
+    call SwitchToQuickfix(1)
     call s:show_qf_numbers(1, num_qfs, v:false)
 endfunction
 
@@ -262,9 +254,7 @@ function! s:go_to_last_qf() abort
     if num_qfs == 0
         return
     endif
-    call SaveLastAccessedQuickfixID()
-    silent execute 'chistory'..num_qfs
-    call s:go_to_current_error()
+    call SwitchToQuickfix(num_qfs)
     call s:show_qf_numbers(num_qfs, num_qfs, v:false)
 endfunction
 
@@ -276,19 +266,6 @@ function! s:qfnr(...) abort
     endif
     let qfnr = getqflist({'nr': x}).nr
     return qfnr
-endfunction
-
-let s:last_accessed_qfid = 0
-
-function! s:last_accessed_qfnr()
-    if s:last_accessed_qfid == 0
-        return 0
-    endif
-    return getqflist({'id': s:last_accessed_qfid, 'nr': 0}).nr
-endfunction
-
-function! SaveLastAccessedQuickfixID()
-    let s:last_accessed_qfid = getqflist({'id': 0}).id
 endfunction
 
 function! s:show_qf_numbers(qfnr, num_qfs, warn) abort
@@ -303,13 +280,11 @@ endfunction
 "===================================================================================================
 
 function! s:go_to_error(errnr, new_window) abort
-    let num_errors = s:errnr('$')
+    let [errnr, num_errors] = s:errnrs()
     if num_errors == 0
         return
     endif
-    if a:errnr < 1
-        let errnr = s:errnr()
-    else
+    if a:errnr >= 1
         if a:errnr > num_errors
             return
         endif
@@ -324,7 +299,7 @@ function! s:go_to_error(errnr, new_window) abort
 endfunction
 
 function! s:go_to_previous_error(num_times) abort
-    let num_errors = s:errnr('$')
+    let [errnr, num_errors] = s:errnrs()
     if num_errors == 0
         return
     endif
@@ -332,7 +307,6 @@ function! s:go_to_previous_error(num_times) abort
     if num_times < 1
         let num_times = 1
     endif
-    let errnr = s:errnr()
     let prev_errnr = (errnr - num_times - num_errors) % num_errors + num_errors
     silent execute 'cc'..prev_errnr
     normal! zz
@@ -340,7 +314,7 @@ function! s:go_to_previous_error(num_times) abort
 endfunction
 
 function! s:go_to_next_error(num_times) abort
-    let num_errors = s:errnr('$')
+    let [errnr, num_errors] = s:errnrs()
     if num_errors == 0
         return
     endif
@@ -348,7 +322,6 @@ function! s:go_to_next_error(num_times) abort
     if num_times < 1
         let num_times = 1
     endif
-    let errnr = s:errnr()
     let next_errnr = (errnr + num_times - 1) % num_errors + 1
     silent execute 'cc'..next_errnr
     normal! zz
@@ -356,45 +329,37 @@ function! s:go_to_next_error(num_times) abort
 endfunction
 
 function! s:go_to_first_error() abort
-    let num_errors = s:errnr('$')
+    let [_, num_errors] = s:errnrs()
     if num_errors == 0
         return
     endif
-    silent cfirst
+    silent cc1
     normal! zz
     call s:show_error_numbers(1, num_errors, v:false)
 endfunction
 
 function! s:go_to_last_error() abort
-    let num_errors = s:errnr('$')
+    let [_, num_errors] = s:errnrs()
     if num_errors == 0
         return
     endif
-    silent clast
+    silent execute 'cc'..num_errors
     normal! zz
     call s:show_error_numbers(num_errors, num_errors, v:false)
 endfunction
 
 function! s:delete_error(errnr) abort
-    let num_errors = s:errnr('$')
+    let [errnr, num_errors] = s:errnrs()
     if num_errors == 0
         return
     endif
-    if a:errnr < 1
-        let errnr = s:errnr()
-    else
+    if a:errnr >= 1
         if a:errnr > num_errors
             return
         endif
         let errnr = a:errnr
     endif
-    let qf = getqflist()
-    if errnr == 1
-        let qf = qf[errnr:]
-    else
-        let qf = qf[:errnr-2] + qf[errnr:]
-    endif
-    call setqflist(qf, 'r')
+    call UpdateQuickfix({ qf -> errnr == 1 ? qf[errnr:] : qf[:errnr-2] + qf[errnr:] })
     let num_errors -= 1
     if num_errors == 0
         return
@@ -408,44 +373,30 @@ function! s:delete_error(errnr) abort
 endfunction
 
 function! s:delete_other_errors(errnr) abort
-    let num_errors = s:errnr('$')
+    let [errnr, num_errors] = s:errnrs()
     if num_errors == 0
         return
     endif
-    if a:errnr < 1
-        let errnr = s:errnr()
-    else
+    if a:errnr >= 1
         if a:errnr > num_errors
             return
         endif
         let errnr = a:errnr
     endif
-    let qf = getqflist()
-    let qf = [qf[errnr - 1]]
-    call setqflist(qf, 'r')
+    call UpdateQuickfix({ qf -> [qf[errnr - 1]] })
     silent cc1
     normal! zz
     call s:show_error_numbers(1, 1, v:false)
 endfunction
 
-function! s:go_to_current_error() abort
-    if s:errnr('$') == 0
-        return
+function! s:errnrs() abort
+    let qf_info = getqflist({'idx': 0, 'size': 0, 'context': 0})
+    let errnr = qf_info.idx
+    let num_errors = GetQuickfixVisibleSize(qf_info)
+    if errnr > num_errors
+        let errnr = num_errors
     endif
-    silent cc
-    normal! zz
-endfunction
-
-function! s:errnr(...) abort
-    if a:0 == 0
-        let errnr = getqflist({'idx': 0}).idx
-        return errnr
-    endif
-    if a:1 == '$'
-        let errnr = getqflist({'size': 0}).size
-        return errnr
-    endif
-    return 0
+    return [errnr, num_errors]
 endfunction
 
 function! s:show_error_numbers(errnr, num_errors, warn) abort

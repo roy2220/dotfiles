@@ -1,8 +1,12 @@
-let g:ToolInstallCommands = get(g:, 'ToolInstallCommands', []) + [
+let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'CGO_ENABLED=0 go install golang.org/x/tools/gopls@latest',
 \    'CGO_ENABLED=0 go install golang.org/x/tools/cmd/goimports@master',
 \    'CGO_ENABLED=0 go install github.com/go-delve/delve/cmd/dlv@latest',
-\]
+\])
+
+let g:FilesToHideInQuickfixByDefault = extendnew(get(g:, 'FilesToHideInQuickfixByDefault', {}), {
+\    'go': ['_test\.go$'],
+\})
 
 augroup __go__
     autocmd!
