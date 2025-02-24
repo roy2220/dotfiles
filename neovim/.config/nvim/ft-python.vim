@@ -5,6 +5,10 @@ let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'pip install autoflake',
 \])
 
+let g:TreeSitterParsersToInstall = extendnew(get(g:, 'TreeSitterParsersToInstall', []), [
+\    'python',
+\])
+
 augroup __python__
     autocmd!
 

@@ -45,7 +45,7 @@ call plug#begin()
         Plug 'github/copilot.vim'
         Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':'..join([
         \    'TSUpdateSync',
-        \    'TSInstallSync go python bash proto',
+        \    exists('g:TreeSitterParsersToInstall') ? 'TSInstallSync '..join(g:TreeSitterParsersToInstall, ' ') : '',
         \    'call system(''git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff'')',
         \], '\|') }
         Plug 'nvim-treesitter/nvim-treesitter-textobjects'

@@ -4,6 +4,12 @@ let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'CGO_ENABLED=0 go install github.com/go-delve/delve/cmd/dlv@latest',
 \])
 
+let g:TreeSitterParsersToInstall = extendnew(get(g:, 'TreeSitterParsersToInstall', []), [
+\    'go',
+\    'gomod',
+\])
+
+
 let g:FilesToHideInQuickfixByDefault = extendnew(get(g:, 'FilesToHideInQuickfixByDefault', {}), {
 \    'go': ['_test\.go$'],
 \})
@@ -79,7 +85,7 @@ function! s:command(command, keep_focus) abort
         endif
     endif
     setlocal shell=sh
-    execute 'terminal exec '..a:command
+    execute printf('terminal echo %s && %s', shellescape(getcwd()..'> '..a:command), a:command)
     if term_winnr != cur_winnr && a:keep_focus
         execute cur_winnr..'wincmd w'
     endif

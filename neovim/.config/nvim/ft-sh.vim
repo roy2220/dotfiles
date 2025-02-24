@@ -3,6 +3,10 @@ let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'CGO_ENABLED=0 go install mvdan.cc/sh/v3/cmd/shfmt@latest',
 \])
 
+let g:TreeSitterParsersToInstall = extendnew(get(g:, 'TreeSitterParsersToInstall', []), [
+\    'bash',
+\])
+
 augroup __sh__
     autocmd!
 
