@@ -38,6 +38,22 @@ let g:mapleader = ' '
 let g:vim_json_conceal = 0
 let g:markdown_syntax_conceal = 0
 
+augroup __markdown__
+    autocmd!
+    autocmd FileType markdown call s:on_markdown_buf()
+augroup END
+
+function! s:on_markdown_buf() abort
+    if &diff != 1
+        let win_id = win_getid()
+        call timer_start(0, { _ -> win_execute(win_id, 'setlocal conceallevel=0') })
+
+        setlocal colorcolumn=
+        setlocal wrap
+        setlocal linebreak
+    endif
+endfunction
+
 augroup __rstrip__
     autocmd!
     autocmd BufWritePre * retab|%s/\s\+$//e
