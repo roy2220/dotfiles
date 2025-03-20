@@ -30,6 +30,7 @@ call plug#begin()
     Plug '~/.tmux/plugins/easyjump.tmux'
     Plug 'othree/eregex.vim'
     if &diff != 1
+        Plug 'tpope/vim-repeat'
         Plug 'tpope/vim-fugitive'
         Plug 'airblade/vim-gitgutter'
         Plug 'knsh14/vim-github-link'

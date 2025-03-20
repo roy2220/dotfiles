@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_USER}@host.docker.internal" pbpaste

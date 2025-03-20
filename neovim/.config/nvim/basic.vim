@@ -218,6 +218,7 @@ endfunction
 
 "===================================================================================================
 
+nnoremap <silent> gm :call <SID>goto_end_of_match('n')<CR>
 onoremap <silent> m :call <SID>goto_end_of_match('o')<CR>
 vnoremap <silent> m :call <SID>goto_end_of_match('v')<CR>
 
