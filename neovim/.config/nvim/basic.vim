@@ -231,7 +231,7 @@ function! s:goto_end_of_match(mode) abort
     if line_num == 0 && col_num == 0
         throw 'Pattern not found: '..pattern
     endif
-    call cursor(line_num, col_num + (a:mode ==# 'n' || a:mode ==# 'n' ? 0 : 1))
+    call cursor(line_num, col_num + (a:mode ==# 'n' || a:mode ==# 'v' ? 0 : 1))
 endfunction
 
 nnoremap <silent> gM :call <SID>goto_begin_of_match('n')<CR>

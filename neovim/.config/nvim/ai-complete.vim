@@ -33,7 +33,7 @@ END
 endfunction
 
 function! s:chatgpt(query) abort
-    let lines = systemlist('chatgpt -q '..shellescape(a:query))
+    let lines = systemlist('chatgpt -q --track-token-usage=false '..shellescape(a:query))
     if v:shell_error != 0
         throw 'Failed to execute: '..a:command
     endif
@@ -41,7 +41,13 @@ function! s:chatgpt(query) abort
         let lines = ['']
     else
         if lines[0][:2] ==# '```'
-            let lines = lines[1:-2]
+            let lines = lines[1:]
+        endif
+        if lines[-1] ==# ''
+            let lines = lines[:-2]
+        endif
+        if lines[-1][:2] ==# '```'
+            let lines = lines[:-2]
         endif
     endif
     let output = join(lines, "\n")
