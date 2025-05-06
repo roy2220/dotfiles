@@ -286,6 +286,7 @@ augroup END
 
 "===================================================================================================
 " copilot.vim
+let g:copilot_proxy = 'https://host.docker.internal:7890'
 let g:copilot_filetypes = {'*': v:false}
 let g:copilot_no_tab_map = v:true
 

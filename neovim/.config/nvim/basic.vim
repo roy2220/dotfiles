@@ -28,6 +28,8 @@ set splitright
 
 set updatetime=500
 
+nnoremap gp `[v`]
+
 noremap : ,
 noremap , :
 noremap q: q,
