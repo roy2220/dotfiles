@@ -215,7 +215,7 @@ nmap <Esc>_#KB#A-S-X<C-G> <Plug>(ExchangeLine)
 " NrrwRgn
 let g:nrrw_rgn_nohl = 1
 let g:nrrw_topbot_leftright = 'botright'
-vmap <leader><leader> <Plug>NrrwrgnDo
+vmap <C-W>e <Plug>NrrwrgnDo
 
 "===================================================================================================
 " vim-vsnip
