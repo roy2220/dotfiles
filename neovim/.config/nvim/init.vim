@@ -29,6 +29,7 @@ call plug#begin()
     Plug '~/.zplug/repos/junegunn/fzf' | Plug 'junegunn/fzf.vim', { 'do': 'git apply ~/.config/nvim/plugin-patches/fzf.vim.diff' }
     Plug '~/.tmux/plugins/easyjump.tmux'
     Plug 'othree/eregex.vim'
+    Plug 'neoclide/jsonc.vim'
     if &diff != 1
         Plug 'tpope/vim-repeat'
         Plug 'tpope/vim-fugitive'
@@ -180,36 +181,36 @@ let g:smartpairs_jumps_enabled = 0
 " vim-caser
 let g:caser_no_mappings = 1
 " for camelCase
-nmap <Esc>_#KB#A-C<C-G>c <Plug>CaserCamelCase
-vmap <Esc>_#KB#A-C<C-G>c <Plug>CaserVCamelCase
+nmap <Esc>_#KB#A-Cc <Plug>CaserCamelCase
+vmap <Esc>_#KB#A-Cc <Plug>CaserVCamelCase
 " for PascalCase
-nmap <Esc>_#KB#A-C<C-G>p <Plug>CaserMixedCase
-vmap <Esc>_#KB#A-C<C-G>p <Plug>CaserVMixedCase
+nmap <Esc>_#KB#A-Cp <Plug>CaserMixedCase
+vmap <Esc>_#KB#A-Cp <Plug>CaserVMixedCase
 " for snake_case
-nmap <Esc>_#KB#A-C<C-G>s <Plug>CaserSnakeCase
-vmap <Esc>_#KB#A-C<C-G>s <Plug>CaserVSnakeCase
+nmap <Esc>_#KB#A-Cs <Plug>CaserSnakeCase
+vmap <Esc>_#KB#A-Cs <Plug>CaserVSnakeCase
 " for SCREAMING_SNAKE_CASE
-nmap <Esc>_#KB#A-C<C-G>S <Plug>CaserUpperCase
-vmap <Esc>_#KB#A-C<C-G>S <Plug>CaserVUpperCase
+nmap <Esc>_#KB#A-CS <Plug>CaserUpperCase
+vmap <Esc>_#KB#A-CS <Plug>CaserVUpperCase
 " for kebab-case
-nmap <Esc>_#KB#A-C<C-G>k <Plug>CaserKebabCase
-vmap <Esc>_#KB#A-C<C-G>k <Plug>CaserVKebabCase
+nmap <Esc>_#KB#A-Ck <Plug>CaserKebabCase
+vmap <Esc>_#KB#A-Ck <Plug>CaserVKebabCase
 " for HTTP-Header-Case
-nmap <Esc>_#KB#A-C<C-G>h <Plug>CaserTitleKebabCase
-vmap <Esc>_#KB#A-C<C-G>h <Plug>CaserVTitleKebabCase
+nmap <Esc>_#KB#A-Ch <Plug>CaserTitleKebabCase
+vmap <Esc>_#KB#A-Ch <Plug>CaserVTitleKebabCase
 " for Title Case
-nmap <Esc>_#KB#A-C<C-G>t <Plug>CaserTitleCase
-vmap <Esc>_#KB#A-C<C-G>t <Plug>CaserVTitleCase
+nmap <Esc>_#KB#A-Ct <Plug>CaserTitleCase
+vmap <Esc>_#KB#A-Ct <Plug>CaserVTitleCase
 " for space case
-nmap <Esc>_#KB#A-C<C-G><Space> <Plug>CaserSpaceCase
-vmap <Esc>_#KB#A-C<C-G><Space> <Plug>CaserVSpaceCase
+nmap <Esc>_#KB#A-C<Space> <Plug>CaserSpaceCase
+vmap <Esc>_#KB#A-C<Space> <Plug>CaserVSpaceCase
 
 "===================================================================================================
 " vim-exchange
-nmap <Esc>_#KB#A-X<C-G> <Plug>(Exchange)
-vmap <Esc>_#KB#A-X<C-G> <Plug>(Exchange)
-nmap <Esc>_#KB#A-X<C-G><BS> <Esc> <Plug>(ExchangeClear)
-nmap <Esc>_#KB#A-S-X<C-G> <Plug>(ExchangeLine)
+nmap <Esc>_#KB#A-X <Plug>(Exchange)
+vmap <Esc>_#KB#A-X <Plug>(Exchange)
+nmap <Esc>_#KB#A-X<BS> <Esc> <Plug>(ExchangeClear)
+nmap <Esc>_#KB#A-S-X <Plug>(ExchangeLine)
 
 "===================================================================================================
 " NrrwRgn

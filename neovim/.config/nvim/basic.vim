@@ -61,22 +61,23 @@ augroup __rstrip__
     autocmd BufWritePre * retab|%s/\s\+$//e
 augroup END
 
-nnoremap <silent> <Esc>_#KB#A-H<C-G> :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
+nnoremap <silent> <Esc>_#KB#A-H :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
 
-inoremap <Esc>_#KB#A-A<C-G> <Home>
-cnoremap <Esc>_#KB#A-A<C-G> <Home>
-noremap <Esc>_#KB#A-A<C-G> <Home>
-inoremap <Esc>_#KB#A-E<C-G> <End>
-cnoremap <Esc>_#KB#A-E<C-G> <End>
-noremap <Esc>_#KB#A-E<C-G> <End>
-inoremap <Esc>_#KB#A-B<C-G> <Left>
-cnoremap <Esc>_#KB#A-B<C-G> <Left>
-inoremap <Esc>_#KB#A-F<C-G> <Right>
-cnoremap <Esc>_#KB#A-F<C-G> <Right>
-inoremap <Esc>_#KB#A-S-B<C-G> <S-Left>
-cnoremap <Esc>_#KB#A-S-B<C-G> <S-Left>
-inoremap <Esc>_#KB#A-S-F<C-G> <S-Right>
-cnoremap <Esc>_#KB#A-S-F<C-G> <S-Right>
+inoremap <Esc>_#KB#A-A <Home>
+cnoremap <Esc>_#KB#A-A <Home>
+noremap <Esc>_#KB#A-A <Home>
+inoremap <Esc>_#KB#A-E <End>
+
+cnoremap <Esc>_#KB#A-E <End>
+noremap <Esc>_#KB#A-E <End>
+inoremap <Esc>_#KB#A-B <Left>
+cnoremap <Esc>_#KB#A-B <Left>
+inoremap <Esc>_#KB#A-F <Right>
+cnoremap <Esc>_#KB#A-F <Right>
+inoremap <Esc>_#KB#A-S-B <S-Left>
+cnoremap <Esc>_#KB#A-S-B <S-Left>
+inoremap <Esc>_#KB#A-S-F <S-Right>
+cnoremap <Esc>_#KB#A-S-F <S-Right>
 
 "===================================================================================================
 

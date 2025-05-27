@@ -2,7 +2,7 @@ let g:FilesToHideInQuickfixByDefault = extendnew(get(g:, 'FilesToHideInQuickfixB
 \    '*': ['\.bak$'],
 \})
 
-nnoremap <silent> <Esc>_#KB#A-Q<C-G> :call <SID>toggle_qf()<CR>
+nnoremap <silent> <Esc>_#KB#A-Q :call <SID>toggle_qf()<CR>
 function! s:toggle_qf()
     let qf_winid = getqflist({'winid': 0}).winid
     if qf_winid == 0

@@ -35,7 +35,7 @@ _fzf-complete-k8s() {
 }
 
 zle -N _fzf-complete-k8s
-bindkey '\e_#KB#A-K\a' _fzf-complete-k8s
+bindkey '\e_#KB#A-K\e\\' _fzf-complete-k8s
 
 Kcn() {
     local current_namespace=$(kubectl config get-contexts | grep --max-count=1 --perl-regexp '^\*' | awk '{ print $5 == "" ? "default" : $5 }')
