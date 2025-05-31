@@ -181,36 +181,36 @@ let g:smartpairs_jumps_enabled = 0
 " vim-caser
 let g:caser_no_mappings = 1
 " for camelCase
-nmap <Esc>_#KB#A-Cc <Plug>CaserCamelCase
-vmap <Esc>_#KB#A-Cc <Plug>CaserVCamelCase
+nmap <M-_>#KB#A-C<M-\>c <Plug>CaserCamelCase
+vmap <M-_>#KB#A-C<M-\>c <Plug>CaserVCamelCase
 " for PascalCase
-nmap <Esc>_#KB#A-Cp <Plug>CaserMixedCase
-vmap <Esc>_#KB#A-Cp <Plug>CaserVMixedCase
+nmap <M-_>#KB#A-C<M-\>p <Plug>CaserMixedCase
+vmap <M-_>#KB#A-C<M-\>p <Plug>CaserVMixedCase
 " for snake_case
-nmap <Esc>_#KB#A-Cs <Plug>CaserSnakeCase
-vmap <Esc>_#KB#A-Cs <Plug>CaserVSnakeCase
+nmap <M-_>#KB#A-C<M-\>s <Plug>CaserSnakeCase
+vmap <M-_>#KB#A-C<M-\>s <Plug>CaserVSnakeCase
 " for SCREAMING_SNAKE_CASE
-nmap <Esc>_#KB#A-CS <Plug>CaserUpperCase
-vmap <Esc>_#KB#A-CS <Plug>CaserVUpperCase
+nmap <M-_>#KB#A-C<M-\>S <Plug>CaserUpperCase
+vmap <M-_>#KB#A-C<M-\>S <Plug>CaserVUpperCase
 " for kebab-case
-nmap <Esc>_#KB#A-Ck <Plug>CaserKebabCase
-vmap <Esc>_#KB#A-Ck <Plug>CaserVKebabCase
+nmap <M-_>#KB#A-C<M-\>k <Plug>CaserKebabCase
+vmap <M-_>#KB#A-C<M-\>k <Plug>CaserVKebabCase
 " for HTTP-Header-Case
-nmap <Esc>_#KB#A-Ch <Plug>CaserTitleKebabCase
-vmap <Esc>_#KB#A-Ch <Plug>CaserVTitleKebabCase
+nmap <M-_>#KB#A-C<M-\>h <Plug>CaserTitleKebabCase
+vmap <M-_>#KB#A-C<M-\>h <Plug>CaserVTitleKebabCase
 " for Title Case
-nmap <Esc>_#KB#A-Ct <Plug>CaserTitleCase
-vmap <Esc>_#KB#A-Ct <Plug>CaserVTitleCase
+nmap <M-_>#KB#A-C<M-\>t <Plug>CaserTitleCase
+vmap <M-_>#KB#A-C<M-\>t <Plug>CaserVTitleCase
 " for space case
-nmap <Esc>_#KB#A-C<Space> <Plug>CaserSpaceCase
-vmap <Esc>_#KB#A-C<Space> <Plug>CaserVSpaceCase
+nmap <M-_>#KB#A-C<M-\><Space> <Plug>CaserSpaceCase
+vmap <M-_>#KB#A-C<M-\><Space> <Plug>CaserVSpaceCase
 
 "===================================================================================================
 " vim-exchange
-nmap <Esc>_#KB#A-X <Plug>(Exchange)
-vmap <Esc>_#KB#A-X <Plug>(Exchange)
-nmap <Esc>_#KB#A-X<BS> <Esc> <Plug>(ExchangeClear)
-nmap <Esc>_#KB#A-S-X <Plug>(ExchangeLine)
+nmap <M-_>#KB#A-X<M-\> <Plug>(Exchange)
+vmap <M-_>#KB#A-X<M-\> <Plug>(Exchange)
+nmap <M-_>#KB#A-X<M-\><BS> <Esc> <Plug>(ExchangeClear)
+nmap <M-_>#KB#A-S-X<M-\> <Plug>(ExchangeLine)
 
 "===================================================================================================
 " NrrwRgn

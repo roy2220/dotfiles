@@ -3,7 +3,7 @@
 set -eu${DEBUG+x}o pipefail
 
 CLEANUPS=()
-trap 'for ((I = ${#CLEANUPS[@]} - 1; I >= 0; I--)); do eval "${CLEANUPS[$I]}"; done' EXIT
+trap 'for I in ${!CLEANUPS[@]}; do eval "${CLEANUPS[-($I+1)]}"; done' EXIT
 
 OUTPUT_FILE=$(mktemp)
 CLEANUPS+=("rm ${OUTPUT_FILE@Q}")
