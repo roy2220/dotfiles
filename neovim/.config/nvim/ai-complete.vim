@@ -35,7 +35,7 @@ endfunction
 function! s:chatgpt(query) abort
     let lines = systemlist('chatgpt -q --track-token-usage=false '..shellescape(a:query))
     if v:shell_error != 0
-        throw 'Failed to execute: '..a:command
+        throw 'Failed to execute: '..a:query
     endif
     if len(lines) == 0
         let lines = ['']

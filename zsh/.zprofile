@@ -63,7 +63,8 @@ export OPENAI_DATA_HOME=~/.local/share/chatgpt-cli
 
 find -H ~/.local/src -mindepth 1 -maxdepth 1 -type f -name '*-start-*.bash' -print0 | sort --zero-terminated | xargs --null --max-lines=1 -- bash
 
-paleta <~/.local/share/palettes/gruvbox-material-soft-dark
+echo 'paleta <~/.local/share/palettes/gruvbox-material-soft-dark' >~/.zsh/paleta.zsh
+source ~/.zsh/paleta.zsh
 source ~/.zplug/repos/fnune/base16-fzf/bash/base16-gruvbox-dark-soft.config
 
 exec tmux new-session -A -s $(id --user --name)
