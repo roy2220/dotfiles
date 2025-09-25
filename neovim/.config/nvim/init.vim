@@ -13,6 +13,7 @@ source ~/.config/nvim/ft-go.vim
 source ~/.config/nvim/ft-python.vim
 source ~/.config/nvim/ft-sh.vim
 source ~/.config/nvim/ft-proto.vim
+source ~/.config/nvim/ft-yaml.vim
 
 source ~/.config/nvim/dir-diff.vim
 
