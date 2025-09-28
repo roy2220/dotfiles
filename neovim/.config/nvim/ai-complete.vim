@@ -18,8 +18,8 @@ function! s:make_query(input) abort
         let pl_hint = printf(' (vim filetype=%s)', &filetype)
     endif
     let lines =<< trim END
-代码片段B和代码片段A的结构应该相同, 但目前代码片段B还不完整, 请严格参照代码片段A, 对代码片段B进行补全, 然后完整输出补全后的代码.
-注意输出的代码需要保留原始缩进.
+代码片段B和片段A的代码结构应该相同, 但目前并不相同. 请严格参照片段A的代码结构, 对片段B进行清理、调整和补全, 最终输出和片段A结构一致的代码.
+注意输出的代码, 对应的基本缩进也要和片段A一致.
 
 >>>>> 开始: 代码片段A%s <<<<<
 %s
@@ -29,11 +29,12 @@ function! s:make_query(input) abort
 %s
 >>>>> 结束: 代码片段B%s <<<<<
 END
-    return printf(join(lines, "\n"), pl_hint, getreg('"'), pl_hint, pl_hint, a:input, pl_hint)
+    let query = printf(join(lines, "\n"), pl_hint, getreg('"'), pl_hint, pl_hint, a:input, pl_hint)
+    return query
 endfunction
 
 function! s:chatgpt(query) abort
-    let lines = systemlist('chatgpt -q --track-token-usage=false '..shellescape(a:query))
+    let lines = systemlist('tee /tmp/ai_complete_query.txt | chatgpt -q --track-token-usage=false', a:query)
     if v:shell_error != 0
         throw 'Failed to execute: '..a:query
     endif
