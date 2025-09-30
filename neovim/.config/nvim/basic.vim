@@ -35,8 +35,6 @@ noremap , :
 noremap q: q,
 noremap q, q:
 
-let g:mapleader = ' '
-
 let g:vim_json_conceal = 0
 let g:markdown_syntax_conceal = 0
 
@@ -62,6 +60,8 @@ augroup __rstrip__
 augroup END
 
 nnoremap <silent> <M-_>#KB#A-H<M-\> :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
+
+inoremap <M-_>#KB#S-CR<M-\> <C-O>O
 
 inoremap <M-_>#KB#A-A<M-\> <Home>
 cnoremap <M-_>#KB#A-A<M-\> <Home>

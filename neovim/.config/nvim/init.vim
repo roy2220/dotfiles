@@ -134,15 +134,13 @@ let g:fzf_action = {
 \    'ctrl-v': 'vsplit',
 \}
 
-nnoremap <silent> <leader>f :Files<CR>
-nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>t :BTags<CR>
-nnoremap <silent> <leader>a :call fzf#vim#grep('ag --nogroup --color ''(?<=^.)''', fzf#vim#with_preview({'options': '--delimiter=: --nth=3..'}))<CR>
-nnoremap <silent> <leader>w :Windows<CR>
-nnoremap <silent> <leader>c :Commands<CR>
-nnoremap <silent> <leader>o :History<CR>
-nnoremap <silent> <leader>, :History:<CR>
-nnoremap <silent> <leader>/ :History/<CR>
+nnoremap <silent> <M-_>#KB#A-F<M-\> :Files<CR>
+nnoremap <silent> <M-_>#KB#A-B<M-\> :Buffers<CR>
+nnoremap <silent> <M-_>#KB#A-T<M-\> :BTags<CR>
+nnoremap <silent> <M-_>#KB#A-A<M-\> :call fzf#vim#grep('ag --nogroup --color ''(?<=^.)''', fzf#vim#with_preview({'options': '--delimiter=: --nth=3..'}))<CR>
+nnoremap <silent> <M-_>#KB#A-O<M-\> :History<CR>
+nnoremap <silent> <M-_>#KB#A-,<M-\> :History:<CR>
+nnoremap <silent> <M-_>#KB#A-/<M-\> :History/<CR>
 
 "===================================================================================================
 " easyjump.tmux
@@ -160,8 +158,13 @@ cabbrev G Git
 
 "===================================================================================================
 " vim-gitgutter
+
 let g:gitgutter_async = 0
 let g:gitgutter_preview_win_floating = 0
+
+nmap <M-_>#KB#A-G<M-\>p <Plug>(GitGutterPreviewHunk)
+nmap <M-_>#KB#A-G<M-\>s <Plug>(GitGutterStageHunk)
+nmap <M-_>#KB#A-G<M-\>u <Plug>(GitGutterUndoHunk)
 
 "===================================================================================================
 " vim-mucomplete
