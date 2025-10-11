@@ -61,21 +61,26 @@ augroup END
 
 nnoremap <silent> <M-_>#KB#A-H<M-\> :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
 
+nnoremap <M-_>#KB#A-W<M-\> :w<CR>
+inoremap <M-_>#KB#A-W<M-\> <C-O>:w<CR><esc>
+
 inoremap <M-_>#KB#S-CR<M-\> <C-O>O
 
-inoremap <M-_>#KB#A-A<M-\> <Home>
+inoremap <M-_>#KB#A-A<M-\> <C-O>^
 cnoremap <M-_>#KB#A-A<M-\> <Home>
-noremap <M-_>#KB#A-A<M-\> <Home>
-inoremap <M-_>#KB#A-E<M-\> <End>
 
+inoremap <M-_>#KB#A-E<M-\> <End>
 cnoremap <M-_>#KB#A-E<M-\> <End>
-noremap <M-_>#KB#A-E<M-\> <End>
+
 inoremap <M-_>#KB#A-B<M-\> <Left>
 cnoremap <M-_>#KB#A-B<M-\> <Left>
+
 inoremap <M-_>#KB#A-F<M-\> <Right>
 cnoremap <M-_>#KB#A-F<M-\> <Right>
+
 inoremap <M-_>#KB#A-S-B<M-\> <S-Left>
 cnoremap <M-_>#KB#A-S-B<M-\> <S-Left>
+
 inoremap <M-_>#KB#A-S-F<M-\> <S-Right>
 cnoremap <M-_>#KB#A-S-F<M-\> <S-Right>
 
