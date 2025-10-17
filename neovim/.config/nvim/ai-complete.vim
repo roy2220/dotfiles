@@ -12,47 +12,36 @@ function! s:ai_complete() abort
 endfunction
 
 function! s:make_query(input) abort
-    if &filetype ==# ''
-        let pl_hint = ''
-    else
-        let pl_hint = printf(' (vim filetype=%s)', &filetype)
-    endif
     let lines =<< trim END
-代码片段B和片段A的代码结构应该相同, 但目前并不相同. 请严格参照片段A的代码结构, 对片段B进行清理、转换和补全, 最终输出和片段A结构一致的代码.
-注意：
-1. 仅需回复代码，不要回复多余的东西.
-2. 回复的代码，对应的基本缩进要和片段A一致.
+理想情况下, 代码片段B和代码片段A应当拥有相同结构和缩进, 并且B是A的超集.
+可是情况并不理想, 请严格参照A的代码结构, 对B进行清理、调整和补全, 最终输出理想的代码.
+注意: 请使用<code_c>和</code_c>标签标记框定输出的代码.
 
->>>>> 开始: 代码片段A%s <<<<<
+<code_a>
 %s
->>>>> 结束: 代码片段A%s <<<<<
+</code_a>
 
->>>>> 开始: 代码片段B%s <<<<<
+<code_b>
 %s
->>>>> 结束: 代码片段B%s <<<<<
+</code_b>
 END
-    let query = printf(join(lines, "\n"), pl_hint, getreg('"'), pl_hint, pl_hint, a:input, pl_hint)
+    let query = printf(join(lines, "\n"), getreg('"'), a:input)
     return query
 endfunction
 
 function! s:chatgpt(query) abort
-    let lines = systemlist('tee /tmp/ai_complete_query.txt | chatgpt -q --track-token-usage=false', a:query)
+    let output = system('tee /tmp/ai_complete.txt | chatgpt -q --track-token-usage=false | tee -a /tmp/ai_complete.txt', a:query)
     if v:shell_error != 0
         throw 'Failed to execute: '..a:query
     endif
-    if len(lines) == 0
-        let lines = ['']
-    else
-        if lines[0][:2] ==# '```'
-            let lines = lines[1:]
-        endif
-        if lines[-1] ==# ''
-            let lines = lines[:-2]
-        endif
-        if lines[-1][:2] ==# '```'
-            let lines = lines[:-2]
-        endif
+    let i = stridx(output, '<code_c>')
+    if i == -1
+        throw 'Failed to locate code_c'
     endif
-    let output = join(lines, "\n")
-    return output
+    let j = i + len('<code_c>')
+    let k = stridx(output, '</code_c>', j)
+    if k == -1
+        throw 'Failed to locate code_c'
+    endif
+    return output[j:k-1]
 endfunction

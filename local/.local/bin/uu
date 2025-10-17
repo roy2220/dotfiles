@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+
+import sys
+from urllib.parse import unquote
+
+sys.stdout.write(unquote(sys.stdin.read()))
