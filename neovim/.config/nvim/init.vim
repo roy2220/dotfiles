@@ -147,6 +147,11 @@ nnoremap <silent> <M-_>#KB#A-/<M-\> :History/<CR>
 let g:easyjump_text_attrs = "\e[0m\e[38;5;245m"
 let g:easyjump_label_attrs = "\e[1m\e[31m"
 
+nmap <M-_>#KB#A-J<M-\> <Plug>EasyJump
+imap <M-_>#KB#A-J<M-\> <Plug>EasyJump
+vmap <M-_>#KB#A-J<M-\> <Plug>EasyJump
+omap <M-_>#KB#A-J<M-\> <Plug>EasyJump
+
 "===================================================================================================
 " eregex.vim
 let g:eregex_default_enable = 0
