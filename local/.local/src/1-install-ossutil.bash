@@ -13,7 +13,7 @@ aarch64)
 	;;
 esac
 
-DOWNLOAD_URL=$(curl -SsLf 'https://www.alibabacloud.com/help/en/oss/developer-reference/install-ossutil' | grep --perl-regexp --only-matching "https://gosspublic.alicdn.com/ossutil/[^/]+/ossutil-v[^-]+-linux-${ARCH}.zip" | head -1)
+DOWNLOAD_URL=$(curl -SsLf 'https://help.aliyun.com/zh/oss/developer-reference/install-ossutil' | grep --perl-regexp --only-matching "https://gosspublic.alicdn.com/ossutil/[^/]+/ossutil-v[^-]+-linux-${ARCH}.zip" | head -1)
 TEMP_FILE=$(mktemp)
 curl -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
 unzip -p "${TEMP_FILE}" "$(basename "${DOWNLOAD_URL}" .zip)/ossutil" | install /dev/stdin "${HOME}/.local/bin/_ossutil"
