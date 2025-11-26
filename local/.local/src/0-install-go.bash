@@ -14,9 +14,9 @@ aarch64)
 esac
 
 ALL_VERSIONS=$(curl -SsLf https://go.dev/doc/devel/release | grep --perl-regexp --only-matching '(?<=id="go)\d+\.\d+\.\d+(?=")')
-VERSION_1=$(grep '^1\.24\.' <<<"${ALL_VERSIONS}" | tail -1)
-VERSION_2=$(grep '^1\.23\.' <<<"${ALL_VERSIONS}" | tail -1)
-VERSION_3=$(grep '^1\.22\.' <<<"${ALL_VERSIONS}" | tail -1)
+VERSION_1=$(grep '^1\.25\.' <<<"${ALL_VERSIONS}" | tail -1)
+VERSION_2=$(grep '^1\.24\.' <<<"${ALL_VERSIONS}" | tail -1)
+VERSION_3=$(grep '^1\.23\.' <<<"${ALL_VERSIONS}" | tail -1)
 
 curl -SsLf "https://dl.google.com/go/go${VERSION_1}.linux-${ARCH}.tar.gz" |
 	tar xz --directory /usr/local
