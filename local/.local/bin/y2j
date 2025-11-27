@@ -5,5 +5,10 @@ import sys
 
 import yaml
 
+if "-s" in sys.argv[1:]:
+    sort_keys = True
+else:
+    sort_keys = False
+
 y = tuple(yaml.safe_load_all(sys.stdin))
-json.dump(y[0] if len(y) == 1 else y, sys.stdout)
+json.dump(y[0] if len(y) == 1 else y, sys.stdout, sort_keys=sort_keys)

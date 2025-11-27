@@ -3,4 +3,9 @@
 import json
 import sys
 
-json.dump(json.load(sys.stdin), sys.stdout, separators=(",", ":"))
+if "-s" in sys.argv[1:]:
+    sort_keys = True
+else:
+    sort_keys = False
+
+json.dump(json.load(sys.stdin), sys.stdout, separators=(",", ":"), sort_keys=sort_keys)

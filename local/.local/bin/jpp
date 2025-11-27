@@ -7,8 +7,13 @@ import sys
 data = sys.stdin.read()
 object = json.loads(data)
 
-if (prefix := re.search(r"^[ \t]*", data).group(0)) == "":
-    json.dump(object, sys.stdout, indent=2, ensure_ascii=False)
+if "-s" in sys.argv[1:]:
+    sort_keys = True
 else:
-    data = json.dumps(object, indent=2, ensure_ascii=False)
+    sort_keys = False
+
+if (prefix := re.search(r"^[ \t]*", data).group(0)) == "":
+    json.dump(object, sys.stdout, indent=2, ensure_ascii=False, sort_keys=sort_keys)
+else:
+    data = json.dumps(object, indent=2, ensure_ascii=False, sort_keys=sort_keys)
     sys.stdout.write(prefix + data.replace("\n", "\n" + prefix))
