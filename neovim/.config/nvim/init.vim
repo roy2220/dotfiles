@@ -134,23 +134,23 @@ let g:fzf_action = {
 \    'ctrl-v': 'vsplit',
 \}
 
-nnoremap <silent> <M-_>#KB#A-F<M-\> :Files<CR>
-nnoremap <silent> <M-_>#KB#A-B<M-\> :Buffers<CR>
-nnoremap <silent> <M-_>#KB#A-T<M-\> :BTags<CR>
-nnoremap <silent> <M-_>#KB#A-A<M-\> :call fzf#vim#grep('ag --nogroup --color ''(?<=^.)''', fzf#vim#with_preview({'options': '--delimiter=: --nth=3..'}))<CR>
-nnoremap <silent> <M-_>#KB#A-O<M-\> :History<CR>
-nnoremap <silent> <M-_>#KB#A-,<M-\> :History:<CR>
-nnoremap <silent> <M-_>#KB#A-/<M-\> :History/<CR>
+nnoremap <silent> <M-_>KB=A-F<M-\> :Files<CR>
+nnoremap <silent> <M-_>KB=A-B<M-\> :Buffers<CR>
+nnoremap <silent> <M-_>KB=A-T<M-\> :BTags<CR>
+nnoremap <silent> <M-_>KB=A-A<M-\> :call fzf#vim#grep('ag --nogroup --color ''(?<=^.)''', fzf#vim#with_preview({'options': '--delimiter=: --nth=3..'}))<CR>
+nnoremap <silent> <M-_>KB=A-O<M-\> :History<CR>
+nnoremap <silent> <M-_>KB=A-,<M-\> :History:<CR>
+nnoremap <silent> <M-_>KB=A-/<M-\> :History/<CR>
 
 "===================================================================================================
 " easyjump.tmux
 let g:easyjump_text_attrs = "\e[0m\e[38;5;245m"
 let g:easyjump_label_attrs = "\e[1m\e[31m"
 
-nmap <M-_>#KB#A-J<M-\> <Plug>EasyJump
-imap <M-_>#KB#A-J<M-\> <Plug>EasyJump
-vmap <M-_>#KB#A-J<M-\> <Plug>EasyJump
-omap <M-_>#KB#A-J<M-\> <Plug>EasyJump
+nmap <M-_>KB=A-J<M-\> <Plug>EasyJump
+imap <M-_>KB=A-J<M-\> <Plug>EasyJump
+vmap <M-_>KB=A-J<M-\> <Plug>EasyJump
+omap <M-_>KB=A-J<M-\> <Plug>EasyJump
 
 "===================================================================================================
 " eregex.vim
@@ -167,9 +167,9 @@ cabbrev G Git
 let g:gitgutter_async = 0
 let g:gitgutter_preview_win_floating = 0
 
-nmap <M-_>#KB#A-G<M-\>p <Plug>(GitGutterPreviewHunk)
-nmap <M-_>#KB#A-G<M-\>s <Plug>(GitGutterStageHunk)
-nmap <M-_>#KB#A-G<M-\>u <Plug>(GitGutterUndoHunk)
+nmap <M-_>KB=A-G<M-\>p <Plug>(GitGutterPreviewHunk)
+nmap <M-_>KB=A-G<M-\>s <Plug>(GitGutterStageHunk)
+nmap <M-_>KB=A-G<M-\>u <Plug>(GitGutterUndoHunk)
 
 "===================================================================================================
 " vim-mucomplete
@@ -190,36 +190,36 @@ let g:smartpairs_jumps_enabled = 0
 " vim-caser
 let g:caser_no_mappings = 1
 " for camelCase
-nmap <M-_>#KB#A-C<M-\>c <Plug>CaserCamelCase
-vmap <M-_>#KB#A-C<M-\>c <Plug>CaserVCamelCase
+nmap <M-_>KB=A-C<M-\>c <Plug>CaserCamelCase
+vmap <M-_>KB=A-C<M-\>c <Plug>CaserVCamelCase
 " for PascalCase
-nmap <M-_>#KB#A-C<M-\>p <Plug>CaserMixedCase
-vmap <M-_>#KB#A-C<M-\>p <Plug>CaserVMixedCase
+nmap <M-_>KB=A-C<M-\>p <Plug>CaserMixedCase
+vmap <M-_>KB=A-C<M-\>p <Plug>CaserVMixedCase
 " for snake_case
-nmap <M-_>#KB#A-C<M-\>s <Plug>CaserSnakeCase
-vmap <M-_>#KB#A-C<M-\>s <Plug>CaserVSnakeCase
+nmap <M-_>KB=A-C<M-\>s <Plug>CaserSnakeCase
+vmap <M-_>KB=A-C<M-\>s <Plug>CaserVSnakeCase
 " for SCREAMING_SNAKE_CASE
-nmap <M-_>#KB#A-C<M-\>S <Plug>CaserUpperCase
-vmap <M-_>#KB#A-C<M-\>S <Plug>CaserVUpperCase
+nmap <M-_>KB=A-C<M-\>S <Plug>CaserUpperCase
+vmap <M-_>KB=A-C<M-\>S <Plug>CaserVUpperCase
 " for kebab-case
-nmap <M-_>#KB#A-C<M-\>k <Plug>CaserKebabCase
-vmap <M-_>#KB#A-C<M-\>k <Plug>CaserVKebabCase
+nmap <M-_>KB=A-C<M-\>k <Plug>CaserKebabCase
+vmap <M-_>KB=A-C<M-\>k <Plug>CaserVKebabCase
 " for HTTP-Header-Case
-nmap <M-_>#KB#A-C<M-\>h <Plug>CaserTitleKebabCase
-vmap <M-_>#KB#A-C<M-\>h <Plug>CaserVTitleKebabCase
+nmap <M-_>KB=A-C<M-\>h <Plug>CaserTitleKebabCase
+vmap <M-_>KB=A-C<M-\>h <Plug>CaserVTitleKebabCase
 " for Title Case
-nmap <M-_>#KB#A-C<M-\>t <Plug>CaserTitleCase
-vmap <M-_>#KB#A-C<M-\>t <Plug>CaserVTitleCase
+nmap <M-_>KB=A-C<M-\>t <Plug>CaserTitleCase
+vmap <M-_>KB=A-C<M-\>t <Plug>CaserVTitleCase
 " for space case
-nmap <M-_>#KB#A-C<M-\><Space> <Plug>CaserSpaceCase
-vmap <M-_>#KB#A-C<M-\><Space> <Plug>CaserVSpaceCase
+nmap <M-_>KB=A-C<M-\><Space> <Plug>CaserSpaceCase
+vmap <M-_>KB=A-C<M-\><Space> <Plug>CaserVSpaceCase
 
 "===================================================================================================
 " vim-exchange
-nmap <M-_>#KB#A-X<M-\> <Plug>(Exchange)
-vmap <M-_>#KB#A-X<M-\> <Plug>(Exchange)
-nmap <M-_>#KB#A-X<M-\><BS> <Esc> <Plug>(ExchangeClear)
-nmap <M-_>#KB#A-S-X<M-\> <Plug>(ExchangeLine)
+nmap <M-_>KB=A-X<M-\> <Plug>(Exchange)
+vmap <M-_>KB=A-X<M-\> <Plug>(Exchange)
+nmap <M-_>KB=A-X<M-\><BS> <Esc> <Plug>(ExchangeClear)
+nmap <M-_>KB=A-S-X<M-\> <Plug>(ExchangeLine)
 
 "===================================================================================================
 " NrrwRgn

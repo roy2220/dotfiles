@@ -60,7 +60,7 @@ _fzf-complete-file() {
 }
 
 zle -N _fzf-complete-file
-bindkey '\e_#KB#A-F\e\\' _fzf-complete-file
+bindkey '\e_KB=A-F\e\\' _fzf-complete-file
 
 _fzf-complete-dir() {
     local input=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
@@ -89,7 +89,7 @@ _fzf-complete-dir() {
 }
 
 zle -N _fzf-complete-dir
-bindkey '\e_#KB#A-D\e\\' _fzf-complete-dir
+bindkey '\e_KB=A-D\e\\' _fzf-complete-dir
 
 _fzf-complete-option1() {
     local command=$(BUFFER=${BUFFER} CURSOR=${CURSOR} python3 /dev/stdin <<'EOF'
@@ -143,7 +143,7 @@ EOF
 }
 
 zle -N _fzf-complete-option1
-bindkey '\e_#KB#A-H\e\\' _fzf-complete-option1
+bindkey '\e_KB=A-H\e\\' _fzf-complete-option1
 
 _fzf-complete-option2() {
     local command=$(BUFFER=${BUFFER} CURSOR=${CURSOR} python3 /dev/stdin <<'EOF'
@@ -197,6 +197,6 @@ EOF
 }
 
 zle -N _fzf-complete-option2
-bindkey '\e_#KB#A-S-H\e\\' _fzf-complete-option2
+bindkey '\e_KB=A-S-H\e\\' _fzf-complete-option2
 
 }

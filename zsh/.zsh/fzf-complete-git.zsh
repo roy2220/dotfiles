@@ -26,7 +26,7 @@ _fzf-complete-git-branch() {
 }
 
 zle -N _fzf-complete-git-branch
-bindkey '\e_#KB#A-G\e\\b' _fzf-complete-git-branch
+bindkey '\e_KB=A-G\e\\b' _fzf-complete-git-branch
 
 Gcb() {
     local branch=$(_fzf-complete-git-branch)
@@ -51,7 +51,7 @@ _fzf-complete-git-tag() {
 }
 
 zle -N _fzf-complete-git-tag
-bindkey '^\e_#KB#A-G\e\\t' _fzf-complete-git-tag
+bindkey '^\e_KB=A-G\e\\t' _fzf-complete-git-tag
 
 Gct() {
     local tag=$(_fzf-complete-git-tag)
@@ -77,7 +77,7 @@ _fzf-complete-git-commit() {
 }
 
 zle -N _fzf-complete-git-commit
-bindkey '\e_#KB#A-G\e\\c' _fzf-complete-git-commit
+bindkey '\e_KB=A-G\e\\c' _fzf-complete-git-commit
 
 Gcc() {
     local commit=$(_fzf-complete-git-commit)
@@ -102,7 +102,7 @@ _fzf-complete-git-file() {
 }
 
 zle -N _fzf-complete-git-file
-bindkey '\e_#KB#A-G\e\\f' _fzf-complete-git-file
+bindkey '\e_KB=A-G\e\\f' _fzf-complete-git-file
 
 Gcf() {
     local file=$(_fzf-complete-git-file)
