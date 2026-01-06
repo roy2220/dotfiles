@@ -21,5 +21,6 @@ rm --force "${TEMP_FILE}"
 
 install /dev/stdin "${HOME}/.local/bin/ossutil" <<'EOF'
 #!/usr/bin/env bash
+
 exec "$(dirname "$0")/_ossutil" ${OSSUTIL_CONFIG_FILE:+--config-file="${OSSUTIL_CONFIG_FILE}"} "${@}"
 EOF

@@ -22,5 +22,6 @@ rm --force "${TEMP_FILE}"
 
 install /dev/stdin "${HOME}/.local/bin/rclone" <<'EOF'
 #!/usr/bin/env bash
+
 exec "$(dirname "$0")/_rclone" ${RCLONE_CONFIG_FILE:+--config="${RCLONE_CONFIG_FILE}"} "${@}"
 EOF
