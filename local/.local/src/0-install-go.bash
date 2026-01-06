@@ -39,6 +39,13 @@ ln --symbolic --no-target-directory "${HOME}/sdk/go${VERSION_3}" "${HOME}/sdk/go
 
 install /dev/stdin "${HOME}/go/bin/go" <<'EOF'
 #!/usr/bin/env sh
+
+if [ -n "${GO_HTTP_PROXY}" ]; then
+	export http_proxy=${GO_HTTP_PROXY}
+fi
+if [ -n "${GO_HTTPS_PROXY}" ]; then
+	export https_proxy=${GO_HTTPS_PROXY}
+fi
 if [ -z "${GOVERSION}" ]; then
     exec /usr/local/go/bin/go "${@}"
 else
@@ -48,6 +55,7 @@ EOF
 
 install /dev/stdin "${HOME}/go/bin/gofmt" <<'EOF'
 #!/usr/bin/env sh
+
 if [ -z "${GOVERSION}" ]; then
     exec /usr/local/go/bin/gofmt "${@}"
 else
