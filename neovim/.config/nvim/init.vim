@@ -46,12 +46,12 @@ call plug#begin()
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
         Plug 'github/copilot.vim'
-        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':'..join([
+        Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'master', 'do': ':'..join([
         \    'TSUpdateSync',
         \    exists('g:TreeSitterParsersToInstall') ? 'TSInstallSync '..join(g:TreeSitterParsersToInstall, ' ') : '',
         \    'call system(''git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff'')',
         \], '\|') }
-        Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+        Plug 'nvim-treesitter/nvim-treesitter-textobjects', { 'branch': 'master' }
     endif
 call plug#end()
 let g:plug_timeout=1200
