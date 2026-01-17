@@ -1,4 +1,4 @@
-[[ -f /tmp/zprofile ]] && sed --in-place 's/\r$//' /tmp/zprofile && source /tmp/zprofile
+[[ -f /tmp/zprofile ]] && source /tmp/zprofile
 
 if [[ ${DOCKER_HOST_OS} == mac ]]; then
     DOCKER_HOST_IP=$(dig +short host.docker.internal)
