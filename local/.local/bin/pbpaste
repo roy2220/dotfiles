@@ -2,5 +2,7 @@
 
 set -euo pipefail
 
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_USER}@host.docker.internal" pbpaste |
-	python3 -c 'import sys; sys.stdout.buffer.write(sys.stdin.buffer.read().decode("gbk").encode())'
+if [[ ${DOCKER_HOST_OS} == mac ]]; then
+	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@host.docker.internal" pbpaste |
+		python3 -c 'import sys; sys.stdout.buffer.write(sys.stdin.buffer.read().decode("gbk").encode())'
+fi

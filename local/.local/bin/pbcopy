@@ -2,27 +2,29 @@
 
 set -euo pipefail
 
-exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_USER}@host.docker.internal" '
+if [[ ${DOCKER_HOST_OS} == mac ]]; then
+	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@host.docker.internal" '
 FILE=$(mktemp -t clipboard)
 cp /dev/stdin "${FILE}"
 osascript -e "set the clipboard to (read (POSIX file \"${FILE}\") as «class utf8»)"
 rm "${FILE}"
 '
+fi
 
-# OSC52_BEGIN="\x1b]52;c;"
-# OSC52_END="\x07"
+OSC52_BEGIN="\x1b]52;c;"
+OSC52_END="\x07"
 
-# if [[ ${TERM:-} == tmux* ]]; then
-#	OSC52_BEGIN="\x1bPtmux;\x1b${OSC52_BEGIN}"
-#	OSC52_END="${OSC52_END}\x1b\\"
-# elif [[ ${TERM:-} == screen* ]]; then
-#	OSC52_BEGIN="\x1bP;${OSC52_BEGIN}"
-#	OSC52_END="${OSC52_END}\x1b\\"
-# fi
+if [[ ${TERM:-} == tmux* ]]; then
+	OSC52_BEGIN="\x1bPtmux;\x1b${OSC52_BEGIN}"
+	OSC52_END="${OSC52_END}\x1b\\"
+elif [[ ${TERM:-} == screen* ]]; then
+	OSC52_BEGIN="\x1bP;${OSC52_BEGIN}"
+	OSC52_END="${OSC52_END}\x1b\\"
+fi
 
-# sed_escape() {
-#	echo -e "${1}" | sed 's/[]\/$*.^[]/\\&/g'
-# }
+sed_escape() {
+	echo -e "${1}" | sed 's/[]\/$*.^[]/\\&/g'
+}
 
-# TTY=$(tmux display -p '#{pane_tty}')
-# openssl base64 -A | sed -e 's/^/'"$(sed_escape "${OSC52_BEGIN}")"'/' -e 's/$/'"$(sed_escape "${OSC52_END}")"'/' >>"${TTY}"
+TTY=$(tmux display -p '#{pane_tty}')
+base64 --wrap=0 | sed -e 's/^/'"$(sed_escape "${OSC52_BEGIN}")"'/' -e 's/$/'"$(sed_escape "${OSC52_END}")"'/' >>"${TTY}"

@@ -1,10 +1,12 @@
-[[ -f /tmp/zprofile ]] && source /tmp/zprofile
+[[ -f /tmp/zprofile ]] && sed --in-place 's/\r$//' /tmp/zprofile && source /tmp/zprofile
 
-DOCKER_HOST_IP=$(dig +short host.docker.internal)
-echo "${DOCKER_HOST_IP} host.docker.internal" >>/etc/hosts
-RULE="OUTPUT -t nat -p udp -d 1.1.1.1 --dport 53 -j DNAT --to ${DOCKER_HOST_IP}:1053"
-iptables -C ${=RULE} || iptables -A ${=RULE}
-echo 'nameserver 1.1.1.1' >/etc/resolv.conf
+if [[ ${DOCKER_HOST_OS} == mac ]]; then
+    DOCKER_HOST_IP=$(dig +short host.docker.internal)
+    echo "${DOCKER_HOST_IP} host.docker.internal" >>/etc/hosts
+    RULE="OUTPUT -t nat -p udp -d 1.1.1.1 --dport 53 -j DNAT --to ${DOCKER_HOST_IP}:1053"
+    iptables -C ${=RULE} || iptables -A ${=RULE}
+    echo 'nameserver 1.1.1.1' >/etc/resolv.conf
+fi
 
 if [[ ! -d ~/.secrets ]]; then
     git -C ~/.files pull --ff-only
