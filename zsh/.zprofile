@@ -42,6 +42,7 @@ while true; do
 
     fusermount3 -u ~/.secrets
 done
+source ~/.secrets/envrc
 
 export TERM=xterm-256color
 export SHELL=${0}

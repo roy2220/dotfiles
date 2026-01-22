@@ -45,13 +45,13 @@ call plug#begin()
         Plug 'AndrewRadev/linediff.vim'
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
-        Plug 'github/copilot.vim'
         Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'master', 'do': ':'..join([
         \    'TSUpdateSync',
         \    exists('g:TreeSitterParsersToInstall') ? 'TSInstallSync '..join(g:TreeSitterParsersToInstall, ' ') : '',
         \    'call system(''git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff'')',
         \], '\|') }
         Plug 'nvim-treesitter/nvim-treesitter-textobjects', { 'branch': 'master' }
+        Plug 'milanglacier/minuet-ai.nvim' | Plug 'nvim-lua/plenary.nvim'
     endif
 call plug#end()
 let g:plug_timeout=1200
@@ -383,6 +383,54 @@ module.setup {
                 ["]F"] = "@function.outer",
                 ["]S"] = "@statement.outer",
             },
+        },
+    },
+}
+EOF
+
+"===================================================================================================
+" minuet-ai.nvim
+lua << EOF
+local ok, module = pcall(require, "minuet")
+if not ok then
+    return
+end
+
+local mc = require 'minuet.config'
+module.setup {
+    virtualtext = {
+        auto_trigger_ft = {},
+        keymap = {
+            next = "<M-_>KB=A-[<M-\\>",
+            dismiss = "<M-_>KB=A-S-[<M-\\>",
+            accept = "<M-_>KB=A-]<M-\\>",
+        },
+    },
+
+    provider = "openai_compatible",
+    request_timeout = 5,
+    n_completions = 1,
+    provider_options = {
+        openai_compatible = {
+            name = "Openrouter",
+            end_point = "https://openrouter.ai/api/v1/chat/completions",
+            api_key = "OPENROUTER_API_KEY",
+            model = "google/gemini-2.0-flash-001",
+            optional = {
+                max_tokens = 5000,
+                top_p = 0.9,
+                provider = {
+                    sort = "throughput",
+                },
+                reasoning = {
+                    effort = "none",
+                },
+            },
+
+            -- Prefix-first style
+            system = mc.default_system_prefix_first,
+            chat_input = mc.default_chat_input_prefix_first,
+            few_shots = mc.default_few_shots_prefix_first,
         },
     },
 }
