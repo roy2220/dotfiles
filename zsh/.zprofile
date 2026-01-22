@@ -1,6 +1,6 @@
 [[ -f /tmp/zprofile ]] && source /tmp/zprofile
 
-if [[ ${DOCKER_HOST_OS} == mac ]]; then
+if [[ ${DOCKER_HOST_OS} == Darwin ]]; then
     DOCKER_HOST_IP=$(dig +short host.docker.internal)
     echo "${DOCKER_HOST_IP} host.docker.internal" >>/etc/hosts
     RULE="OUTPUT -t nat -p udp -d 1.1.1.1 --dport 53 -j DNAT --to ${DOCKER_HOST_IP}:1053"
