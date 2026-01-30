@@ -64,18 +64,19 @@ endfunction
 
 function! s:toggle_hidden_errors() abort
     let qf_info = getqflist({'context': 0})
-    let context = qf_info.context
-    let number_of_hidden_errors = empty(context) ? 0 : get(context, '__qf__number_of_hidden_errors', 0)
+    let qf_context = qf_info.context
+    let number_of_hidden_errors = empty(qf_context) ? 0 : get(qf_context, '__qf__number_of_hidden_errors', 0)
     if number_of_hidden_errors == 0
         return
     endif
-    if number_of_hidden_errors > 0
+    let qf_context.__qf__show_hidden_errors = !qf_context.__qf__show_hidden_errors
+    if qf_context.__qf__show_hidden_errors
         normal! zR
+        let qf_context.__qf__visible_size += number_of_hidden_errors
     else
         normal! zM
+        let qf_context.__qf__visible_size -= number_of_hidden_errors
     endif
-    let context.__qf__number_of_hidden_errors = -number_of_hidden_errors
-    let context.__qf__visible_size += number_of_hidden_errors
     call setqflist([], 'a', qf_info)
 endfunction
 
@@ -98,10 +99,7 @@ function! s:add_qf(qf) abort
     let [qf, cur_pos_on_error, number_of_hidden_errors] = s:sort_errors(a:qf)
     let qf_info = {'items': qf, 'context': ''}
     if number_of_hidden_errors >= 1
-        let qf_info.context = {
-        \    '__qf__number_of_hidden_errors': number_of_hidden_errors,
-        \    '__qf__visible_size': len(qf) - number_of_hidden_errors,
-        \}
+        let qf_info.context = s:make_qf_context(len(qf), number_of_hidden_errors, v:false)
     endif
     call s:save_last_accessed_quickfix_id()
     call setqflist([], ' ', qf_info)
@@ -159,23 +157,32 @@ function! s:sort_errors(qf) abort
     return [qf, cur_pos_on_error, number_of_hidden_errors]
 endfunction
 
+function! s:make_qf_context(qf_size, number_of_hidden_errors, show_hidden_errors) abort
+    if a:qf_size == a:number_of_hidden_errors || a:show_hidden_errors
+        let show_hidden_errors = v:true
+    else
+        let show_hidden_errors = v:false
+    endif
+    return {
+    \    '__qf__number_of_hidden_errors': a:number_of_hidden_errors,
+    \    '__qf__show_hidden_errors': show_hidden_errors,
+    \    '__qf__visible_size': a:qf_size - (show_hidden_errors ? 0 : a:number_of_hidden_errors),
+    \}
+endfunction
+
 function! UpdateQuickfix(qf_modifier) abort
     let qf_info = getqflist({'items': 0, 'context': 0})
     let qf_info.items = call(a:qf_modifier, [qf_info.items])
-    let context = qf_info.context
-    let number_of_hidden_errors = empty(context) ? 0 : get(context, '__qf__number_of_hidden_errors', 0)
+    let qf_context = qf_info.context
+    let number_of_hidden_errors = empty(qf_context) ? 0 : get(qf_context, '__qf__number_of_hidden_errors', 0)
     if number_of_hidden_errors != 0
-        let sign = number_of_hidden_errors / abs(number_of_hidden_errors)
-        let number_of_hidden_errors = sign * reduce(qf_info.items, { acc, val -> acc + get(val, 'user_data', 0) }, 0)
+        let number_of_hidden_errors = reduce(qf_info.items, { acc, val -> acc + get(val, 'user_data', 0) }, 0)
         if number_of_hidden_errors == 0
-            call remove(context, '__qf__number_of_hidden_errors')
-            call remove(context, '__qf__visible_size')
+            call remove(qf_context, '__qf__number_of_hidden_errors')
+            call remove(qf_context, '__qf__show_hidden_errors')
+            call remove(qf_context, '__qf__visible_size')
         else
-            let context.__qf__number_of_hidden_errors = number_of_hidden_errors
-            let context.__qf__visible_size = len(qf_info.items)
-            if number_of_hidden_errors > 0
-                let context.__qf__visible_size -= number_of_hidden_errors
-            endif
+            call extend(qf_context, s:make_qf_context(len(qf_info.items), number_of_hidden_errors, qf_context.__qf__show_hidden_errors))
         endif
     endif
     call setqflist([], 'r', qf_info)
@@ -214,15 +221,15 @@ endfunction
 
 function! s:refold_hidden_errors(qf_info) abort
     normal! zE
-    let context = a:qf_info.context
-    let number_of_hidden_errors = empty(context) ? 0 : get(context, '__qf__number_of_hidden_errors', 0)
+    let qf_context = a:qf_info.context
+    let number_of_hidden_errors = empty(qf_context) ? 0 : get(qf_context, '__qf__number_of_hidden_errors', 0)
     if number_of_hidden_errors == 0
         return
     endif
     setlocal foldminlines=0
     let qf_size = line('$')
-    execute (qf_size - abs(number_of_hidden_errors) + 1)..',$fold'
-    if number_of_hidden_errors < 0
+    execute (qf_size - number_of_hidden_errors + 1)..',$fold'
+    if qf_context.__qf__show_hidden_errors
         normal! zR
     endif
 endfunction
