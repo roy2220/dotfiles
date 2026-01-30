@@ -35,13 +35,20 @@ let s:file_type_2_language = {}
 let s:bufnr_2_cache = {}
 
 function! s:setup() abort
-    if expand('%') == ''
+    if &filetype == ''
         return
     endif
     if has_key(s:file_type_2_language, &filetype)
         return
     endif
-    let language = matchstr(system('ctags --print-language '..shellescape(expand('%'))),': \zs[^ ]\+\ze\n$')
+    if !(&buftype == '' && bufname('%') != '')
+        return
+    endif
+    let output = system('ctags --print-language '..shellescape(expand('%')))
+    if v:shell_error != 0
+        return
+    endif
+    let language = matchstr(output, ': \zs[^ ]\+\ze\n$')
     if language == 'NONE'
         let language = ''
     endif
@@ -210,4 +217,3 @@ function! s:tag_info(tag) abort
     let tag_info ..= a:tag.name
     return tag_info
 endfunction
-
