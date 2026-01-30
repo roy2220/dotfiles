@@ -312,31 +312,6 @@ augroup lsp_install
 augroup END
 
 "===================================================================================================
-" copilot.vim
-let g:copilot_proxy = 'https://host.docker.internal:7890'
-let g:copilot_filetypes = {'*': v:false}
-let g:copilot_no_tab_map = v:true
-
-inoremap <script><expr> <C-L> <SID>copilot_suggest_or_accept()
-function! s:copilot_suggest_or_accept() abort
-    if pumvisible()
-        " retry
-        call timer_start(0, { _ -> s:copilot_suggest_or_accept() })
-        if empty(v:completed_item)
-            return "\<C-E>"
-        else
-            return "\<C-Y>"
-        endif
-    endif
-
-    if !exists('b:_copilot.suggestions')
-        return copilot#Suggest()
-    else
-        return copilot#Accept('')
-    endif
-endfunction
-
-"===================================================================================================
 " nvim-treesitter & nvim-treesitter-textobjects
 lua << EOF
 local ok, module = pcall(require, "nvim-treesitter.configs")
@@ -419,8 +394,8 @@ module.setup {
         auto_trigger_ft = {},
         keymap = {
             next = "<M-_>KB=A-[<M-\\>",
-            dismiss = "<M-_>KB=A-S-[<M-\\>",
             accept = "<M-_>KB=A-]<M-\\>",
+            accept_line = "<M-_>KB=A-S-]<M-\\>",
         },
     },
 
@@ -432,9 +407,9 @@ module.setup {
             name = "Openrouter",
             end_point = "https://openrouter.ai/api/v1/chat/completions",
             api_key = "OPENROUTER_API_KEY",
-            model = "google/gemini-2.0-flash-001",
+            model = "google/gemini-2.5-flash",
             optional = {
-                max_tokens = 5000,
+                max_tokens = 512,
                 top_p = 0.9,
                 provider = {
                     sort = "throughput",
@@ -445,9 +420,31 @@ module.setup {
             },
 
             -- Prefix-first style
-            system = mc.default_system_prefix_first,
-            chat_input = mc.default_chat_input_prefix_first,
-            few_shots = mc.default_few_shots_prefix_first,
+            system = {
+                template = [[
+你是一个极度严谨的代码补全引擎，擅长推断用户意图，帮助用户补全代码片段
+
+用户输入格式: 代码上文<<<CURSOR>>>代码下文
+
+行为准则:
+1. 补全<<<CURSOR>>>处的代码。
+2. 除非能在代码上下文找到*高度置信的线索*，依据线索补全完整代码；否则转为*极度保守模式*，仅试探性补全单行代码！
+3. 生成代码时，要严格遵循上下文的缩进，并排除上下文已有的代码。
+4. 直接输出生成的代码本身，切记不要添加任何多余的东西，包括xml/markdown标记。
+]]
+            },
+            chat_input = {
+                template = [[
+{{{language}}}
+{{{tab}}}
+{{{context_before_cursor}}}<<<CURSOR>>>{{{context_after_cursor}}}
+]],
+                language = mc.default_chat_input_prefix_first.language,
+                tab = mc.default_chat_input_prefix_first.tab,
+                context_before_cursor = mc.default_chat_input_prefix_first.context_before_cursor,
+                context_after_cursor = mc.default_chat_input_prefix_first.context_after_cursor,
+            },
+            few_shots = {}
         },
     },
 }

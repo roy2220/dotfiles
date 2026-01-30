@@ -30,7 +30,7 @@ END
 endfunction
 
 function! s:chatgpt(query) abort
-    let output = system('tee /tmp/ai_complete.txt | chatgpt | tee -a /tmp/ai_complete.txt', a:query)
+    let output = system('tee /tmp/ai_complete.txt | xargs -- chatgpt -- | tee -a /tmp/ai_complete.txt', a:query)
     if v:shell_error != 0
         throw 'Failed to execute: '..a:query
     endif
