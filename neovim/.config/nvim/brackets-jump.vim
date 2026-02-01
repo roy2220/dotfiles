@@ -41,6 +41,7 @@ function! s:setup() abort
     if has_key(s:file_type_2_language, &filetype)
         return
     endif
+
     if !(&buftype == '' && bufname('%') != '')
         return
     endif
@@ -48,6 +49,7 @@ function! s:setup() abort
     if v:shell_error != 0
         return
     endif
+
     let language = matchstr(output, ': \zs[^ ]\+\ze\n$')
     if language == 'NONE'
         let language = ''
@@ -63,37 +65,50 @@ function! s:setup() abort
 endfunction
 
 function! s:init(language) abort
-    execute 'nnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
-    execute 'nnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
-    execute 'nnoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> [] :<C-U>call <SID>lr_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
-    execute 'nnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'onoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:false, '..string(a:language)..', v:count)<CR>'
-    execute 'vnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_brackets_jump(v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> [[ :<C-U>call <SID>ll_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> [[ :<C-U>call <SID>ll_jump(v:false, v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> ]] :<C-U>call <SID>rr_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> ]] :<C-U>call <SID>rr_jump(v:false, v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> [] :<C-U>call <SID>lr_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> [] :<C-U>call <SID>lr_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> [] :<C-U>call <SID>lr_jump(v:false, v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> ][ :<C-U>call <SID>rl_jump(v:false, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> ][ :<C-U>call <SID>rl_jump(v:false, v:true, '..string(a:language)..', v:count)<CR>'
+
+    execute 'nnoremap <buffer> <silent> [{ :<C-U>call <SID>ll_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> [{ :<C-U>call <SID>ll_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> [{ :<C-U>call <SID>ll_jump(v:true, v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> ]} :<C-U>call <SID>rr_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> ]} :<C-U>call <SID>rr_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> ]} :<C-U>call <SID>rr_jump(v:true, v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> [} :<C-U>call <SID>lr_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> [} :<C-U>call <SID>lr_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> [} :<C-U>call <SID>lr_jump(v:true, v:true, '..string(a:language)..', v:count)<CR>'
+    execute 'nnoremap <buffer> <silent> ]{ :<C-U>call <SID>rl_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'onoremap <buffer> <silent> ]{ :<C-U>call <SID>rl_jump(v:true, v:false, '..string(a:language)..', v:count)<CR>'
+    execute 'vnoremap <buffer> <silent> ]{ :<C-U>call <SID>rl_jump(v:true, v:true, '..string(a:language)..', v:count)<CR>'
 endfunction
 
-function! s:ll_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_start }, { line1, line2 -> line1 < line2 }, a:num_times)
+function! s:ll_jump(to_outer, visual_mode, language, num_times) abort
+    call s:jump(a:to_outer, a:visual_mode, a:language, a:num_times, { tag -> tag.line_start }, { line1, line2 -> line1 < line2 })
 endfunction
 
-function! s:rr_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_start }, { line1, line2 -> line1 > line2 }, a:num_times)
+function! s:rr_jump(to_outer, visual_mode, language, num_times) abort
+    call s:jump(a:to_outer, a:visual_mode, a:language, a:num_times, { tag -> tag.line_start }, { line1, line2 -> line1 > line2 })
 endfunction
 
-function! s:lr_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_end }, { line1, line2 -> line1 < line2 }, a:num_times)
+function! s:lr_jump(to_outer, visual_mode, language, num_times) abort
+    call s:jump(a:to_outer, a:visual_mode, a:language, a:num_times, { tag -> tag.line_end }, { line1, line2 -> line1 < line2 })
 endfunction
 
-function! s:rl_brackets_jump(visual_mode, language, num_times) abort
-    call s:brackets_jump(a:visual_mode, a:language, { tag -> tag.line_end }, { line1, line2 -> line1 > line2 }, a:num_times)
+function! s:rl_jump(to_outer, visual_mode, language, num_times) abort
+    call s:jump(a:to_outer, a:visual_mode, a:language, a:num_times, { tag -> tag.line_end }, { line1, line2 -> line1 > line2 })
 endfunction
 
-function! s:brackets_jump(visual_mode, language, choose_line, compare_line, num_times) abort
+function! s:jump(to_outer, visual_mode, language, num_times, get_line, test_line) abort
     if a:visual_mode
         normal! gv
         let line1 = line("'<")
@@ -106,31 +121,60 @@ function! s:brackets_jump(visual_mode, language, choose_line, compare_line, num_
     else
         let cur_line = line('.')
     endif
-    let line = cur_line
+
+    if a:to_outer
+        let outer_scope_level = -1
+        for tag in s:get_tags(a:language)
+            if tag.line_start <= cur_line && tag.line_end >= cur_line
+                let outer_scope_level = tag.scope_level - 1
+                break
+            endif
+        endfor
+        if outer_scope_level == -1
+            return
+        endif
+    else
+        let outer_scope_level = v:null
+    endif
+
     let i = 0
     let n = a:num_times < 1 ? 1 : a:num_times
+    let cur_tag = {}
     while i < n
-        let nearest_tag = s:get_nearest_tag(a:language, a:choose_line, a:compare_line, line)
-        if nearest_tag == {}
+        let tag = s:get_nearest_tag(a:language, cur_line, outer_scope_level, a:get_line, a:test_line)
+        if tag == {}
             break
         endif
-        let line = a:choose_line(nearest_tag)
+        let cur_tag = tag
+        let cur_line = a:get_line(tag)
+        if a:to_outer
+            let outer_scope_level = tag.scope_level - 1
+        endif
         let i += 1
     endwhile
-    if line != cur_line
-        execute printf('normal! %dG0', line)
-        call search('\V\C\<'..(nearest_tag.name)..'\>', 'c', line)
-        redraw | echo s:tag_info(nearest_tag)
+    if cur_tag == {}
+        return
     endif
+
+    execute printf('normal! %dG0', cur_line)
+    call search('\V\C\<'..(cur_tag.name)..'\>', 'c', cur_line)
+    redraw | echo s:tag_info(cur_tag)
 endfunction
 
-function! s:get_nearest_tag(language, choose_line, compare_line, cur_line) abort
+function! s:get_nearest_tag(language, line, scope_level, get_line, test_line) abort
+    if !(a:scope_level is v:null) && a:scope_level < 0
+        return {}
+    endif
+
     let nearest_tag = {}
     for tag in s:get_tags(a:language)
-        if !a:compare_line(a:choose_line(tag), a:cur_line)
+        if !(a:scope_level is v:null) && tag.scope_level != a:scope_level
             continue
         endif
-        if nearest_tag == {} || a:compare_line(a:choose_line(nearest_tag), a:choose_line(tag))
+        if !a:test_line(a:get_line(tag), a:line)
+            continue
+        endif
+        if nearest_tag == {} || a:test_line(a:get_line(nearest_tag), a:get_line(tag))
             let nearest_tag = tag
         endif
     endfor
@@ -168,7 +212,7 @@ function! s:purge_cache(timer_id, bufnr) abort
 endfunction
 
 function! s:do_get_tags(language) abort
-    let command_prefix = 'ctags --language-force='..a:language..' -x --_xformat=''%N,%K,%n,%e,%s'' '
+    let command_prefix = 'ctags --sort=no --language-force='..a:language..' -x --_xformat=''%N,%K,%n,%e,%s'' '
     let file_name = expand('%')
     if filereadable(file_name) && &modified == 0
         let results = systemlist(command_prefix.shellescape(file_name))
@@ -195,13 +239,15 @@ function! s:do_get_tags(language) abort
         "if line_start == line_end
         "    continue
         "endif
-        let struct_name = parts[4]
+        let scope_name = parts[4]
+        let scope_level = len(split(scope_name, '\.', v:false))
         let tag = {
         \    'name': name,
         \    'kind': kind,
         \    'line_start': line_start,
         \    'line_end': line_end,
-        \    'struct_name': struct_name,
+        \    'scope_name': scope_name,
+        \    'scope_level': scope_level,
         \}
         call add(tags, tag)
     endfor
@@ -211,8 +257,8 @@ endfunction
 
 function! s:tag_info(tag) abort
     let tag_info = a:tag.kind..' '
-    if a:tag.struct_name != ''
-        let tag_info ..= a:tag.struct_name..'.'
+    if a:tag.scope_name != ''
+        let tag_info ..= a:tag.scope_name..'.'
     endif
     let tag_info ..= a:tag.name
     return tag_info
