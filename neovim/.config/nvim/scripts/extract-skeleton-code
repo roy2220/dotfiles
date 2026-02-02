@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+
+import glob
+import json
+import os
+import subprocess
+import sys
+
+
+def get_root_tags(file_path: str) -> list[dict]:
+    output = subprocess.run(
+        ["ctags", "--sort=no", "--output-format=json", "--fields=-F-P+S", file_path],
+        capture_output=True,
+        text=True,
+    ).stdout
+
+    i = 0
+    unknown_scopes: list[str] = []
+    tag_map: dict[str, dict] = {}
+    while True:
+        try:
+            j = output.index("\n", i)
+        except ValueError:
+            break
+        line = output[i:j].strip()
+        i = j + 1
+        if line == "":
+            continue
+
+        tag = json.loads(line)
+        if (scope := tag.get("scope", None)) is None:
+            tag_id = tag["name"]
+        else:
+            if tag["scopeKind"] == "unknown":
+                unknown_scopes.append(scope)
+            tag_id = scope + "." + tag["name"]
+        tag_map[tag_id] = tag
+
+    for unknown_scope in unknown_scopes:
+        parts = unknown_scope.split(".")
+        for i in range(len(parts)):
+            tag_id = ".".join(parts[: i + 1])
+            tag = tag_map.get(tag_id, None)
+            if tag is not None:
+                continue
+
+            tag_name = parts[i]
+            tag = {"name": tag_name, "kind": "unknown"}
+            if i >= 1:
+                tag["scope"] = tag_id[: -len(tag_name) - 1]
+            tag_map[tag_id] = tag
+
+    root_tags: list[dict] = []
+    for tag in tuple(tag_map.values()):
+        if (scope := tag.get("scope", None)) is None:
+            root_tags.append(tag)
+        else:
+            parent_tag_id = tag["scope"]
+            parent_tag = tag_map.get(parent_tag_id, None)
+            if parent_tag is None:
+                continue
+            children = parent_tag.get("_children", None)
+            if children is None:
+                children = []
+                parent_tag["_children"] = children
+            children.append(tag)
+    return root_tags
+
+
+MAX_TREE_HEIGHT = 2000
+
+
+def dump_tree(tree: dict[str, list[dict]], prefix: str, cur_file_name: str) -> str:
+    lines: list[str] = []
+
+    def walk(x: dict, prefix: str):
+        children = x.get("_children", [])
+        if len(children) == 0:
+            lines.append(f"{prefix}{describe_tag(x)}")
+        else:
+            lines.append(f"{prefix}{describe_tag(x)} {{")
+            for child in children:
+                walk(child, prefix + "    ")
+            lines.append(f"{prefix}}}")
+
+    for i, (file_name, root_tags) in enumerate(tree.items()):
+        if i >= 1:
+            lines.append("")
+        if file_name == cur_file_name:
+            section_name = "currentFile"
+        else:
+            section_name = "otherFile"
+        if len(root_tags) == 0:
+            lines.append(f"{prefix}{section_name} `{file_name}`")
+        else:
+            lines.append(f"{prefix}{section_name} `{file_name}` {{")
+            for j, root_tag in enumerate(root_tags):
+                walk(root_tag, prefix + "    ")
+            lines.append(f"{prefix}}}")
+
+    if len(lines) > MAX_TREE_HEIGHT:
+        lines = lines[:MAX_TREE_HEIGHT]
+        lines.append(f"{prefix}...(truncated)")
+
+    lines.append("")
+    return "\n".join(lines)
+
+
+def describe_tag(tag: dict) -> str:
+    parts = [tag["kind"], tag["name"]]
+    colon_is_added = False
+    if (signature := tag.get("signature", None)) is not None:
+        if not colon_is_added:
+            parts[-1] += ":"
+            colon_is_added = True
+        parts.append(signature)
+    if (typeref := tag.get("typeref", None)) is not None:
+        if not colon_is_added:
+            parts[-1] += ":"
+            colon_is_added = True
+        parts.append(typeref.removeprefix("typename:"))
+    return " ".join(parts)
+
+
+def main():
+    cur_file_path = sys.argv[1]
+    prefix = sys.argv[2] if len(sys.argv) >= 3 else ""
+
+    cur_dir_path = os.path.dirname(cur_file_path)
+    cur_file_name = os.path.basename(cur_file_path)
+    _, cur_file_ext = os.path.splitext(cur_file_name)
+    if cur_file_ext == "":
+        print(f"{prefix}NONE")
+        return
+
+    file_names = glob.glob("*" + cur_file_ext, root_dir=cur_dir_path)
+    file_names.sort(key=lambda x: "" if x == cur_file_name else x)
+
+    tree: dict[str, list[dict]] = {}
+    for file_name in file_names:
+        file_path = os.path.join(cur_dir_path, file_name)
+        tree[file_name] = get_root_tags(file_path)
+    sys.stdout.write(dump_tree(tree, prefix, cur_file_name))
+
+
+main()

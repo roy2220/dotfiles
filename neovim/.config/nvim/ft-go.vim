@@ -46,7 +46,7 @@ function! s:goimports() abort
     call winrestview(view)
 endfunction
 
-let s:list_go_imports_cmd = expand('<sfile>:p:h')..'/scripts/list-go-imports'
+let s:list_go_imports_cmd = stdpath('config')..'/scripts/list-go-imports'
 
 function! s:complete_import() abort
     return fzf#vim#complete(s:list_go_imports_cmd)

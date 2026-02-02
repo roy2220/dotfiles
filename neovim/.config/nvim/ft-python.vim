@@ -45,7 +45,7 @@ function! s:isort() abort
     call winrestview(view)
 endfunction
 
-let s:list_python_imports_cmd = expand('<sfile>:p:h')..'/scripts/list-python-imports'
+let s:list_python_imports_cmd = stdpath('config')..'/scripts/list-python-imports'
 
 function! s:complete_import() abort
     return fzf#vim#complete(s:list_python_imports_cmd)

@@ -431,7 +431,11 @@ module.setup {
 2. 除非能在代码上下文找到*高度置信的线索*，依据线索补全完整代码；否则转为*极度保守模式*，仅试探性补全单行代码！
 3. 生成代码时，要严格遵循上下文的缩进，并排除上下文已有的代码。
 4. 直接输出生成的代码本身，切记不要添加任何多余的东西，包括xml/markdown标记。
-]]
+
+Skeleton Code:
+{{{skeleton_code}}}
+]],
+                skeleton_code = function() return vim.fn.system({vim.fn.stdpath("config").."/scripts/extract-skeleton-code", vim.fn.expand("%:p"), "    "}) end,
             },
             chat_input = {
                 template = [[
