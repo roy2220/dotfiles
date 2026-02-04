@@ -180,7 +180,7 @@ def describe_tag(tag: list) -> str:
 
 
 def main():
-    cur_file_path = sys.argv[1]
+    cur_file_path = os.path.realpath(sys.argv[1])
     prefix = sys.argv[2] if len(sys.argv) >= 3 else ""
 
     cur_dir_path = os.path.dirname(cur_file_path)
