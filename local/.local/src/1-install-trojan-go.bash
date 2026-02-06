@@ -28,7 +28,9 @@ if download_url is None:
     sys.exit(1)
 print(download_url)
 ')
+
 TEMP_FILE=$(mktemp)
 curl -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
-unzip -p "${TEMP_FILE}" trojan-go | install /dev/stdin "${HOME}/.local/bin/trojan-go"
+unzip -p "${TEMP_FILE}" trojan-go |
+	install -D /dev/stdin "${HOME}/.local/bin/trojan-go"
 rm --force "${TEMP_FILE}"

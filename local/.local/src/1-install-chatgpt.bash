@@ -14,4 +14,5 @@ aarch64)
 esac
 
 DOWNLOAD_URL=https://github.com/kardolus/chatgpt-cli/releases/latest/download/chatgpt-linux-${ARCH}
-curl -SsLf "${DOWNLOAD_URL}" | install /dev/stdin "${HOME}/.local/bin/chatgpt"
+curl -SsLf "${DOWNLOAD_URL}" |
+	install -D /dev/stdin "${HOME}/.local/bin/chatgpt"

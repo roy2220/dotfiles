@@ -29,4 +29,6 @@ if download_url is None:
     sys.exit(1)
 print(download_url)
 ')
-curl -SsLf "${DOWNLOAD_URL}" | install /dev/stdin "${HOME}/.local/bin/mkcert"
+
+curl -SsLf "${DOWNLOAD_URL}" |
+	install -D /dev/stdin "${HOME}/.local/bin/mkcert"

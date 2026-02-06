@@ -37,7 +37,7 @@ rm "${HOME}/go/bin/go${VERSION_3}"
 rm "${HOME}/sdk/go${VERSION_3}/go"*'.tar.gz'
 ln --symbolic --no-target-directory "${HOME}/sdk/go${VERSION_3}" "${HOME}/sdk/go$(cut --delimiter=. --fields=1,2 <<<"${VERSION_3}")"
 
-install /dev/stdin "${HOME}/go/bin/go" <<'EOF'
+install -D /dev/stdin "${HOME}/go/bin/go" <<'EOF'
 #!/usr/bin/env sh
 
 if [ -n "${GO_HTTP_PROXY}" ]; then
@@ -53,7 +53,7 @@ else
 fi
 EOF
 
-install /dev/stdin "${HOME}/go/bin/gofmt" <<'EOF'
+install -D /dev/stdin "${HOME}/go/bin/gofmt" <<'EOF'
 #!/usr/bin/env sh
 
 if [ -z "${GOVERSION}" ]; then

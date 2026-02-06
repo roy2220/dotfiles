@@ -29,7 +29,7 @@ if download_url is None:
     sys.exit(1)
 print(download_url)
 ')
-TEMP_DIR=$(mktemp --directory)
-curl -SsLf "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"
-install "${TEMP_DIR}/delta-"*"-${ARCH}-unknown-linux-gnu/delta" "${HOME}/.local/bin/delta"
-rm --force --recursive "${TEMP_DIR}"
+
+curl -SsLf "${DOWNLOAD_URL}" |
+	tar xz --wildcards "delta-*-${ARCH}-unknown-linux-gnu/delta" --to-stdout |
+	install -D /dev/stdin "${HOME}/.local/bin/delta"

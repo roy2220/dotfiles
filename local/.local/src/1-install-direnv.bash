@@ -28,8 +28,6 @@ if download_url is None:
     sys.exit(1)
 print(download_url)
 ')
-TEMP_FILE=$(mktemp)
-curl -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
-chmod +x "${TEMP_FILE}"
-install "${TEMP_FILE}" "${HOME}/.local/bin/direnv"
-rm --force "${TEMP_FILE}"
+
+curl -SsLf "${DOWNLOAD_URL}" |
+	install -D /dev/stdin "${HOME}/.local/bin/direnv"

@@ -28,7 +28,9 @@ if download_url is None:
     sys.exit(1)
 print(download_url)
 ')
+
 TEMP_FILE=$(mktemp)
 curl -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
-unzip -p "${TEMP_FILE}" | install /dev/stdin "${HOME}/.local/bin/tun2socks"
+unzip -p "${TEMP_FILE}" |
+	install -D /dev/stdin "${HOME}/.local/bin/tun2socks"
 rm --force "${TEMP_FILE}"

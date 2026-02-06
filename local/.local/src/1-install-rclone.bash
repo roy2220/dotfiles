@@ -15,12 +15,11 @@ esac
 
 TEMP_FILE=$(mktemp)
 curl -SsLf --output "${TEMP_FILE}" "https://downloads.rclone.org/rclone-current-linux-${ARCH}.zip"
-VERSION=$(curl -SsLf https://downloads.rclone.org/version.txt)
-VERSION=$(grep --perl-regexp --only-matching 'v\d+\.\d+\.\d+' <<<"${VERSION}")
-unzip -p "${TEMP_FILE}" "rclone-${VERSION}-linux-${ARCH}/rclone" | install /dev/stdin "${HOME}/.local/bin/_rclone"
+unzip -p "${TEMP_FILE}" "rclone-*-linux-${ARCH}/rclone" |
+	install -D /dev/stdin "${HOME}/.local/bin/_rclone"
 rm --force "${TEMP_FILE}"
 
-install /dev/stdin "${HOME}/.local/bin/rclone" <<'EOF'
+install -D /dev/stdin "${HOME}/.local/bin/rclone" <<'EOF'
 #!/usr/bin/env bash
 
 exec "$(dirname "$0")/_rclone" ${RCLONE_CONFIG_FILE:+--config="${RCLONE_CONFIG_FILE}"} "${@}"

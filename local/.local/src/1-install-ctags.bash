@@ -29,7 +29,7 @@ if download_url is None:
     sys.exit(1)
 print(download_url)
 ')
-TEMP_DIR=$(mktemp --directory)
-curl -SsLf "${DOWNLOAD_URL}" | tar xJ --directory "${TEMP_DIR}"
-install "${TEMP_DIR}/uctags-"*"-linux-${ARCH}.release/bin/ctags" "${HOME}/.local/bin/ctags"
-rm --force --recursive "${TEMP_DIR}"
+
+curl -SsLf "${DOWNLOAD_URL}" |
+	tar xJ --wildcards "uctags-*-linux-${ARCH}.release/bin/ctags" --to-stdout |
+	install -D /dev/stdin "${HOME}/.local/bin/ctags"
