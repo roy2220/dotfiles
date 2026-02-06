@@ -81,7 +81,7 @@ def build_tree(dir_path: str, file_names: list[str]) -> dict[str, list[list]]:
                 tag_map[tag_id] = tag
 
         root_tags: list[list] = []
-        for tag in tuple(tag_map.values()):
+        for tag in tag_map.values():
             if (scope := tag[F_SCOPE]) == "":
                 root_tags.append(tag)
             else:
