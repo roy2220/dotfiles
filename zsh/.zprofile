@@ -47,7 +47,7 @@ source ~/.secrets/envrc
 export TERM=xterm-256color
 export SHELL=${0}
 export EDITOR=$(which nvim)
-export PATH=~/.local/bin:~/go/bin:~/.cargo/bin${PATH:+:${PATH}}
+export PATH=~/.local/sbin:~/.local/bin:~/go/bin:~/.cargo/bin${PATH:+:${PATH}}
 export LD_LIBRARY_PATH=~/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 # for zsh
 export KEYTIMEOUT=100

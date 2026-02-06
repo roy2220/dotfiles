@@ -1,0 +1,4 @@
+/local/.local/bin
+/tmux/.tmux/plugins
+/neovim/.local
+/openssh/.ssh/known_hosts*
