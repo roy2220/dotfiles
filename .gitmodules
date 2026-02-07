@@ -4,9 +4,6 @@
 [submodule "tmux/.tmux/plugins/tpm"]
 	path = tmux/.tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm.git
-[submodule "local/.local/share/words"]
-	path = local/.local/share/words
-	url = https://github.com/roy2220/words.git
 [submodule "neovim/.local/share/nvim/site/autoload"]
 	path = neovim/.local/share/nvim/site/autoload
 	url = https://github.com/junegunn/vim-plug.git
