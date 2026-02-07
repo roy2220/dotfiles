@@ -29,7 +29,7 @@ if download_url is None:
     sys.exit(1)
 print(download_url)
 ')
-TEMP_DIR=$(mktemp --directory)
-curl -SsLf "${DOWNLOAD_URL}" | tar xz --directory "${TEMP_DIR}"
-install "${TEMP_DIR}/linux-${ARCH}/helm" "${HOME}/.local/bin/helm"
-rm --force --recursive "${TEMP_DIR}"
+
+curl -SsLf "${DOWNLOAD_URL}" |
+	tar xz --wildcards "linux-${ARCH}/helm" --to-stdout |
+	install -D /dev/stdin "${HOME}/.local/bin/helm"
