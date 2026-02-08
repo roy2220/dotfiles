@@ -315,12 +315,12 @@ augroup END
 "===================================================================================================
 " nvim-treesitter & nvim-treesitter-textobjects
 lua << EOF
-local ok, module = pcall(require, "nvim-treesitter.configs")
+local ok, configs = pcall(require, "nvim-treesitter.configs")
 if not ok then
     return
 end
 
-module.setup {
+configs.setup {
     -- nvim-treesitter
     auto_install = false,
     highlight = {
@@ -384,22 +384,13 @@ EOF
 "===================================================================================================
 " minuet-ai.nvim
 lua << EOF
-local ok, module = pcall(require, "minuet")
+local ok, minuet = pcall(require, "minuet")
 if not ok then
     return
 end
 
-local mc = require 'minuet.config'
-module.setup {
-    virtualtext = {
-        auto_trigger_ft = {},
-        keymap = {
-            next = "<M-_>KB=A-[<M-\\>",
-            accept = "<M-_>KB=A-]<M-\\>",
-            accept_line = "<M-_>KB=A-S-]<M-\\>",
-        },
-    },
-
+local config = require("minuet.config")
+minuet.setup {
     provider = "openai_compatible",
     request_timeout = 5,
     n_completions = 1,
@@ -423,34 +414,109 @@ module.setup {
             -- Prefix-first style
             system = {
                 template = [[
-你是一个极度严谨的代码补全引擎，擅长推断用户意图，帮助用户补全代码片段
+# 你的角色
 
-用户输入格式: 代码上文<<<CURSOR>>>代码下文
+你是一个极度严谨的代码补全引擎，擅长推断用户意图，帮助用户补全代码片段。
 
-行为准则:
-1. 补全<<<CURSOR>>>处的代码。
-2. 除非能在代码上下文找到*高度置信的线索*，依据线索补全完整代码；否则转为*极度保守模式*，仅试探性补全单行代码！
-3. 生成代码时，要严格遵循上下文的缩进，并排除上下文已有的代码。
-4. 直接输出生成的代码本身，切记不要添加任何多余的东西，包括xml/markdown标记。
 
-Skeleton Code:
-{{{skeleton_code}}}
+# 用户引言
+
+当我们说某个事物“是什么”，通常会找一个宽泛的概念，将事物囊括进来，例如：狗是哺乳动物。
+反之描述“不是什么”， 我们会找一个锚点，然后强调它的差异性，比如：狗不是狼，它已被驯服。
+相较于“是什么”，“不是什么”的信息密度更大，也更具象——“是什么”描绘轮廓，“不是什么”雕琢细节。
+
+在处理工作任务之前，我们脑海里只是清楚要干的活“是什么”。随后在执行过程中，随着细节深入，
+我们才逐渐感知到理想和现实的摩擦，一系列需要动态决策的点开始浮现，我们被迫明确它“不是什么”。
+最终在反复打磨后，我们才得到高质量的工作成果。“是什么”决定木桶的高度，“不是什么”决定木桶的短板。
+
+近似的，我们让AI干活之前，只能告诉它“要什么”，却很难说清楚“不要什么”。因为“不要什么”是执行过程中，
+一系列动态决策的结果。由于自身没有参与执行，信息量不足，我们难以察觉这些隐性决策空间的存在，
+这便默认成了AI自由发挥的空间，这是个巨大的隐患。
+
+
+# 用户输入
+
+用户会向你提供正在编辑中的文件——其中的局部代码片段。
+
+具体格式：代码上文<<<CURSOR>>>代码下文
+
+
+# 你的行为准则
+
+- 补全<<<CURSOR>>>处最可能的代码。
+
+- 如果你在上下文找到*置信度大于90%*的线索，直接依据线索补全完整的代码。
+
+- 如果你没有在上下文找到*置信度大于90%*的线索，或者你察觉到这里存在隐性决策空间，禁止提供代码，
+  而是将你的问题、困惑以*代码注释*的形式补全在光标处，随后用户会在注释中与你进一步讨论。
+
+  生成代码注释的规格：
+    - 使用中文。
+    - 控制注释行的长度，必要时进行换行。
+    - 如果给用户提供了选项，给每个选项附上唯一标识。
+    - 在且仅在第一行注释署名“AI: ”。
+    - 在且仅在最后一行注释署名“USER: ”留白，示意用户答复。
+
+- 生成的代码、注释，要严格遵循上下文的缩进，禁止包含上下文已有的代码。
+
+- 直接输出代码、注释本身，禁止附加任何东西，尤其是xml/markdown标记。
 ]],
-                skeleton_code = function() return vim.fn.system({vim.fn.stdpath("config").."/scripts/extract-skeleton-code", vim.fn.expand("%:p"), "    "}) end,
             },
             chat_input = {
                 template = [[
+{{{code_outline}}}
 {{{language}}}
 {{{tab}}}
+
 {{{context_before_cursor}}}<<<CURSOR>>>{{{context_after_cursor}}}
 ]],
-                language = mc.default_chat_input_prefix_first.language,
-                tab = mc.default_chat_input_prefix_first.tab,
-                context_before_cursor = mc.default_chat_input_prefix_first.context_before_cursor,
-                context_after_cursor = mc.default_chat_input_prefix_first.context_after_cursor,
+                code_outline = function()
+                    local commentstring = vim.bo.commentstring
+                    if commentstring == nil or commentstring == "" then
+                        commentstring = "# %s"
+                    end
+                    local lines = vim.fn.systemlist({
+                        vim.fn.stdpath("config").."/scripts/extract-code-outline",
+                        vim.fn.expand("%:p"),
+                        "     ",
+                    })
+                    for i, line in ipairs(lines) do
+                        lines[i] = string.format(commentstring, line)
+                    end
+                    lines[1] = string.format(commentstring, "code outline:\n")..lines[1]
+                    return table.concat(lines, "\n")
+                end,
+                language = config.default_chat_input_prefix_first.language,
+                tab = config.default_chat_input_prefix_first.tab,
+                context_before_cursor = config.default_chat_input_prefix_first.context_before_cursor,
+                context_after_cursor = config.default_chat_input_prefix_first.context_after_cursor,
             },
             few_shots = {}
         },
     },
+
+    virtualtext = {
+        auto_trigger_ft = {},
+        keymap = {
+            accept = "<M-_>KB=A-]<M-\\>",
+            accept_line = "<M-_>KB=A-S-]<M-\\>",
+        },
+    },
 }
+
+local action = require("minuet.virtualtext").action
+vim.keymap.set(
+    "i",
+    "<M-_>KB=A-[<M-\\>",
+    function()
+        if action.is_visible then
+            action.dismiss()
+        end
+        return action.next()
+    end,
+    {
+        desc = "[minuet.virtualtext] next suggestion",
+        silent = true,
+    }
+)
 EOF
