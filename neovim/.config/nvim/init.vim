@@ -51,7 +51,7 @@ call plug#begin()
         \    'call system(''git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff'')',
         \], '\|') }
         Plug 'nvim-treesitter/nvim-treesitter-textobjects', { 'branch': 'master' }
-        Plug 'milanglacier/minuet-ai.nvim' | Plug 'nvim-lua/plenary.nvim'
+        Plug 'milanglacier/minuet-ai.nvim', { 'do': 'git apply ~/.config/nvim/plugin-patches/minuet-ai.nvim.diff' } | Plug 'nvim-lua/plenary.nvim'
     endif
 call plug#end()
 let g:plug_timeout=1200
@@ -445,9 +445,9 @@ minuet.setup {
 
 - 补全<<<CURSOR>>>处最可能的代码。
 
-- 如果你在上下文找到*置信度大于90%*的线索，直接依据线索补全完整的代码。
+- 如果你在上下文找到*置信度大于90%*的线索，依据线索补全完整的代码。
 
-- 如果你没有在上下文找到*置信度大于90%*的线索，或者你察觉到这里存在隐性决策空间，禁止提供代码，
+- 如果你没有在上下文找到*置信度大于90%*的线索，或者你察觉到这里存在隐性决策空间，禁止补全代码，
   而是将你的问题、困惑以*代码注释*的形式补全在光标处，随后用户会在注释中与你进一步讨论。
 
   生成代码注释的规格：
@@ -459,7 +459,7 @@ minuet.setup {
 
 - 生成的代码、注释，要严格遵循上下文的缩进，禁止包含上下文已有的代码。
 
-- 直接输出代码、注释本身，禁止附加任何东西，尤其是xml/markdown标记。
+- 直接输出<<<CURSOR>>>处的代码、注释本身。
 ]],
             },
             chat_input = {
@@ -480,6 +480,9 @@ minuet.setup {
                         vim.fn.expand("%:p"),
                         "     ",
                     })
+                    if #lines == 0 then
+                        return "code outline: none"
+                    end
                     for i, line in ipairs(lines) do
                         lines[i] = string.format(commentstring, line)
                     end

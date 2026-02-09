@@ -187,7 +187,6 @@ def main():
     cur_file_name = os.path.basename(cur_file_path)
     _, cur_file_ext = os.path.splitext(cur_file_name)
     if cur_file_ext == "":
-        print(f"{prefix}NONE")
         return
 
     file_names = glob.glob("*" + cur_file_ext, root_dir=cur_dir_path)

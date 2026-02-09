@@ -1,0 +1,29 @@
+diff --git a/lua/minuet/utils.lua b/lua/minuet/utils.lua
+index b3e03e5..bcec1f0 100644
+--- a/lua/minuet/utils.lua
++++ b/lua/minuet/utils.lua
+@@ -620,9 +620,21 @@ M.list_dedup = function(list)
+     local hash = {}
+     local items_cleaned = {}
+     for _, item in ipairs(list) do
+-        if type(item) == 'string' and not hash[item] then
+-            hash[item] = true
+-            table.insert(items_cleaned, item)
++        if type(item) == 'string' then
++            local _, i = string.find(item, '```')
++            if i ~= nil then
++                _, i = string.find(item, '\n', i+1)
++                if i ~= nil then
++                    local j, _ = string.find(item, '\n```', i+1)
++                    if j ~= nil then
++                        item = string.sub(item, i+1, j-1)
++                    end
++                end
++            end
++            if not hash[item] then
++                hash[item] = true
++                table.insert(items_cleaned, item)
++            end
+         end
+     end
+     return items_cleaned
