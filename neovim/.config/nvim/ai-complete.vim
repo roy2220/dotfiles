@@ -30,18 +30,26 @@ END
 endfunction
 
 function! s:chatgpt(query) abort
-    let output = system('tee /tmp/ai_complete.txt | xargs -- chatgpt -- | tee -a /tmp/ai_complete.txt', a:query)
+    let input = '{"model":"x-ai/grok-3","messages":[{"role":"user","content":'..json_encode(a:query).."}]}\n"
+    let output = system(
+    \   'tee /tmp/ai_complete.txt'..
+    \   ' | curl https://openrouter.ai/api/v1/chat/completions'..
+    \       ' -H "Authorization: Bearer ${OPENROUTER_API_KEY}"'..
+    \       ' -H ''Content-Type: application/json'''..
+    \       ' -d@-'..
+    \   ' | tee -a /tmp/ai_complete.txt',
+    \ input)
     if v:shell_error != 0
         throw 'Failed to execute: '..a:query
     endif
-    let i = stridx(output, '<code_c>')
+    let i = stridx(output, '<code_c>\n')
     if i == -1
         throw 'Failed to locate code_c'
     endif
-    let j = i + len('<code_c>')
-    let k = stridx(output, '</code_c>', j)
+    let j = i + len('<code_c>\n')
+    let k = stridx(output, '\n</code_c>', j)
     if k == -1
         throw 'Failed to locate code_c'
     endif
-    return output[j:k-1]
+    return json_decode('"'..output[j:k-1]..'"')
 endfunction
