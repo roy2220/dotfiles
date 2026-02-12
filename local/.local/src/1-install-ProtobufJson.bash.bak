@@ -1,6 +1,6 @@
 set -eu${DEBUG+x}o pipefail
 
-DOWNLOAD_URL=$(curl -SsLf 'https://api.github.com/repos/hq6/ProtobufJson/tags' | python3 -c '
+DOWNLOAD_URL=$(curl --retry 3 -SsLf 'https://api.github.com/repos/hq6/ProtobufJson/tags' | python3 -c '
 import json
 import re
 import sys
@@ -21,7 +21,7 @@ if [[ -f ${CACHE_FILE} ]]; then
 	download() { cat "${CACHE_FILE}"; }
 	USE_CACHE=1
 else
-	download() { curl -SsLf "${DOWNLOAD_URL}"; }
+	download() { curl --retry 3 -SsLf "${DOWNLOAD_URL}"; }
 	USE_CACHE=0
 fi
 TEMP_DIR=$(mktemp --directory)

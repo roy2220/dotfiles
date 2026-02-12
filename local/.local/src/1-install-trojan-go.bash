@@ -13,7 +13,7 @@ aarch64)
 	;;
 esac
 
-DOWNLOAD_URL=$(curl -SsLf https://api.github.com/repos/p4gefau1t/trojan-go/releases/latest | python3 -c '
+DOWNLOAD_URL=$(curl --retry 3 -SsLf https://api.github.com/repos/p4gefau1t/trojan-go/releases/latest | python3 -c '
 import json
 import sys
 
@@ -30,7 +30,7 @@ print(download_url)
 ')
 
 TEMP_FILE=$(mktemp)
-curl -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
+curl --retry 3 -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
 unzip -p "${TEMP_FILE}" trojan-go |
 	install -D /dev/stdin "${HOME}/.local/bin/trojan-go"
 rm --force "${TEMP_FILE}"

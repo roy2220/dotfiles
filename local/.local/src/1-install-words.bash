@@ -1,6 +1,6 @@
 set -eu${DEBUG+x}o pipefail
 
-DOWNLOAD_URL=$(curl -SsLf https://api.github.com/repos/roy2220/words/releases/latest | python3 -c '
+DOWNLOAD_URL=$(curl --retry 3 -SsLf https://api.github.com/repos/roy2220/words/releases/latest | python3 -c '
 import json
 import sys
 
@@ -16,7 +16,7 @@ if download_url is None:
 print(download_url)
 ')
 
-curl -SsLf "${DOWNLOAD_URL}" |
+curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
 	gzip --decompress |
 	install -D -m 644 /dev/stdin "${HOME}/.local/share/words/words.txt"
 

@@ -13,7 +13,7 @@ aarch64)
 	;;
 esac
 
-DOWNLOAD_URL=$(curl -SsLf https://api.github.com/repos/direnv/direnv/releases/latest | python3 -c '
+DOWNLOAD_URL=$(curl --retry 3 -SsLf https://api.github.com/repos/direnv/direnv/releases/latest | python3 -c '
 import json
 import sys
 
@@ -29,5 +29,5 @@ if download_url is None:
 print(download_url)
 ')
 
-curl -SsLf "${DOWNLOAD_URL}" |
+curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
 	install -D /dev/stdin "${HOME}/.local/bin/direnv"

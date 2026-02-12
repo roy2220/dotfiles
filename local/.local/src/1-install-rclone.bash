@@ -14,7 +14,7 @@ aarch64)
 esac
 
 TEMP_FILE=$(mktemp)
-curl -SsLf --output "${TEMP_FILE}" "https://downloads.rclone.org/rclone-current-linux-${ARCH}.zip"
+curl --retry 3 -SsLf --output "${TEMP_FILE}" "https://downloads.rclone.org/rclone-current-linux-${ARCH}.zip"
 unzip -p "${TEMP_FILE}" "rclone-*-linux-${ARCH}/rclone" |
 	install -D /dev/stdin "${HOME}/.local/bin/_rclone"
 rm --force "${TEMP_FILE}"

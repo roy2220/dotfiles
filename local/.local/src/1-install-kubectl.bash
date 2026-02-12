@@ -13,6 +13,6 @@ aarch64)
 	;;
 esac
 
-K8S_VERSION=$(curl -SsLf https://dl.k8s.io/release/stable.txt)
-curl -SsLf "https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/${ARCH}/kubectl" |
+K8S_VERSION=$(curl --retry 3 -SsLf https://dl.k8s.io/release/stable.txt)
+curl --retry 3 -SsLf "https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/${ARCH}/kubectl" |
 	install -D /dev/stdin "${HOME}/.local/bin/kubectl"

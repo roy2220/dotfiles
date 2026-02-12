@@ -13,7 +13,7 @@ aarch64)
 	;;
 esac
 
-DOWNLOAD_URL=$(curl -SsLf https://api.github.com/repos/xjasonlyu/tun2socks/releases/latest | python3 -c '
+DOWNLOAD_URL=$(curl --retry 3 -SsLf https://api.github.com/repos/xjasonlyu/tun2socks/releases/latest | python3 -c '
 import json
 import sys
 
@@ -30,7 +30,7 @@ print(download_url)
 ')
 
 TEMP_FILE=$(mktemp)
-curl -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
+curl --retry 3 -SsLf --output "${TEMP_FILE}" "${DOWNLOAD_URL}"
 unzip -p "${TEMP_FILE}" |
 	install -D /dev/stdin "${HOME}/.local/bin/tun2socks"
 rm --force "${TEMP_FILE}"
