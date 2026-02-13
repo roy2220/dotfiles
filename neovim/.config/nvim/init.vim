@@ -389,6 +389,26 @@ if not ok then
     return
 end
 
+local function code_outline()
+    local commentstring = vim.bo.commentstring
+    if commentstring == nil or commentstring == "" then
+        commentstring = "# %s"
+    end
+    local lines = vim.fn.systemlist({
+        vim.fn.stdpath("config").."/scripts/extract-code-outline",
+        vim.fn.expand("%:p"),
+        "     ",
+    })
+    if #lines == 0 then
+        return "code outline: none"
+    end
+    for i, line in ipairs(lines) do
+        lines[i] = string.format(commentstring, line)
+    end
+    lines[1] = string.format(commentstring, "code outline:\n")..lines[1]
+    return table.concat(lines, "\n")
+end
+
 local config = require("minuet.config")
 minuet.setup {
     provider = "openai_compatible",
@@ -464,33 +484,15 @@ minuet.setup {
             },
             chat_input = {
                 template = [[
-{{{code_outline}}}
 {{{language}}}
 {{{tab}}}
+{{{code_outline}}}
 
 {{{context_before_cursor}}}<<<CURSOR>>>{{{context_after_cursor}}}
 ]],
-                code_outline = function()
-                    local commentstring = vim.bo.commentstring
-                    if commentstring == nil or commentstring == "" then
-                        commentstring = "# %s"
-                    end
-                    local lines = vim.fn.systemlist({
-                        vim.fn.stdpath("config").."/scripts/extract-code-outline",
-                        vim.fn.expand("%:p"),
-                        "     ",
-                    })
-                    if #lines == 0 then
-                        return "code outline: none"
-                    end
-                    for i, line in ipairs(lines) do
-                        lines[i] = string.format(commentstring, line)
-                    end
-                    lines[1] = string.format(commentstring, "code outline:\n")..lines[1]
-                    return table.concat(lines, "\n")
-                end,
                 language = config.default_chat_input_prefix_first.language,
                 tab = config.default_chat_input_prefix_first.tab,
+                code_outline = code_outline,
                 context_before_cursor = config.default_chat_input_prefix_first.context_before_cursor,
                 context_after_cursor = config.default_chat_input_prefix_first.context_after_cursor,
             },
