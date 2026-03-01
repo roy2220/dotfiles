@@ -1,33 +1,34 @@
-source ~/.config/nvim/basic.vim
+runtime basic.vim
 set shadafile=/workspace/.shada
 
-source ~/.config/nvim/brackets-jump.vim
-source ~/.config/nvim/quickfix.vim
-source ~/.config/nvim/workflow.vim
-source ~/.config/nvim/bang.vim
-source ~/.config/nvim/the-silver-searcher.vim
-source ~/.config/nvim/tmux-clipboard.vim
-source ~/.config/nvim/ai-complete.vim
+runtime brackets-jump.vim
+runtime quickfix.vim
+runtime workflow.vim
+runtime bang.vim
+runtime the-silver-searcher.vim
+runtime tmux-clipboard.vim
+runtime ai-complete.vim
 
-source ~/.config/nvim/ft-go.vim
-source ~/.config/nvim/ft-python.vim
-source ~/.config/nvim/ft-sh.vim
-source ~/.config/nvim/ft-proto.vim
-source ~/.config/nvim/ft-yaml.vim
+runtime ft-go.vim
+runtime ft-python.vim
+runtime ft-sh.vim
+runtime ft-proto.vim
+runtime ft-yaml.vim
 
-source ~/.config/nvim/dir-diff.vim
+runtime dir-diff.vim
 
 "===================================================================================================
 " vim-plug
+let g:plugin_patch_dir_path = stdpath('config')..'/plugin-patches/'
 call plug#begin()
     Plug 'sainnhe/gruvbox-material'
     Plug 'itchyny/lightline.vim'
-    Plug 'mengelbrecht/lightline-bufferline', { 'do': 'git apply ~/.config/nvim/plugin-patches/lightline-bufferline.diff' }
+    Plug 'mengelbrecht/lightline-bufferline', { 'do': 'git apply '..g:plugin_patch_dir_path..'/lightline-bufferline.diff' }
     Plug 'psliwka/vim-smoothie'
     Plug 'Yggdroot/indentLine'
     Plug 'tpope/vim-sleuth'
     Plug 'machakann/vim-highlightedyank'
-    Plug '~/.zplug/repos/junegunn/fzf' | Plug 'junegunn/fzf.vim', { 'do': 'git apply ~/.config/nvim/plugin-patches/fzf.vim.diff' }
+    Plug '~/.zplug/repos/junegunn/fzf' | Plug 'junegunn/fzf.vim', { 'do': 'git apply '..g:plugin_patch_dir_path..'/fzf.vim.diff' }
     Plug '~/.tmux/plugins/easyjump.tmux'
     Plug 'othree/eregex.vim'
     Plug 'neoclide/jsonc.vim'
@@ -37,21 +38,21 @@ call plug#begin()
         Plug 'airblade/vim-gitgutter'
         Plug 'knsh14/vim-github-link'
         Plug 'lifepillar/vim-mucomplete'
-        Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply ~/.config/nvim/plugin-patches/vim-smartpairs.diff' }
+        Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply '..g:plugin_patch_dir_path..'/vim-smartpairs.diff' }
         Plug 'tpope/vim-surround'
         Plug 'arthurxavierx/vim-caser'
         Plug 'tommcdo/vim-exchange'
         Plug 'chrisbra/NrrwRgn'
         Plug 'AndrewRadev/linediff.vim'
         Plug 'hrsh7th/vim-vsnip'
-        Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply ~/.config/nvim/plugin-patches/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
+        Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply '..g:plugin_patch_dir_path..'/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
         Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'master', 'do': ':'..join([
         \    'TSUpdateSync',
         \    exists('g:TreeSitterParsersToInstall') ? 'TSInstallSync '..join(g:TreeSitterParsersToInstall, ' ') : '',
-        \    'call system(''git apply ~/.config/nvim/plugin-patches/nvim-treesitter.diff'')',
+        \    'call system(''git apply '..g:plugin_patch_dir_path..'/nvim-treesitter.diff'')',
         \], '\|') }
         Plug 'nvim-treesitter/nvim-treesitter-textobjects', { 'branch': 'master' }
-        Plug 'milanglacier/minuet-ai.nvim', { 'do': 'git apply ~/.config/nvim/plugin-patches/minuet-ai.nvim.diff' } | Plug 'nvim-lua/plenary.nvim'
+        Plug 'milanglacier/minuet-ai.nvim', { 'do': 'git apply '..g:plugin_patch_dir_path..'/minuet-ai.nvim.diff' } | Plug 'nvim-lua/plenary.nvim'
     endif
 call plug#end()
 let g:plug_timeout=1200
@@ -421,7 +422,7 @@ minuet.setup {
             api_key = "OPENROUTER_API_KEY",
             model = "google/gemini-2.5-flash",
             optional = {
-                max_tokens = 512,
+                max_tokens = 1024,
                 top_p = 0.9,
                 provider = {
                     sort = "throughput",
@@ -442,15 +443,15 @@ minuet.setup {
 # 用户引言
 
 当我们说某个事物“是什么”，通常会找一个宽泛的概念，将事物囊括进来，例如：狗是哺乳动物。
-反之描述“不是什么”， 我们会找一个锚点，然后强调它的差异性，比如：狗不是狼，它已被驯服。
-相较于“是什么”，“不是什么”的信息密度更大，也更具象——“是什么”描绘轮廓，“不是什么”雕琢细节。
+反之描述“不是什么”，我们会找一个锚点，然后强调它的差异性，比如：狗不是狼，它已被驯服。
+相较于“是什么”，“不是什么”的信息密度更大，也更具象——“是什么”勾勒轮廓，“不是什么”雕琢细节。
 
 在处理工作任务之前，我们脑海里只是清楚要干的活“是什么”。随后在执行过程中，随着细节深入，
-我们才逐渐感知到理想和现实的摩擦，一系列需要动态决策的点开始浮现，我们被迫明确它“不是什么”。
+我们才逐渐感知到理想和现实的摩擦，一系列需要动态决策的点开始涌现——我们被迫明确它“不是什么”。
 最终在反复打磨后，我们才得到高质量的工作成果。“是什么”决定木桶的高度，“不是什么”决定木桶的短板。
 
 近似的，我们让AI干活之前，只能告诉它“要什么”，却很难说清楚“不要什么”。因为“不要什么”是执行过程中，
-一系列动态决策的结果。由于自身没有参与执行，信息量不足，我们难以察觉这些隐性决策空间的存在，
+一系列动态决策的结果。由于自身没有参与执行，缺少摩擦力的反馈，我们难以察觉这些隐性决策空间的存在，
 这便默认成了AI自由发挥的空间，这是个巨大的隐患。
 
 
