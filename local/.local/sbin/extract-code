@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+FILES=$(find . -mindepth 1 -maxdepth 1 -type f -printf '%f\n' | eval "${1}")
+if [[ -z ${FILES} ]]; then
+	exit 1
+fi
+readarray -t FILES <<<"${FILES}"
+
+for FILE in "${FILES[@]}"; do
+	echo ''
+	echo "# ${FILE}"
+	if [[ ! -v DRYRUN ]]; then
+		echo '```'
+		cat "${FILE}"
+		echo '```'
+	fi
+done
