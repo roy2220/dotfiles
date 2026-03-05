@@ -125,7 +125,7 @@ vnoremap <silent> \\s :<C-U>call <SID>super_s('v')<CR>
 function! s:super_s(mode) abort
     let keys = 'q:'
     if a:mode ==# 'v'
-        let word = escape(GetVisualSelection(), '/\')
+        let word = substitute(escape(GetVisualSelection(), '/\'), "\t", '\\t', 'g')
         let word2 = substitute(word, "\n", '\\n', 'g')
         let word3 = substitute(escape(word, "&~"), "\n", '\\r', 'g')
         let n_chars = strchars(word)
