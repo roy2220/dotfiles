@@ -10,7 +10,7 @@ readarray -t FILES <<<"${FILES}"
 
 for FILE in "${FILES[@]}"; do
 	echo ''
-	echo "# ${FILE}"
+	echo "# File \`${FILE}\`"
 	if [[ ! -v DRYRUN ]]; then
 		echo '```'
 		cat "${FILE}"
