@@ -2,6 +2,9 @@ nnoremap <silent> ! :call <SID>exchange_n(input('!'))<CR>
 vnoremap <silent> ! :<C-U>call <SID>exchange_v(input('!'))<CR>
 
 function! s:exchange_n(command) abort
+    if a:command ==# ""
+        return
+    endif
     let lines = getline(1, '$')
     let lines[-1] ..= "\n"
     let input = join(lines, "\n")
@@ -13,6 +16,9 @@ endfunction
 
 function! s:exchange_v(command) abort
     normal! gv
+    if a:command ==# ""
+        return
+    endif
     let input = GetVisualSelection()
     let output = s:systemx(a:command, input)
     let vmode = visualmode()
