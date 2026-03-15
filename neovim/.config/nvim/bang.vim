@@ -15,10 +15,10 @@ function! s:exchange_n(command) abort
 endfunction
 
 function! s:exchange_v(command) abort
-    normal! gv
     if a:command ==# ""
         return
     endif
+    normal! gv
     let input = GetVisualSelection()
     let output = s:systemx(a:command, input)
     let vmode = visualmode()

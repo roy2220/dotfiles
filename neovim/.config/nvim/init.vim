@@ -236,8 +236,8 @@ vmap <M-_>KB=A-C<M-\><Space> <Plug>CaserVSpaceCase
 " vim-exchange
 nmap <M-_>KB=A-X<M-\> <Plug>(Exchange)
 vmap <M-_>KB=A-X<M-\> <Plug>(Exchange)
-nmap <M-_>KB=A-X<M-\><BS> <Esc> <Plug>(ExchangeClear)
 nmap <M-_>KB=A-S-X<M-\> <Plug>(ExchangeLine)
+nmap <M-_>KB=A-X<M-\><M-_>KB=A-X<M-\> <Plug>(ExchangeClear)
 
 "===================================================================================================
 " NrrwRgn
