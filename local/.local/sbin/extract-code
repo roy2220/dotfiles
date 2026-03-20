@@ -2,16 +2,39 @@
 
 set -euo pipefail
 
-FILES=$(git ls-files | eval "${1}")
+if [[ "${#}" -gt 0 && "${1}" == -d ]]; then
+	DRYRUN=1
+	shift
+else
+	DRYRUN=0
+fi
+
+if [[ "${#}" -gt 0 ]]; then
+	FILTER="${1}"
+else
+	FILTER='cat'
+fi
+
+MAX_FILES=${MAX_FILES:-30}
+
+if git rev-parse --git-dir >/dev/null 2>&1; then
+	FILES=$(git ls-files | eval "${FILTER}" | head -"$((MAX_FILES + 1))")
+else
+	FILES=$(find . -mindepth 1 -type f -printf '%P\n' | eval "${FILTER}" | head -"$((MAX_FILES + 1))")
+fi
 if [[ -z ${FILES} ]]; then
 	exit 1
 fi
 readarray -t FILES <<<"${FILES}"
+if [[ "${#FILES[@]}" -gt "${MAX_FILES}" ]]; then
+	echo 'too many files' >&2
+	exit 1
+fi
 
 for FILE in "${FILES[@]}"; do
 	echo ''
 	echo "# File \`${FILE}\`"
-	if [[ ! -v DRYRUN ]]; then
+	if [[ "${DRYRUN}" -eq 0 ]]; then
 		echo '```'
 		cat "${FILE}"
 		echo '```'

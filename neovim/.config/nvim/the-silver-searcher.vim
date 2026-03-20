@@ -5,7 +5,7 @@ endif
 command! -nargs=1 -bang Ag call s:ag(<bang>v:false, <f-args>, v:true)|set hlsearch
 command! -nargs=1 -bang Agp call s:ag(<bang>v:false, <f-args>, v:false)|set hlsearch
 
-command! -nargs=0 AgConflicts call s:ag('^(<{7,9} .+|\|{7,9} .+|={7,9}|>{7,9} .+)$', v:false)|set hlsearch
+command! -nargs=0 AgConflicts call s:ag(v:false, '^(<{7,9} .+|\|{7,9} .+|={7,9}|>{7,9} .+)$', v:false)|set hlsearch
 
 function! s:ag(invert_match, pattern, pattern_is_fixed) abort
     let command = 'ag --vimgrep '
