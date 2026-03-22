@@ -135,8 +135,8 @@ let g:fzf_action = {
 \    'ctrl-v': 'vsplit',
 \}
 
-nnoremap <silent> <M-_>KB=A-F<M-\> :call <SID>fzf_files(v:false)<CR>
-nnoremap <silent> <M-_>KB=A-S-F<M-\> :call <SID>fzf_files(v:true)<CR>
+nnoremap <silent> <M-_>KB=A-F<M-\> :call <SID>fzf_files(v:true)<CR>
+nnoremap <silent> <M-_>KB=A-S-F<M-\> :call <SID>fzf_files(v:false)<CR>
 nnoremap <silent> <M-_>KB=A-B<M-\> :Buffers<CR>
 nnoremap <silent> <M-_>KB=A-T<M-\> :BTags<CR>
 nnoremap <silent> <M-_>KB=A-O<M-\> :History<CR>
@@ -144,17 +144,14 @@ nnoremap <silent> <M-_>KB=A-,<M-\> :History:<CR>
 nnoremap <silent> <M-_>KB=A-/<M-\> :History/<CR>
 
 function! s:fzf_files(check_cur_file_dir) abort
-    let cur_file_dir_path = expand('%:p:h')
     if a:check_cur_file_dir
-        call fzf#vim#files(cur_file_dir_path)
-        return
-    endif
-
-    let cur_dir_path = getcwd()
-    if cur_file_dir_path[:len(cur_dir_path)] ==# cur_dir_path.'/'
-        let query = cur_file_dir_path[len(cur_dir_path) + 1:].'/'
-        call fzf#vim#files('', fzf#vim#with_preview({'options': ['--query='.query]}))
-        return
+        let cur_file_dir_path = expand('%:p:h')
+        let cur_dir_path = getcwd()
+        if cur_file_dir_path[:len(cur_dir_path)] ==# cur_dir_path.'/'
+            let query = cur_file_dir_path[len(cur_dir_path) + 1:].'/'
+            call fzf#vim#files('', fzf#vim#with_preview({'options': ['--query='.query]}))
+            return
+        endif
     endif
 
     call fzf#vim#files('')

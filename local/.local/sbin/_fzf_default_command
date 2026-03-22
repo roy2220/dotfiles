@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+CMD='fd --type f --hidden --follow --exclude .git'
+
+if [[ "$(git check-ignore .)" == . ]]; then
+	exec ${CMD} --no-ignore
+else
+	exec ${CMD}
+fi

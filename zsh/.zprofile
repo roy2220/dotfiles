@@ -52,7 +52,7 @@ export LD_LIBRARY_PATH=~/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 # for zsh
 export KEYTIMEOUT=100
 # for fzf
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_DEFAULT_COMMAND='_fzf_default_command'
 export FZF_DEFAULT_OPTS='--history='\'${HOME}'/.fzf_history'\'' --height=38% --reverse --info=inline --bind '\''ctrl-y:execute-silent(echo -n {} | pbcopy; tmux set-buffer {})+abort'\'
 # for ossutil
 export OSSUTIL_CONFIG_FILE=~/.secrets/ossutil/config
