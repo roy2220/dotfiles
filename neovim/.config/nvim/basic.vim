@@ -84,7 +84,6 @@ cnoremap <M-_>KB=A-S-B<M-\> <S-Left>
 inoremap <M-_>KB=A-S-F<M-\> <S-Right>
 cnoremap <M-_>KB=A-S-F<M-\> <S-Right>
 
-autocmd TermOpen * startinsert
 tnoremap <M-_>KB=A-\<M-\> <C-\><C-n>
 
 "===================================================================================================

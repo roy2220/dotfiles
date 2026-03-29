@@ -7,6 +7,7 @@ let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 let g:TreeSitterParsersToInstall = extendnew(get(g:, 'TreeSitterParsersToInstall', []), [
 \    'go',
 \    'gomod',
+\    'gotmpl',
 \])
 
 
@@ -28,6 +29,8 @@ augroup __go__
     \})
 
     autocmd FileType go call s:on_go_buf()
+
+    autocmd BufRead,BufNewFile *.gotmpl setlocal filetype=gotmpl tabstop=8 softtabstop=0 shiftwidth=0 noexpandtab
 augroup END
 
 function! s:on_go_buf() abort
@@ -36,7 +39,7 @@ function! s:on_go_buf() abort
         autocmd BufWritePre <buffer> call s:goimports()
     augroup END
 
-    setlocal shiftwidth=8 softtabstop=8 noexpandtab
+    "setlocal tabstop=8 softtabstop=0 shiftwidth=0 noexpandtab
     inoremap <buffer> <expr> <c-x>i <SID>complete_import()
 endfunction
 
