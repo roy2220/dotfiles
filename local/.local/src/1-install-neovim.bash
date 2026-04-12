@@ -32,4 +32,4 @@ print(download_url)
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
 	tar xz --directory /opt
-stow --target=/usr/local --dir=/opt nvim-linux-arm64
+stow --target=/usr/local --dir=/opt "nvim-linux-${ARCH}"
