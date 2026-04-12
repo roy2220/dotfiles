@@ -46,12 +46,11 @@ call plug#begin()
         Plug 'AndrewRadev/linediff.vim'
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply '..g:plugin_patch_dir_path..'/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
-        Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'master', 'do': ':'..join([
-        \    'TSUpdateSync',
-        \    exists('g:TreeSitterParsersToInstall') ? 'TSInstallSync '..join(g:TreeSitterParsersToInstall, ' ') : '',
-        \    'call system(''git apply '..g:plugin_patch_dir_path..'/nvim-treesitter.diff'')',
+        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':'..join([
+        \    'TSUpdate',
+        \    exists('g:TreeSitterParsersToInstall') ? 'TSInstall '..join(g:TreeSitterParsersToInstall, ' ') : '',
+        \    'sleep 30',
         \], '\|') }
-        Plug 'nvim-treesitter/nvim-treesitter-textobjects', { 'branch': 'master' }
         Plug 'milanglacier/minuet-ai.nvim', { 'do': 'git apply '..g:plugin_patch_dir_path..'/minuet-ai.nvim.diff' } | Plug 'nvim-lua/plenary.nvim'
     endif
 call plug#end()
@@ -309,75 +308,6 @@ augroup lsp_install
     autocmd!
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
-
-"===================================================================================================
-" nvim-treesitter & nvim-treesitter-textobjects
-lua << EOF
-local ok, configs = pcall(require, "nvim-treesitter.configs")
-if not ok then
-    return
-end
-
-configs.setup {
-    -- nvim-treesitter
-    auto_install = false,
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = false,
-            scope_incremental = false,
-            node_incremental = "<C-I>",
-            node_decremental = "<C-O>",
-        },
-    },
-
-    -- nvim-treesitter-textobjects
-    textobjects = {
-        select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-                ["aa"] = "@parameter.outer",
-                ["ia"] = "@parameter.inner",
-                ["af"] = "@function.outer",
-                ["if"] = "@function.inner",
-                ["as"] = "@statement.outer",
-                ["is"] = "@statement.outer",
-            },
-            selection_modes = "v",
-            include_surrounding_whitespace = false,
-        },
-        move = {
-            enable = true,
-            set_jumps = true,
-            goto_previous_start = {
-                ["[a"] = "@parameter.inner",
-                ["[f"] = "@function.outer",
-                ["[s"] = "@statement.outer",
-            },
-            goto_next_start = {
-                ["]a"] = "@parameter.inner",
-                ["]f"] = "@function.outer",
-                ["]s"] = "@statement.outer",
-            },
-            goto_previous_end = {
-                ["[A"] = "@parameter.inner",
-                ["[F"] = "@function.outer",
-                ["[S"] = "@statement.outer",
-            },
-            goto_next_end = {
-                ["]A"] = "@parameter.inner",
-                ["]F"] = "@function.outer",
-                ["]S"] = "@statement.outer",
-            },
-        },
-    },
-}
-EOF
 
 "===================================================================================================
 " minuet-ai.nvim
