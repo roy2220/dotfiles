@@ -59,32 +59,32 @@ augroup __rstrip__
     autocmd BufWritePre * retab|%s/\s\+$//e
 augroup END
 
-nnoremap <silent> <M-_>KB=A-H<M-\> :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
+nnoremap <silent> <M-h> :execute (v:hlsearch == '0' ? 'set hlsearch' : 'nohlsearch')<CR>
 
-nnoremap <M-_>KB=A-W<M-\> :w<CR>
-inoremap <M-_>KB=A-W<M-\> <C-O>:w<CR><esc>
+nnoremap <M-w> :w<CR>
+inoremap <M-w> <C-O>:w<CR><esc>
 
-inoremap <M-_>KB=S-CR<M-\> <C-O>O
+inoremap <M-CR> <C-O>O
 
-inoremap <M-_>KB=A-A<M-\> <C-O>^
-cnoremap <M-_>KB=A-A<M-\> <Home>
+inoremap <M-a> <C-O>^
+cnoremap <M-a> <Home>
 
-inoremap <M-_>KB=A-E<M-\> <End>
-cnoremap <M-_>KB=A-E<M-\> <End>
+inoremap <M-e> <End>
+cnoremap <M-e> <End>
 
-inoremap <M-_>KB=A-B<M-\> <Left>
-cnoremap <M-_>KB=A-B<M-\> <Left>
+inoremap <M-b> <Left>
+cnoremap <M-b> <Left>
 
-inoremap <M-_>KB=A-F<M-\> <Right>
-cnoremap <M-_>KB=A-F<M-\> <Right>
+inoremap <M-f> <Right>
+cnoremap <M-f> <Right>
 
-inoremap <M-_>KB=A-S-B<M-\> <S-Left>
-cnoremap <M-_>KB=A-S-B<M-\> <S-Left>
+inoremap <M-S-b> <S-Left>
+cnoremap <M-S-b> <S-Left>
 
-inoremap <M-_>KB=A-S-F<M-\> <S-Right>
-cnoremap <M-_>KB=A-S-F<M-\> <S-Right>
+inoremap <M-S-f> <S-Right>
+cnoremap <M-S-f> <S-Right>
 
-tnoremap <M-_>KB=A-\<M-\> <C-\><C-n>
+tnoremap <M-\> <C-\><C-n>
 
 "===================================================================================================
 

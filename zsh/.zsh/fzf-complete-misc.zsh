@@ -60,7 +60,7 @@ _fzf-complete-file() {
 }
 
 zle -N _fzf-complete-file
-bindkey '\e_KB=A-F\e\\' _fzf-complete-file
+bindkey '^[f' _fzf-complete-file
 
 _fzf-complete-dir() {
     local input=$(grep --perl-regexp --only-matching '[^\s]+$' <<< ${LBUFFER})
@@ -89,9 +89,9 @@ _fzf-complete-dir() {
 }
 
 zle -N _fzf-complete-dir
-bindkey '\e_KB=A-D\e\\' _fzf-complete-dir
+bindkey '^[d' _fzf-complete-dir
 
-_fzf-complete-option1() {
+_fzf-complete-option() {
     local command=$(BUFFER=${BUFFER} CURSOR=${CURSOR} python3 /dev/stdin <<'EOF'
 import os
 import re
@@ -142,61 +142,7 @@ EOF
     LBUFFER=${LBUFFER}${option}
 }
 
-zle -N _fzf-complete-option1
-bindkey '\e_KB=A-H\e\\' _fzf-complete-option1
-
-_fzf-complete-option2() {
-    local command=$(BUFFER=${BUFFER} CURSOR=${CURSOR} python3 /dev/stdin <<'EOF'
-import os
-import re
-
-import bashlex
-
-buffer = os.environ["BUFFER"]
-cursor = int(os.environ["CURSOR"])
-
-nearest_command = None
-
-
-def walk(node):
-    global nearest_command
-    if node.kind == "command":
-        nodes = getattr(node, "parts", [])
-        if len(nodes) >= 1 and nodes[0].kind == "word" and cursor > nodes[0].pos[1]:
-            if nearest_command is None or node.pos[0] > nearest_command.pos[0]:
-                nearest_command = node
-    nodes = getattr(node, "parts", [])
-    for node in nodes:
-        walk(node)
-    nodes = getattr(node, "list", [])
-    for node in nodes:
-        walk(node)
-
-
-if buffer != "":
-    for node in bashlex.parse(buffer):
-        walk(node)
-
-if nearest_command is not None:
-    parts = [nearest_command.parts[0].word]
-    for node in nearest_command.parts[1:]:
-        if not re.fullmatch(r"[a-zA-Z][-_a-zA-Z]*", node.word):
-            break
-        parts.append(node.word)
-    parts[1:1] = ["help"]
-    print(" ".join(parts))
-EOF
-)
-    if [[ -z ${command} ]]; then
-        return
-    fi
-    local option=$(${=command} 2>&1 |
-        grep --perl-regexp --only-matching '(?<=^|\s|\[)-+[-_a-zA-Z0-9]+' |
-        fzf-popup --prompt="${command} > ")
-    LBUFFER=${LBUFFER}${option}
-}
-
-zle -N _fzf-complete-option2
-bindkey '\e_KB=A-S-H\e\\' _fzf-complete-option2
+zle -N _fzf-complete-option
+bindkey '^[h' _fzf-complete-option
 
 }

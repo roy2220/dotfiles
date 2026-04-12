@@ -1,5 +1,8 @@
 () {
 
+# Enable csi-u mode 1
+printf '\033[>4;1m'
+
 test -f ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.p10k.zsh
 

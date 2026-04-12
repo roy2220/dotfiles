@@ -135,13 +135,13 @@ let g:fzf_action = {
 \    'ctrl-v': 'vsplit',
 \}
 
-nnoremap <silent> <M-_>KB=A-F<M-\> :call <SID>fzf_files(v:true)<CR>
-nnoremap <silent> <M-_>KB=A-S-F<M-\> :call <SID>fzf_files(v:false)<CR>
-nnoremap <silent> <M-_>KB=A-B<M-\> :Buffers<CR>
-nnoremap <silent> <M-_>KB=A-T<M-\> :BTags<CR>
-nnoremap <silent> <M-_>KB=A-O<M-\> :History<CR>
-nnoremap <silent> <M-_>KB=A-,<M-\> :History:<CR>
-nnoremap <silent> <M-_>KB=A-/<M-\> :History/<CR>
+nnoremap <silent> <M-f> :call <SID>fzf_files(v:true)<CR>
+nnoremap <silent> <M-S-f> :call <SID>fzf_files(v:false)<CR>
+nnoremap <silent> <M-b> :Buffers<CR>
+nnoremap <silent> <M-t> :BTags<CR>
+nnoremap <silent> <M-o> :History<CR>
+nnoremap <silent> <M-,> :History:<CR>
+nnoremap <silent> <M-/> :History/<CR>
 
 function! s:fzf_files(check_cur_file_dir) abort
     if a:check_cur_file_dir
@@ -162,10 +162,10 @@ endfunction
 let g:easyjump_text_attrs = "\e[0m\e[38;5;245m"
 let g:easyjump_label_attrs = "\e[1m\e[31m"
 
-nmap <M-_>KB=A-J<M-\> <Plug>EasyJump
-imap <M-_>KB=A-J<M-\> <Plug>EasyJump
-vmap <M-_>KB=A-J<M-\> <Plug>EasyJump
-omap <M-_>KB=A-J<M-\> <Plug>EasyJump
+nmap <M-j> <Plug>EasyJump
+imap <M-j> <Plug>EasyJump
+vmap <M-j> <Plug>EasyJump
+omap <M-j> <Plug>EasyJump
 
 "===================================================================================================
 " eregex.vim
@@ -182,9 +182,9 @@ cabbrev G Git
 let g:gitgutter_async = 0
 let g:gitgutter_preview_win_floating = 0
 
-nmap <M-_>KB=A-G<M-\>p <Plug>(GitGutterPreviewHunk)
-nmap <M-_>KB=A-G<M-\>s <Plug>(GitGutterStageHunk)
-nmap <M-_>KB=A-G<M-\>u <Plug>(GitGutterUndoHunk)
+nmap <M-g>p <Plug>(GitGutterPreviewHunk)
+nmap <M-g>s <Plug>(GitGutterStageHunk)
+nmap <M-g>u <Plug>(GitGutterUndoHunk)
 
 "===================================================================================================
 " vim-mucomplete
@@ -205,36 +205,36 @@ let g:smartpairs_jumps_enabled = 0
 " vim-caser
 let g:caser_no_mappings = 1
 " for camelCase
-nmap <M-_>KB=A-C<M-\>c <Plug>CaserCamelCase
-vmap <M-_>KB=A-C<M-\>c <Plug>CaserVCamelCase
+nmap <M-C>c <Plug>CaserCamelCase
+vmap <M-C>cc <Plug>CaserVCamelCase
 " for PascalCase
-nmap <M-_>KB=A-C<M-\>p <Plug>CaserMixedCase
-vmap <M-_>KB=A-C<M-\>p <Plug>CaserVMixedCase
+nmap <M-C>p <Plug>CaserMixedCase
+vmap <M-C>p <Plug>CaserVMixedCase
 " for snake_case
-nmap <M-_>KB=A-C<M-\>s <Plug>CaserSnakeCase
-vmap <M-_>KB=A-C<M-\>s <Plug>CaserVSnakeCase
+nmap <M-C>s <Plug>CaserSnakeCase
+vmap <M-C>s <Plug>CaserVSnakeCase
 " for SCREAMING_SNAKE_CASE
-nmap <M-_>KB=A-C<M-\>S <Plug>CaserUpperCase
-vmap <M-_>KB=A-C<M-\>S <Plug>CaserVUpperCase
+nmap <M-C>S <Plug>CaserUpperCase
+vmap <M-C>S <Plug>CaserVUpperCase
 " for kebab-case
-nmap <M-_>KB=A-C<M-\>k <Plug>CaserKebabCase
-vmap <M-_>KB=A-C<M-\>k <Plug>CaserVKebabCase
+nmap <M-C>k <Plug>CaserKebabCase
+vmap <M-C>k <Plug>CaserVKebabCase
 " for HTTP-Header-Case
-nmap <M-_>KB=A-C<M-\>h <Plug>CaserTitleKebabCase
-vmap <M-_>KB=A-C<M-\>h <Plug>CaserVTitleKebabCase
+nmap <M-C>h <Plug>CaserTitleKebabCase
+vmap <M-C>h <Plug>CaserVTitleKebabCase
 " for Title Case
-nmap <M-_>KB=A-C<M-\>t <Plug>CaserTitleCase
-vmap <M-_>KB=A-C<M-\>t <Plug>CaserVTitleCase
+nmap <M-C>t <Plug>CaserTitleCase
+vmap <M-C>t <Plug>CaserVTitleCase
 " for space case
-nmap <M-_>KB=A-C<M-\><Space> <Plug>CaserSpaceCase
-vmap <M-_>KB=A-C<M-\><Space> <Plug>CaserVSpaceCase
+nmap <M-C><Space> <Plug>CaserSpaceCase
+vmap <M-C><Space> <Plug>CaserVSpaceCase
 
 "===================================================================================================
 " vim-exchange
-nmap <M-_>KB=A-X<M-\> <Plug>(Exchange)
-vmap <M-_>KB=A-X<M-\> <Plug>(Exchange)
-nmap <M-_>KB=A-S-X<M-\> <Plug>(ExchangeLine)
-nmap <M-_>KB=A-X<M-\><M-_>KB=A-X<M-\> <Plug>(ExchangeClear)
+nmap <M-x> <Plug>(Exchange)
+vmap <M-x> <Plug>(Exchange)
+nmap <M-S-x> <Plug>(ExchangeLine)
+nmap <M-x><M-x> <Plug>(ExchangeClear)
 
 "===================================================================================================
 " NrrwRgn
@@ -271,7 +271,7 @@ function! s:on_lsp_buffer_enabled() abort
     nnoremap <buffer> gr <plug>(lsp-references)
     nnoremap <buffer> gi <plug>(lsp-implementation)
     nnoremap <buffer> gh <plug>(lsp-signature-help)
-    inoremap <buffer> <M-_>KB=A-G<M-\>h <C-O>:LspSignatureHelp<CR>
+    inoremap <buffer> <M-g>h <C-O>:LspSignatureHelp<CR>
     nnoremap <buffer> [d <plug>(lsp-previous-diagnostic)
     nnoremap <buffer> ]d <plug>(lsp-next-diagnostic)
     nnoremap <buffer> <silent> gD :LspDocumentDiagnostics --buffers=*<CR>
@@ -501,8 +501,8 @@ minuet.setup {
     virtualtext = {
         auto_trigger_ft = {},
         keymap = {
-            accept = "<M-_>KB=A-]<M-\\>",
-            accept_line = "<M-_>KB=A-S-]<M-\\>",
+            accept = "<M-]>",
+            accept_line = "<M-S-]>",
         },
     },
 }
@@ -510,7 +510,7 @@ minuet.setup {
 local action = require("minuet.virtualtext").action
 vim.keymap.set(
     "i",
-    "<M-_>KB=A-[<M-\\>",
+    "<M-[>",
     function()
         if action.is_visible then
             action.dismiss()
