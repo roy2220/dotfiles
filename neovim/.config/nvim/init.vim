@@ -204,29 +204,29 @@ let g:smartpairs_jumps_enabled = 0
 " vim-caser
 let g:caser_no_mappings = 1
 " for camelCase
-nmap <M-C>c <Plug>CaserCamelCase
-vmap <M-C>cc <Plug>CaserVCamelCase
+nmap <M-c>c <Plug>CaserCamelCase
+vmap <M-c>cc <Plug>CaserVCamelCase
 " for PascalCase
-nmap <M-C>p <Plug>CaserMixedCase
-vmap <M-C>p <Plug>CaserVMixedCase
+nmap <M-c>p <Plug>CaserMixedCase
+vmap <M-c>p <Plug>CaserVMixedCase
 " for snake_case
-nmap <M-C>s <Plug>CaserSnakeCase
-vmap <M-C>s <Plug>CaserVSnakeCase
+nmap <M-c>s <Plug>CaserSnakeCase
+vmap <M-c>s <Plug>CaserVSnakeCase
 " for SCREAMING_SNAKE_CASE
-nmap <M-C>S <Plug>CaserUpperCase
-vmap <M-C>S <Plug>CaserVUpperCase
+nmap <M-c>S <Plug>CaserUpperCase
+vmap <M-c>S <Plug>CaserVUpperCase
 " for kebab-case
-nmap <M-C>k <Plug>CaserKebabCase
-vmap <M-C>k <Plug>CaserVKebabCase
+nmap <M-c>k <Plug>CaserKebabCase
+vmap <M-c>k <Plug>CaserVKebabCase
 " for HTTP-Header-Case
-nmap <M-C>h <Plug>CaserTitleKebabCase
-vmap <M-C>h <Plug>CaserVTitleKebabCase
+nmap <M-c>h <Plug>CaserTitleKebabCase
+vmap <M-c>h <Plug>CaserVTitleKebabCase
 " for Title Case
-nmap <M-C>t <Plug>CaserTitleCase
-vmap <M-C>t <Plug>CaserVTitleCase
+nmap <M-c>t <Plug>CaserTitleCase
+vmap <M-c>t <Plug>CaserVTitleCase
 " for space case
-nmap <M-C><Space> <Plug>CaserSpaceCase
-vmap <M-C><Space> <Plug>CaserVSpaceCase
+nmap <M-c><Space> <Plug>CaserSpaceCase
+vmap <M-c><Space> <Plug>CaserVSpaceCase
 
 "===================================================================================================
 " vim-exchange
