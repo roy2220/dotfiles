@@ -41,7 +41,9 @@ endfunction
 
 function! s:isort() abort
     let view = winsaveview()
-    execute 'keepjumps %!isort --profile=black - 2>/dev/null || cat /dev/stdin'
+    silent execute 'keepjumps %!TEMP_FILE=$(mktemp /dev/shm/isort_XXXXXX); (tee "${TEMP_FILE}" | '
+       \..'isort --profile=black -'
+       \..' 2>/dev/null) || cat "${TEMP_FILE}"; rm "${TEMP_FILE}"'
     call winrestview(view)
 endfunction
 
@@ -55,6 +57,8 @@ command -nargs=0 Autoflake call s:autoflake()
 
 function! s:autoflake() abort
     let view = winsaveview()
-    silent execute 'keepjumps %!vim-autoflake --remove-all-unused-imports --remove-duplicate-keys --remove-unused-variables'
+    silent execute 'keepjumps %!TEMP_FILE=$(mktemp /dev/shm/autoflake_XXXXXX); cat >"${TEMP_FILE}"; '
+       \..'autoflake --in-place --remove-all-unused-imports --remove-duplicate-keys --remove-unused-variables "${TEMP_FILE}"'
+       \..'; cat "${TEMP_FILE}"; rm "${TEMP_FILE}"'
     call winrestview(view)
 endfunction

@@ -31,6 +31,8 @@ endfunction
 
 function! s:shfmt() abort
     let view = winsaveview()
-    execute 'keepjumps %!shfmt 2>/dev/null || cat /dev/stdin'
+    execute 'keepjumps %!TEMP_FILE=$(mktemp /dev/shm/shfmt_XXXXXX); (tee "${TEMP_FILE}" | '
+       \..'shfmt'
+       \..' 2>/dev/null) || cat "${TEMP_FILE}"; rm "${TEMP_FILE}"'
     call winrestview(view)
 endfunction

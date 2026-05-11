@@ -45,7 +45,9 @@ endfunction
 
 function! s:goimports() abort
     let view = winsaveview()
-    execute 'keepjumps %!goimports -srcdir '..shellescape(expand('%:p:h'))..' 2>/dev/null || cat /dev/stdin'
+    silent execute 'keepjumps %!TEMP_FILE=$(mktemp /dev/shm/goimports_XXXXXX); (tee "${TEMP_FILE}" | '
+       \..'goimports -srcdir '..shellescape(expand('%:p:h'))
+       \..' 2>/dev/null) || cat "${TEMP_FILE}"; rm "${TEMP_FILE}"'
     call winrestview(view)
 endfunction
 
