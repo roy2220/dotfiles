@@ -5,7 +5,7 @@ set -eu${DEBUG+x}o pipefail
 CLEANUPS=()
 trap 'for I in ${!CLEANUPS[@]}; do eval "${CLEANUPS[-($I+1)]}"; done' EXIT
 
-OUTPUT_FILE=$(mktemp)
+OUTPUT_FILE=$(mktemp /dev/shm/fzf-popup_XXXXXX)
 CLEANUPS+=("rm ${OUTPUT_FILE@Q}")
 
 tmux display-popup -E -B -w62% -h62% -- sh -c "fzf --no-height --border=rounded ${*@Q} </proc/$$/fd/0 >${OUTPUT_FILE@Q}"
