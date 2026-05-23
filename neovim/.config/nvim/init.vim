@@ -289,7 +289,7 @@ function! s:lsp_restart_server() abort
         return
     endif
 
-    execute 'autocmd User lsp_server_exit ++once set filetype= | set filetype='..&filetype
+    autocmd User lsp_server_exit ++once call timer_start(0, { _ -> execute('set filetype= | edit') })
     for server in servers
         call lsp#stop_server(server)
     endfor

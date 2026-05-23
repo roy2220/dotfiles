@@ -21,7 +21,7 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
-set completeopt=menuone,noselect
+set completeopt=menuone,noselect,fuzzy
 
 set splitbelow
 set splitright
