@@ -30,7 +30,7 @@ END
 endfunction
 
 function! s:chatgpt(query) abort
-    let input = '{"model":"x-ai/grok-3","messages":[{"role":"user","content":'..json_encode(a:query).."}]}\n"
+    let input = '{"model":"google/gemini-3.1-flash-lite","messages":[{"role":"user","content":'..json_encode(a:query).."}]}\n"
     let output = system(
     \   'tee /tmp/ai_complete.txt'..
     \   ' | curl https://openrouter.ai/api/v1/chat/completions'..
