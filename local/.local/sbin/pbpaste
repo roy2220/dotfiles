@@ -3,6 +3,6 @@
 set -euo pipefail
 
 if [[ ${DOCKER_HOST_OS} == Darwin ]]; then
-	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@host.docker.internal" pbpaste |
-		python3 -c 'import sys; sys.stdout.buffer.write(sys.stdin.buffer.read().decode("gbk").encode())'
+	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@host.docker.internal" \
+		'export LANG=en_US.UTF-8; exec pbpaste'
 fi
