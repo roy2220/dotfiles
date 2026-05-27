@@ -60,9 +60,6 @@ export OSSUTIL_CONFIG_FILE=~/.secrets/ossutil/config
 export RCLONE_CONFIG_FILE=~/.secrets/rclone/rclone.conf
 export HISTFILE=/workspace/.zsh_history
 export ZSHZ_DATA=/workspace/.z
-# for chatgpt-cli
-export OPENAI_CONFIG_HOME=~/.secrets/chatgpt-cli
-export OPENAI_DATA_HOME=~/.local/share/chatgpt-cli
 
 find -H ~/.local/src -mindepth 1 -maxdepth 1 -type f -name '*-start-*.bash' -print0 | sort --zero-terminated | xargs --null --max-lines=1 -- bash
 
