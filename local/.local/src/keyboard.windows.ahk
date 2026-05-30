@@ -18,43 +18,34 @@ $Escape:: {
 isComboTriggered := false
 firstCapsLockUpTime := 0
 
-$CapsLock:: {
-    global isComboTriggered
-
-    isComboTriggered := false
-    KeyWait "CapsLock"
-}
-
 $CapsLock up:: {
     global isComboTriggered, firstCapsLockUpTime
 
-    if isComboTriggered || A_PriorKey != "CapsLock" {
+    f := isComboTriggered
+    isComboTriggered := false
+    if f {
         return
     }
 
     currentTime := A_TickCount
-    elapsedTime := currentTime - firstCapsLockUpTime
-    if (elapsedTime > 500) {
+    if (currentTime - firstCapsLockUpTime > 500) {
         firstCapsLockUpTime := currentTime
         return
     }
+
     firstCapsLockUpTime := 0
     Send "{Esc}"
-}
-
-$Enter:: {
-    global isComboTriggered
-
-    isComboTriggered := false
-    KeyWait "Enter"
 }
 
 $Enter up:: {
     global isComboTriggered
 
-    if isComboTriggered || A_PriorKey != "Enter" {
+    f := isComboTriggered
+    isComboTriggered := false
+    if f {
         return
     }
+
     Send "{Enter}"
 }
 
