@@ -7,5 +7,5 @@ if [[ ${DOCKER_HOST_OS} == Darwin ]]; then
 		'export LANG=en_US.UTF-8; exec pbpaste'
 elif [[ ${DOCKER_HOST_OS} == WSL ]]; then
 	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@localhost" \
-		'/mnt/c/Windows/System32/WindowsPowerShell/*/powershell.exe -NoProfile -Command '\''[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; (Get-Clipboard) -join "`n"'\'' | head --bytes=-2'
+		'/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -Command '\''[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; (Get-Clipboard) -join "`n"'\'' | head --bytes=-2'
 fi
