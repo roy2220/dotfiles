@@ -3,8 +3,11 @@
 set -euo pipefail
 
 if [[ ${DOCKER_HOST_OS} == Darwin ]]; then
-	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@host.docker.internal" \
+	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@localhost" \
 		'export LANG=en_US.UTF-8; exec pbcopy'
+elif [[ ${DOCKER_HOST_OS} == WSL ]]; then
+	exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${DOCKER_HOST_USER}@localhost" \
+		'iconv --from-code=UTF-8 --to-code=UTF-16LE | /mnt/c/WINDOWS/system32/clip.exe'
 fi
 
 OSC52_BEGIN="\x1b]52;c;"
