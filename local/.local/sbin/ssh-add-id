@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+TARGET_HOST=${1:-localhost}
+IDENTITY_FILE=$(ssh -G "${TARGET_HOST}" | grep --perl-regexp --only-matching '(?<=^identityfile ).+$')
+PUBLIC_KEY=$(eval "cat ${IDENTITY_FILE}.pub")
+cat <<EOF
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+echo "${PUBLIC_KEY}" >>~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+EOF
