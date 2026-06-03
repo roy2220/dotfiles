@@ -4,7 +4,7 @@
 SetCapsLockState "AlwaysOff"
 capsLockOn := false
 
-$Escape:: {
+$Escape up:: {
     global capsLockOn
 
     capsLockOn := !capsLockOn
@@ -148,13 +148,27 @@ IsTerminal() {
     return WinActive("ahk_exe alacritty.exe") || WinActive("ahk_exe WindowsTerminal.exe")
 }
 
+ctrlIsDown := false
+altIsDown := false
+
 #HotIf IsTerminal()
 
 Alt & Tab::AltTab
 Ctrl & Tab::Send "^{Tab}"
 
-Alt::Ctrl
-Ctrl::Alt
+*Alt:: {
+    global ctrlIsDown
+
+    Send "{Blind}{Ctrl DownR}"
+    ctrlIsDown := true
+}
+
+*Ctrl:: {
+    global altIsDown
+
+    Send "{Blind}{Alt DownR}"
+    altIsDown := true
+}
 
 #HotIf !IsTerminal()
 
@@ -162,3 +176,25 @@ Alt & Space::Send "^{Space}"
 Ctrl & Space::Send "!{Space}"
 
 #HotIf
+
+*Alt up:: {
+    global ctrlIsDown
+
+    if ctrlIsDown {
+        ctrlIsDown := false
+        Send "{Blind}{Ctrl Up}"
+    } else {
+        Send "{Blind}{Alt Up}"
+    }
+}
+
+*Ctrl up:: {
+    global altIsDown
+
+    if altIsDown {
+        altIsDown := false
+        Send "{Blind}{Alt Up}"
+    } else {
+        Send "{Blind}{Ctrl Up}"
+    }
+}
