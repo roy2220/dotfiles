@@ -4,6 +4,7 @@
 SetCapsLockState "AlwaysOff"
 capsLockOn := false
 
+$Escape:: {}
 $Escape up:: {
     global capsLockOn
 
@@ -18,6 +19,7 @@ $Escape up:: {
 isComboTriggered := false
 firstCapsLockUpTime := 0
 
+$CapsLock:: {}
 $CapsLock up:: {
     global isComboTriggered, firstCapsLockUpTime
 
@@ -37,6 +39,7 @@ $CapsLock up:: {
     Send "{Esc}"
 }
 
+$Enter:: {}
 $Enter up:: {
     global isComboTriggered
 
@@ -144,14 +147,14 @@ SendCombo(key) {
     Send modifiers "{" key "}"
 }
 
-IsTerminal() {
-    return WinActive("ahk_exe alacritty.exe") || WinActive("ahk_exe WindowsTerminal.exe")
+IsInTerminal() {
+    return WinActive("ahk_exe WindowsTerminal.exe") || WinActive("ahk_exe alacritty.exe")
 }
 
 ctrlIsDown := false
 altIsDown := false
 
-#HotIf IsTerminal()
+#HotIf IsInTerminal()
 
 Alt & Tab::AltTab
 Ctrl & Tab::Send "^{Tab}"
@@ -170,7 +173,7 @@ Ctrl & Tab::Send "^{Tab}"
     altIsDown := true
 }
 
-#HotIf !IsTerminal()
+#HotIf !IsInTerminal()
 
 Alt & Space::Send "^{Space}"
 Ctrl & Space::Send "!{Space}"
