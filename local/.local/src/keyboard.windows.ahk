@@ -4,7 +4,7 @@
 SetCapsLockState "AlwaysOff"
 capsLockOn := false
 
-$Escape:: {}
+$Escape::return
 $Escape up:: {
     global capsLockOn
 
@@ -19,7 +19,7 @@ $Escape up:: {
 isComboTriggered := false
 firstCapsLockUpTime := 0
 
-$CapsLock:: {}
+$CapsLock::return
 $CapsLock up:: {
     global isComboTriggered, firstCapsLockUpTime
 
@@ -39,7 +39,7 @@ $CapsLock up:: {
     Send "{Esc}"
 }
 
-$Enter:: {}
+$Enter::return
 $Enter up:: {
     global isComboTriggered
 
@@ -50,6 +50,20 @@ $Enter up:: {
     }
 
     Send "{Enter}"
+}
+
+SendCombo(key) {
+    global isComboTriggered
+
+    isComboTriggered := true
+    modifiers := "!"
+    if GetKeyState("Ctrl", "P") {
+        modifiers .= "^"
+    }
+    if GetKeyState("Shift", "P") {
+        modifiers .= "+"
+    }
+    Send modifiers "{" key "}"
 }
 
 #HotIf GetKeyState("CapsLock", "P") || GetKeyState("Enter", "P")
@@ -133,26 +147,12 @@ $*Right::SendCombo("Right")
 
 #HotIf
 
-SendCombo(key) {
-    global isComboTriggered
-
-    isComboTriggered := true
-    modifiers := "!"
-    if GetKeyState("Ctrl", "P") {
-        modifiers .= "^"
-    }
-    if GetKeyState("Shift", "P") {
-        modifiers .= "+"
-    }
-    Send modifiers "{" key "}"
-}
+ctrlIsDown := false
+altIsDown := false
 
 IsInTerminal() {
     return WinActive("ahk_exe WindowsTerminal.exe") || WinActive("ahk_exe alacritty.exe")
 }
-
-ctrlIsDown := false
-altIsDown := false
 
 #HotIf IsInTerminal()
 
