@@ -66,7 +66,7 @@ SendCombo(key) {
     Send modifiers "{" key "}"
 }
 
-#HotIf GetKeyState("CapsLock", "P") || GetKeyState("Enter", "P")
+#HotIf (GetKeyState("CapsLock", "P") || GetKeyState("Enter", "P")) && !(GetKeyState("LWin", "P") || GetKeyState("RWin", "P"))
 
 $*a::SendCombo("a")
 $*b::SendCombo("b")
