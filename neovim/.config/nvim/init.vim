@@ -15,8 +15,6 @@ runtime ft-sh.vim
 runtime ft-proto.vim
 runtime ft-yaml.vim
 
-runtime dir-diff.vim
-
 "===================================================================================================
 " vim-plug
 let g:plugin_patch_dir_path = stdpath('config')..'/plugin-patches/'
