@@ -37,7 +37,7 @@ function! s:operate_errors(mode, op) abort
         let pattern = GetVisualSelection()
         let i = getpos("'<")[2] - 1
     endif
-    let j = match(getline('.'), '|\d\+\( col \d\+\)\?|')
+    let j = stridx(getline('.'), '|')
     let match_file_name = i < j
     if a:op ==# 'k'
         call s:keep_errors(pattern, match_file_name, v:true)
