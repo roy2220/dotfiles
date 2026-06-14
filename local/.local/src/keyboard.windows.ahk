@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-#F5:: {
+$#F5:: {
     Reload()
     TrayTip("", "Script reloaded", "Iconi")
 }
@@ -162,16 +162,16 @@ IsInTerminal() {
 #HotIf IsInTerminal()
 
 Alt & Tab::AltTab
-Ctrl & Tab::Send "^{Tab}"
+$^Tab::Send "^{Tab}"
 
-*Alt:: {
+$Alt:: {
     global ctrlIsDown
 
     Send "{Blind}{Ctrl DownR}"
     ctrlIsDown := true
 }
 
-*Ctrl:: {
+$Ctrl:: {
     global altIsDown
 
     Send "{Blind}{Alt DownR}"
@@ -180,12 +180,12 @@ Ctrl & Tab::Send "^{Tab}"
 
 #HotIf !IsInTerminal()
 
-Alt & Space::Send "^{Space}"
-Ctrl & Space::Send "!{Space}"
+$!Space::Send "^{Space}"
+$^Space::Send "!{Space}"
 
 #HotIf
 
-*Alt up:: {
+$Alt up:: {
     global ctrlIsDown
 
     if ctrlIsDown {
@@ -196,7 +196,7 @@ Ctrl & Space::Send "!{Space}"
     }
 }
 
-*Ctrl up:: {
+$Ctrl up:: {
     global altIsDown
 
     if altIsDown {
