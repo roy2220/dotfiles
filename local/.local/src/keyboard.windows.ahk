@@ -3,7 +3,7 @@
 
 $#F5:: {
     Reload()
-    TrayTip("", "Script reloaded", "Iconi")
+    TrayTip("Script reloaded", "AutoHotkey", 4)
 }
 
 SetCapsLockState "AlwaysOff"
