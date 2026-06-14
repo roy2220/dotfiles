@@ -162,7 +162,7 @@ IsInTerminal() {
 #HotIf IsInTerminal()
 
 Alt & Tab::AltTab
-$^Tab::Send "^{Tab}"
+Ctrl & Tab::Send "^{Tab}"
 
 $Alt:: {
     global ctrlIsDown
