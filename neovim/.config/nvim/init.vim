@@ -39,7 +39,7 @@ call plug#begin()
         Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply '..g:plugin_patch_dir_path..'/vim-smartpairs.diff' }
         Plug 'tpope/vim-surround'
         Plug 'arthurxavierx/vim-caser'
-        Plug 'tommcdo/vim-exchange'
+        Plug 'tommcdo/vim-exchange', { 'do': 'git apply '..g:plugin_patch_dir_path..'/vim-exchange.diff' }
         Plug 'chrisbra/NrrwRgn'
         Plug 'AndrewRadev/linediff.vim'
         Plug 'hrsh7th/vim-vsnip'

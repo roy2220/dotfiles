@@ -1,0 +1,48 @@
+diff --git a/plugin/exchange.vim b/plugin/exchange.vim
+index d3c94bb..dec632c 100644
+--- a/plugin/exchange.vim
++++ b/plugin/exchange.vim
+@@ -3,8 +3,8 @@ let s:enable_highlighting = 1
+ function! s:exchange(x, y, reverse, expand)
+ 	let reg_z = s:save_reg('z')
+ 	let reg_unnamed = s:save_reg('"')
+-	let reg_star = s:save_reg('*')
+-	let reg_plus = s:save_reg('+')
++	let reg_star = s:save_reg('y')
++	let reg_plus = s:save_reg('x')
+ 	let selection = &selection
+ 	set selection=inclusive
+ 
+@@ -48,8 +48,8 @@ function! s:exchange(x, y, reverse, expand)
+ 	let &selection = selection
+ 	call s:restore_reg('z', reg_z)
+ 	call s:restore_reg('"', reg_unnamed)
+-	call s:restore_reg('*', reg_star)
+-	call s:restore_reg('+', reg_plus)
++	call s:restore_reg('y', reg_star)
++	call s:restore_reg('x', reg_plus)
+ endfunction
+ 
+ function! s:fix_cursor(x, y, reverse)
+@@ -105,8 +105,8 @@ endfunction
+ 
+ function! s:exchange_get(type, vis)
+ 	let reg = s:save_reg('"')
+-	let reg_star = s:save_reg('*')
+-	let reg_plus = s:save_reg('+')
++	let reg_star = s:save_reg('y')
++	let reg_plus = s:save_reg('x')
+ 	if a:vis
+ 		let type = a:type
+ 		let [start, end] = s:store_pos("'<", "'>")
+@@ -134,8 +134,8 @@ function! s:exchange_get(type, vis)
+ 	endif
+ 	let text = getreg('@')
+ 	call s:restore_reg('"', reg)
+-	call s:restore_reg('*', reg_star)
+-	call s:restore_reg('+', reg_plus)
++	call s:restore_reg('y', reg_star)
++	call s:restore_reg('x', reg_plus)
+ 	return {
+ 	\	'text': text,
+ 	\	'type': type,
