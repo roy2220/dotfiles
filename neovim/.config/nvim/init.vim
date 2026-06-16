@@ -19,7 +19,7 @@ runtime ft-yaml.vim
 " vim-plug
 let g:plugin_patch_dir_path = stdpath('config')..'/plugin-patches/'
 call plug#begin()
-    Plug 'sainnhe/gruvbox-material'
+    Plug 'sainnhe/everforest'
     Plug 'itchyny/lightline.vim'
     Plug 'mengelbrecht/lightline-bufferline', { 'do': 'git apply '..g:plugin_patch_dir_path..'/lightline-bufferline.diff' }
     Plug 'psliwka/vim-smoothie'
@@ -55,12 +55,12 @@ call plug#end()
 let g:plug_timeout=1200
 
 "===================================================================================================
-" gruvbox-material
-let g:gruvbox_material_better_performance = 1
-let g:gruvbox_material_background = 'soft'
-let g:gruvbox_material_diagnostic_virtual_text = 'highlighted'
+" everforest
+let g:everforest_better_performance = 1
+let g:everforest_background = 'medium'
+let g:everforest_diagnostic_virtual_text = 'highlighted'
 set background=dark
-colorscheme gruvbox-material
+colorscheme everforest
 
 "===================================================================================================
 " lightline.vim
@@ -76,7 +76,7 @@ function! s:lightline_buffers() abort
 endfunction
 
 let g:lightline = {
-\    'colorscheme': 'gruvbox_material',
+\    'colorscheme': 'everforest',
 \    'active': {
 \        'left': [['mode', 'paste'], ['readonly', 'filename', 'fugitive', 'modified'], ['winnr']],
 \        'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']],

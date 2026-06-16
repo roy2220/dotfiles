@@ -4,7 +4,7 @@
 [pull]
 	ff = only
 [merge]
-	ff = only
+	; ff = only
 	conflictstyle = diff3
 [diff]
 	colorMoved = default
@@ -16,4 +16,4 @@
 [delta]
 	navigate = true  # use n and N to move between diff sections
 	side-by-side = true
-	syntax-theme = gruvbox-dark
+	syntax-theme = base16-256

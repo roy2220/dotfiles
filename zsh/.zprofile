@@ -66,7 +66,6 @@ export ZSHZ_DATA=/workspace/.z
 
 find -H ~/.local/src -mindepth 1 -maxdepth 1 -type f -name '*-start-*.bash' -print0 | sort --zero-terminated | xargs --null --max-lines=1 -- bash
 
-source ~/.zsh/paleta.zsh
-source ~/.zplug/repos/fnune/base16-fzf/bash/base16-gruvbox-dark-soft.config
+source ~/.zplug/repos/tinted-theming/tinted-fzf/bash/base16-everforest-dark-medium.config
 
 exec tmux new-session -A -s $(id --user --name)
