@@ -265,9 +265,9 @@ endfunction
 
 "===================================================================================================
 
-xnoremap <silent> = :<C-U>call <SID>assign(input('Symbol Name: '))<CR>
+xnoremap <silent> = :<C-U>call <SID>extract_variable(input('Variable Name: '))<CR>
 
-function! s:assign(symbol_name) abort
+function! s:extract_variable(symbol_name) abort
     if a:symbol_name ==# ""
         return
     endif
@@ -275,7 +275,7 @@ function! s:assign(symbol_name) abort
         return
     endif
     call setreg('"', a:symbol_name, 'v')
-    call feedkeys(printf("gvpO%s = \<C-O>p\<esc>`[v`]o^V", a:symbol_name), 'n')
+    call feedkeys(printf("gvpO%s = \<C-O>p\<esc>`]v`[^V", a:symbol_name), 'n')
 endfunction
 
 "===================================================================================================
