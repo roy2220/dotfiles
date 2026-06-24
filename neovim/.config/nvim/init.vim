@@ -41,6 +41,7 @@ call plug#begin()
         Plug 'arthurxavierx/vim-caser'
         Plug 'tommcdo/vim-exchange', { 'do': 'git apply '..g:plugin_patch_dir_path..'/vim-exchange.diff' }
         Plug 'chrisbra/NrrwRgn'
+        Plug 'matze/vim-move'
         Plug 'AndrewRadev/linediff.vim'
         Plug 'hrsh7th/vim-vsnip'
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply '..g:plugin_patch_dir_path..'/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
@@ -238,6 +239,13 @@ nmap <M-x><M-x> <Plug>(ExchangeClear)
 let g:nrrw_rgn_nohl = 1
 let g:nrrw_topbot_leftright = 'botright'
 xmap <C-W>e <Plug>NrrwrgnDo
+
+"===================================================================================================
+" vim-move
+let g:move_map_keys = 0
+let g:move_undo_join_same_dir_only = 0
+xmap K <Plug>MoveBlockCountLinesUp
+xmap J <Plug>MoveBlockCountLinesDown
 
 "===================================================================================================
 " vim-vsnip

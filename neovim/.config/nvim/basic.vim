@@ -265,8 +265,6 @@ endfunction
 
 "===================================================================================================
 
-xnoremap K :move '<-2<CR>gv
-xnoremap J :move '>+1<CR>gv
 xnoremap <silent> = :<C-U>call <SID>assign(input('Symbol Name: '))<CR>
 
 function! s:assign(symbol_name) abort
