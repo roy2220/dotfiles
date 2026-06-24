@@ -2,7 +2,7 @@ let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'CGO_ENABLED=0 go install github.com/lasorda/protobuf-language-server@latest',
 \])
 
-let g:TreeSitterParsersToInstall = extendnew(get(g:, 'TreeSitterParsersToInstall', []), [
+let g:RequiredTreeSitterParsers = extendnew(get(g:, 'RequiredTreeSitterParsers', []), [
 \    'proto',
 \])
 

@@ -1,15 +1,16 @@
+let g:assignment_statement_formats['go'] = '%s := %s'
+
 let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
 \    'CGO_ENABLED=0 go install golang.org/x/tools/gopls@latest',
 \    'CGO_ENABLED=0 go install golang.org/x/tools/cmd/goimports@master',
 \    'CGO_ENABLED=0 go install github.com/go-delve/delve/cmd/dlv@latest',
 \])
 
-let g:TreeSitterParsersToInstall = extendnew(get(g:, 'TreeSitterParsersToInstall', []), [
+let g:RequiredTreeSitterParsers = extendnew(get(g:, 'RequiredTreeSitterParsers', []), [
 \    'go',
 \    'gomod',
 \    'gotmpl',
 \])
-
 
 let g:FilesToHideInQuickfixByDefault = extendnew(get(g:, 'FilesToHideInQuickfixByDefault', {}), {
 \    'go': ['_test\.go$'],

@@ -47,7 +47,7 @@ call plug#begin()
         Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply '..g:plugin_patch_dir_path..'/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
         Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':'..join([
         \    'TSUpdate',
-        \    exists('g:TreeSitterParsersToInstall') ? 'TSInstall '..join(g:TreeSitterParsersToInstall, ' ') : '',
+        \    exists('g:RequiredTreeSitterParsers') ? 'TSInstall '..join(g:RequiredTreeSitterParsers, ' ') : '',
         \    'sleep 30',
         \], '\|') }
         Plug 'milanglacier/minuet-ai.nvim', { 'do': 'git apply '..g:plugin_patch_dir_path..'/minuet-ai.nvim.diff' } | Plug 'nvim-lua/plenary.nvim'

@@ -3,6 +3,7 @@ xnoremap <silent> ! :<C-U>call <SID>exchange_v(input('!'))<CR>
 
 function! s:exchange_n(command) abort
     if a:command ==# ""
+        redraw | echo
         return
     endif
     let lines = getline(1, '$')
