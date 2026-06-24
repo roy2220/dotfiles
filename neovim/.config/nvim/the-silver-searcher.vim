@@ -116,13 +116,13 @@ nnoremap <silent> gA :let g:_ = 'Ag! '..expand('<cword>')
     \\|unlet g:_
     \\|set hlsearch<CR>
 
-vnoremap <silent> ga :<C-U>let g:_ = 'Ag '..GetVisualSelection()
+xnoremap <silent> ga :<C-U>let g:_ = 'Ag '..GetVisualSelection()
     \\|execute g:_
     \\|call histadd('cmd', g:_)
     \\|unlet g:_
     \\|set hlsearch<CR>
 
-vnoremap <silent> gA :<C-U>let g:_ = 'Ag! '..GetVisualSelection()
+xnoremap <silent> gA :<C-U>let g:_ = 'Ag! '..GetVisualSelection()
     \\|execute g:_
     \\|call histadd('cmd', g:_)
     \\|unlet g:_

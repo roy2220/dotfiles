@@ -97,8 +97,8 @@ nnoremap <silent> <C-G> :<C-U>echomsg call('printf', [g:ctrl_g_format] + map(cop
 
 "===================================================================================================
 
-vnoremap <silent> / :<C-U>let @/='\V\C'..substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
-vnoremap <silent> ? :<C-U>let @/='\V\C'..substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
+xnoremap <silent> / :<C-U>let @/='\V\C'..substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
+xnoremap <silent> ? :<C-U>let @/='\V\C'..substitute(escape(GetVisualSelection(), '/\'), "\n", '\\n', 'g')\|set hlsearch<CR>
 
 function! GetVisualSelection() abort
     " Why is this not a built-in Vim script function?!
@@ -125,11 +125,11 @@ endfunction
 "===================================================================================================
 
 nnoremap <silent> \\s :call <SID>super_s('n')<CR>
-vnoremap <silent> \\s :<C-U>call <SID>super_s('v')<CR>
+xnoremap <silent> \\s :<C-U>call <SID>super_s('x')<CR>
 
 function! s:super_s(mode) abort
     let keys = 'q:'
-    if a:mode ==# 'v'
+    if a:mode ==# 'x'
         let word = substitute(escape(GetVisualSelection(), '/\'), "\t", '\\t', 'g')
         let word2 = substitute(word, "\n", '\\n', 'g')
         let word3 = substitute(escape(word, "&~"), "\n", '\\r', 'g')
@@ -151,11 +151,11 @@ endfunction
 "===================================================================================================
 
 nnoremap <silent> \\d :call <SID>super_d('n')<CR>
-vnoremap <silent> \\d :<C-U>call <SID>super_d('v')<CR>
+xnoremap <silent> \\d :<C-U>call <SID>super_d('x')<CR>
 
 function! s:super_d(mode) abort
     let keys = 'q:'
-    if a:mode ==# 'v'
+    if a:mode ==# 'x'
         let word = escape(GetVisualSelection(), '/\')
         let word2 = substitute(word, "\n", '\\n', 'g')
         let n_chars = strchars(word)
@@ -176,11 +176,11 @@ endfunction
 "===================================================================================================
 
 nnoremap <silent> \\k :call <SID>super_k('n')<CR>
-vnoremap <silent> \\k :<C-U>call <SID>super_k('v')<CR>
+xnoremap <silent> \\k :<C-U>call <SID>super_k('x')<CR>
 
 function! s:super_k(mode) abort
     let keys = 'q:'
-    if a:mode ==# 'v'
+    if a:mode ==# 'x'
         let word = escape(GetVisualSelection(), '/\')
         let word2 = substitute(word, "\n", '\\n', 'g')
         let n_chars = strchars(word)
@@ -219,7 +219,7 @@ endfunction
 
 "===================================================================================================
 
-vnoremap <silent> \\b :<C-U>call <SID>bash()<CR>
+xnoremap <silent> \\b :<C-U>call <SID>bash()<CR>
 
 func! s:bash() abort
     let script = GetVisualSelection()
@@ -233,10 +233,10 @@ endfunction
 
 nnoremap <silent> gm :call <SID>goto_end_of_match('n')<CR>
 onoremap <silent> m :call <SID>goto_end_of_match('o')<CR>
-vnoremap <silent> m :call <SID>goto_end_of_match('v')<CR>
+xnoremap <silent> m :call <SID>goto_end_of_match('x')<CR>
 
 function! s:goto_end_of_match(mode) abort
-    if a:mode ==# 'v'
+    if a:mode ==# 'x'
         normal! gv
     endif
     let pattern = getreg('/')
@@ -244,15 +244,15 @@ function! s:goto_end_of_match(mode) abort
     if line_num == 0 && col_num == 0
         throw 'Pattern not found: '..pattern
     endif
-    call cursor(line_num, col_num + (a:mode ==# 'n' || a:mode ==# 'v' ? 0 : 1))
+    call cursor(line_num, col_num + (a:mode ==# 'n' || a:mode ==# 'x' ? 0 : 1))
 endfunction
 
 nnoremap <silent> gM :call <SID>goto_begin_of_match('n')<CR>
 onoremap <silent> M :call <SID>goto_begin_of_match('o')<CR>
-vnoremap <silent> M :call <SID>goto_begin_of_match('v')<CR>
+xnoremap <silent> M :call <SID>goto_begin_of_match('x')<CR>
 
 function! s:goto_begin_of_match(mode) abort
-    if a:mode ==# 'v'
+    if a:mode ==# 'x'
         normal! gv
     endif
     let pattern = getreg('/')
@@ -261,6 +261,23 @@ function! s:goto_begin_of_match(mode) abort
         throw 'Pattern not found: '..pattern
     endif
     call cursor(line_num, col_num)
+endfunction
+
+"===================================================================================================
+
+xnoremap K :move '<-2<CR>gv
+xnoremap J :move '>+1<CR>gv
+xnoremap <silent> = :<C-U>call <SID>assign(input('Symbol Name: '))<CR>
+
+function! s:assign(symbol_name) abort
+    if a:symbol_name ==# ""
+        return
+    endif
+    if visualmode() ==# 'V'
+        return
+    endif
+    call setreg('"', a:symbol_name, 'v')
+    call feedkeys(printf("gvpO%s = \<C-O>p\<esc>`[v`]o^V", a:symbol_name), 'n')
 endfunction
 
 "===================================================================================================

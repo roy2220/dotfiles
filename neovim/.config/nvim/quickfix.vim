@@ -19,9 +19,9 @@ augroup END
 
 function! s:init() abort
     nnoremap <buffer> <silent> K :call <SID>operate_errors('n', 'k')<CR>
-    vnoremap <buffer> <silent> K :<C-U>call <SID>operate_errors('v', 'k')<CR>
+    xnoremap <buffer> <silent> K :<C-U>call <SID>operate_errors('x', 'k')<CR>
     nnoremap <buffer> <silent> D :call <SID>operate_errors('n', 'd')<CR>
-    vnoremap <buffer> <silent> D :<C-U>call <SID>operate_errors('v', 'd')<CR>
+    xnoremap <buffer> <silent> D :<C-U>call <SID>operate_errors('x', 'd')<CR>
     nnoremap <buffer> <silent> H :call <SID>toggle_hidden_errors()<CR>
     command! -buffer -nargs=1 -bang Keep call s:keep_errors(<f-args>, v:false, !v:true)
     command! -buffer -nargs=1 -bang Keepf call s:keep_errors(<f-args>, v:true, !v:true)

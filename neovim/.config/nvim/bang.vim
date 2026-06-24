@@ -1,5 +1,5 @@
 nnoremap <silent> ! :call <SID>exchange_n(input('!'))<CR>
-vnoremap <silent> ! :<C-U>call <SID>exchange_v(input('!'))<CR>
+xnoremap <silent> ! :<C-U>call <SID>exchange_v(input('!'))<CR>
 
 function! s:exchange_n(command) abort
     if a:command ==# ""

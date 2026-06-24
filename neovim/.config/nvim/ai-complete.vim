@@ -1,4 +1,4 @@
-vnoremap <silent> <leader>p !:<C-U>call <SID>ai_complete()<CR>
+xnoremap <silent> <leader>p !:<C-U>call <SID>ai_complete()<CR>
 
 function! s:ai_complete() abort
     normal! gv

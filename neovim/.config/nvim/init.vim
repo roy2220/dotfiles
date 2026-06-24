@@ -161,7 +161,7 @@ let g:easyjump_label_attrs = "\e[1m\e[31m"
 
 nmap <M-j> <Plug>EasyJump
 imap <M-j> <Plug>EasyJump
-vmap <M-j> <Plug>EasyJump
+xmap <M-j> <Plug>EasyJump
 omap <M-j> <Plug>EasyJump
 
 "===================================================================================================
@@ -203,33 +203,33 @@ let g:smartpairs_jumps_enabled = 0
 let g:caser_no_mappings = 1
 " for camelCase
 nmap <M-c>c <Plug>CaserCamelCase
-vmap <M-c>cc <Plug>CaserVCamelCase
+xmap <M-c>cc <Plug>CaserVCamelCase
 " for PascalCase
 nmap <M-c>p <Plug>CaserMixedCase
-vmap <M-c>p <Plug>CaserVMixedCase
+xmap <M-c>p <Plug>CaserVMixedCase
 " for snake_case
 nmap <M-c>s <Plug>CaserSnakeCase
-vmap <M-c>s <Plug>CaserVSnakeCase
+xmap <M-c>s <Plug>CaserVSnakeCase
 " for SCREAMING_SNAKE_CASE
 nmap <M-c>S <Plug>CaserUpperCase
-vmap <M-c>S <Plug>CaserVUpperCase
+xmap <M-c>S <Plug>CaserVUpperCase
 " for kebab-case
 nmap <M-c>k <Plug>CaserKebabCase
-vmap <M-c>k <Plug>CaserVKebabCase
+xmap <M-c>k <Plug>CaserVKebabCase
 " for HTTP-Header-Case
 nmap <M-c>h <Plug>CaserTitleKebabCase
-vmap <M-c>h <Plug>CaserVTitleKebabCase
+xmap <M-c>h <Plug>CaserVTitleKebabCase
 " for Title Case
 nmap <M-c>t <Plug>CaserTitleCase
-vmap <M-c>t <Plug>CaserVTitleCase
+xmap <M-c>t <Plug>CaserVTitleCase
 " for space case
 nmap <M-c><Space> <Plug>CaserSpaceCase
-vmap <M-c><Space> <Plug>CaserVSpaceCase
+xmap <M-c><Space> <Plug>CaserVSpaceCase
 
 "===================================================================================================
 " vim-exchange
 nmap <M-x> <Plug>(Exchange)
-vmap <M-x> <Plug>(Exchange)
+xmap <M-x> <Plug>(Exchange)
 nmap <M-S-x> <Plug>(ExchangeLine)
 nmap <M-x><M-x> <Plug>(ExchangeClear)
 
@@ -237,7 +237,7 @@ nmap <M-x><M-x> <Plug>(ExchangeClear)
 " NrrwRgn
 let g:nrrw_rgn_nohl = 1
 let g:nrrw_topbot_leftright = 'botright'
-vmap <C-W>e <Plug>NrrwrgnDo
+xmap <C-W>e <Plug>NrrwrgnDo
 
 "===================================================================================================
 " vim-vsnip
