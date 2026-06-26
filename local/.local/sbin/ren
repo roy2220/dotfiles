@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+DIR=$(dirname -- "${1}")
+exec mv --interactive -- "${1}" "${DIR%/}/${2}"
