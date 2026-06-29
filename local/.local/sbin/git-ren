@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+DIR=$(dirname -- "${1}")
+exec git mv -- "${1}" "${DIR%/}/${2}"
