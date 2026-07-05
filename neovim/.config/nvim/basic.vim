@@ -266,10 +266,10 @@ endfunction
 "===================================================================================================
 
 let g:assignment_statement_formats = {'vim': 'let %s = %s'}
-xnoremap <silent> = :<C-U>call <SID>extract_variable(input('variable name: '))<CR>
+xnoremap <silent> = :<C-U>call <SID>extract_variable(input('Variable name: '))<CR>
 
-function! s:extract_variable(symbol_name) abort
-    if a:symbol_name ==# ""
+function! s:extract_variable(variable_name) abort
+    if a:variable_name ==# ""
         redraw | echo
         return
     endif
@@ -282,8 +282,8 @@ function! s:extract_variable(symbol_name) abort
     else
         let assignment_statement_format = '%s = %s'
     endif
-    call setreg('"', a:symbol_name, 'v')
-    call feedkeys(printf('gvpO'..assignment_statement_format.."\<esc>`]v`[^V", a:symbol_name, "\<C-O>p"), 'n')
+    call setreg('"', a:variable_name, 'v')
+    call feedkeys(printf('gvpO'..assignment_statement_format.."\<esc>`]v`[^V", a:variable_name, "\<C-O>p"), 'n')
 endfunction
 
 "===================================================================================================

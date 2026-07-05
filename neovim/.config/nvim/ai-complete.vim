@@ -31,25 +31,26 @@ endfunction
 
 function! s:chatgpt(query) abort
     let input = '{"model":"google/gemini-3.1-flash-lite","messages":[{"role":"user","content":'..json_encode(a:query).."}]}\n"
+    echomsg 'AI-completing...'
     let output = system(
     \   'tee /tmp/ai_complete.txt'..
     \   ' | curl https://openrouter.ai/api/v1/chat/completions'..
     \       ' -H "Authorization: Bearer ${OPENROUTER_API_KEY}"'..
     \       ' -H ''Content-Type: application/json'''..
     \       ' -d@-'..
-    \   ' | tee -a /tmp/ai_complete.txt',
+    \   ' | tee --append /tmp/ai_complete.txt | jq --raw-output ''.choices[0].message.content''',
     \ input)
     if v:shell_error != 0
         throw 'Failed to execute: '..a:query
     endif
-    let i = stridx(output, '<code_c>\n')
+    let i = stridx(output, "<code_c>\n")
     if i == -1
         throw 'Failed to locate code_c'
     endif
-    let j = i + len('<code_c>\n')
-    let k = stridx(output, '\n</code_c>', j)
+    let j = i + len("<code_c>\n")
+    let k = stridx(output, "\n</code_c>", j)
     if k == -1
         throw 'Failed to locate code_c'
     endif
-    return json_decode('"'..output[j:k-1]..'"')
+    return output[j:k-1]
 endfunction
