@@ -6,6 +6,7 @@ printf '\033[>4;1m'
 test -f ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh && source ~/.cache/p10k-instant-prompt-${(%):-%n}.zsh
 source ~/.p10k.zsh
 
+##### BEGIN PLUGINS #####
 source ~/.zplug/init.zsh
 {
     zplug "romkatv/powerlevel10k", as:"theme", hook-build:"./gitstatus/install", depth:1
@@ -24,6 +25,7 @@ source ~/.zplug/init.zsh
     zplug "zsh-users/zsh-history-substring-search", depth:1, defer:2
 }
 zplug load
+##### END PLUGINS #####
 
 eval "$(direnv hook zsh)"
 

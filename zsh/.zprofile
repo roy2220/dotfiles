@@ -1,14 +1,16 @@
 [[ -f /tmp/zprofile ]] && source /tmp/zprofile
 
 if [[ ${DOCKER_HOST_OS} == Darwin ]]; then
-    DNS_SERVER_IP=$(dig +short host.docker.internal)
+    DOCKER_PHYSICAL_HOST_IP=$(dig +short host.docker.internal)
 elif [[ ${DOCKER_HOST_OS} == WSL ]]; then
-    DNS_SERVER_IP=$(ip route show default | grep --perl-regexp --only-matching '(?<=^default via )[^ ]+')
+    DOCKER_PHYSICAL_HOST_IP=$(ip route show default | grep --perl-regexp --only-matching '(?<=^default via )[^ ]+')
 fi
-if [[ ! -z ${DNS_SERVER_IP} ]]; then
-    RULE="OUTPUT -t nat -p udp -d 1.1.1.1 --dport 53 -j DNAT --to ${DNS_SERVER_IP}:1053"
+if [[ ! -z ${DOCKER_PHYSICAL_HOST_IP} ]]; then
+    echo "${DOCKER_PHYSICAL_HOST_IP} host.docker.internal" >>/etc/hosts
+
+    RULE="OUTPUT -t nat -p udp -d 1.2.3.4 --dport 53 -j DNAT --to ${DOCKER_PHYSICAL_HOST_IP}:1053"
     iptables -C ${=RULE} || iptables -A ${=RULE}
-    echo 'nameserver 1.1.1.1' >/etc/resolv.conf
+    echo 'nameserver 1.2.3.4' >/etc/resolv.conf
 fi
 
 if [[ ! -d ~/.secrets ]]; then
