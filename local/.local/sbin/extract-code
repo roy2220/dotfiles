@@ -31,12 +31,17 @@ if [[ "${#FILES[@]}" -gt "${MAX_FILES}" ]]; then
 	exit 1
 fi
 
+I=0
 for FILE in "${FILES[@]}"; do
-	echo ''
+	if [[ ${I} -gt 0 ]]; then
+		echo -ne '\n---\n\n'
+	fi
 	echo "# File \`${FILE}\`"
 	if [[ "${DRYRUN}" -eq 0 ]]; then
-		echo '```'
-		cat "${FILE}"
-		echo '```'
+		echo -ne '\n```\n'
+		# shellcheck disable=SC1003
+		sed '$a\' "${FILE}"
+		echo -ne '```\n'
 	fi
+	I=$((I + 1))
 done
