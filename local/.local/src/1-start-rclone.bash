@@ -1,4 +1,4 @@
-set -eu${DEBUG+x}o pipefail
+set -euo pipefail
 
 mkdir --parents /gdrive
 rclone mount --daemon gdrive: /gdrive

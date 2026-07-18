@@ -1,4 +1,4 @@
-set -eu${DEBUG+x}o pipefail
+set -euo pipefail
 
 case $(arch) in
 x86_64)
@@ -21,7 +21,7 @@ import sys
 release = json.loads(sys.stdin.read())
 download_url = None
 for asset in release["assets"]:
-    if re.match(r"^fx_linux_'${ARCH}'$", asset["name"]) is not None:
+    if asset["name"] == "fx_linux_'${ARCH}'":
         download_url = asset["browser_download_url"]
         break
 if download_url is None:

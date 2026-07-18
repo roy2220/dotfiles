@@ -1,4 +1,4 @@
-set -eu${DEBUG+x}o pipefail
+set -euo pipefail
 
 DOWNLOAD_URL=$(curl --retry 3 -SsLf 'https://api.github.com/repos/hq6/ProtobufJson/tags' | python3 -c '
 import json

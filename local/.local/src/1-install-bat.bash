@@ -1,4 +1,4 @@
-set -eu${DEBUG+x}o pipefail
+set -euo pipefail
 
 case $(arch) in
 x86_64)
