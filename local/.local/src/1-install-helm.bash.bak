@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards "linux-${ARCH}/helm" --to-stdout |
+	tar xz --to-stdout "linux-${ARCH}/helm" |
 	install -D /dev/stdin "${HOME}/.local/bin/helm"

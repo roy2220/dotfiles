@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards fzf --to-stdout |
+	tar xz --to-stdout fzf |
 	install -D /dev/stdin "${HOME}/.local/bin/fzf"

@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards "etcd-*-linux-${ARCH}/etcdctl" --to-stdout |
+	tar xz --to-stdout --wildcards "etcd-*-linux-${ARCH}/etcdctl" |
 	install -D /dev/stdin "${HOME}/.local/bin/etcdctl"

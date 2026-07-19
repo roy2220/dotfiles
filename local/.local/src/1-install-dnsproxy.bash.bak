@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards "./linux-${ARCH}/dnsproxy" --to-stdout |
+	tar xz --to-stdout "./linux-${ARCH}/dnsproxy" |
 	install -D /dev/stdin "${HOME}/.local/bin/dnsproxy"

@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards "delta-*-${ARCH}-unknown-linux-gnu/delta" --to-stdout |
+	tar xz --to-stdout --wildcards "delta-*-${ARCH}-unknown-linux-gnu/delta" |
 	install -D /dev/stdin "${HOME}/.local/bin/delta"

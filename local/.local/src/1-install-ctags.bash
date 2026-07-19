@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xJ --wildcards "uctags-*-linux-${ARCH}.release/bin/ctags" --to-stdout |
+	tar xJ --to-stdout --wildcards "uctags-*-linux-${ARCH}.release/bin/ctags" |
 	install -D /dev/stdin "${HOME}/.local/bin/ctags"

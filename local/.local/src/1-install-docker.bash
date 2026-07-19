@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards docker/docker --to-stdout |
+	tar xz --to-stdout docker/docker |
 	install -D /dev/stdin "${HOME}/.local/bin/docker"

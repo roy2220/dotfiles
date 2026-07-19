@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards go-carpet --to-stdout |
+	tar xz --to-stdout go-carpet |
 	install -D /dev/stdin "${HOME}/.local/bin/go-carpet"

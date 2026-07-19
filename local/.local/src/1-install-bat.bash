@@ -31,5 +31,5 @@ print(download_url)
 ')
 
 curl --retry 3 -SsLf "${DOWNLOAD_URL}" |
-	tar xz --wildcards "bat-*-${ARCH}-unknown-linux-gnu/bat" --to-stdout |
+	tar xz --to-stdout --wildcards "bat-*-${ARCH}-unknown-linux-gnu/bat" |
 	install -D /dev/stdin "${HOME}/.local/bin/bat"
