@@ -93,13 +93,13 @@ function! s:set_diffopt(git_diff_opts) abort
         elseif git_diff_opt ==# '--diff-algorithm=myers'
             set diffopt+=algorithm:myers
             call add(accepted_git_diff_opts, git_diff_opt)
-        elseif git_diff_opt ==# '--diff-algorithm=minimal'
+        elseif git_diff_opt ==# '--diff-algorithm=minimal' || git_diff_opt ==# '--minimal'
             set diffopt+=algorithm:minimal
             call add(accepted_git_diff_opts, git_diff_opt)
-        elseif git_diff_opt ==# '--diff-algorithm=patience'
+        elseif git_diff_opt ==# '--diff-algorithm=patience' || git_diff_opt ==# '--patience'
             set diffopt+=algorithm:patience
             call add(accepted_git_diff_opts, git_diff_opt)
-        elseif git_diff_opt ==# '--diff-algorithm=histogram'
+        elseif git_diff_opt ==# '--diff-algorithm=histogram' || git_diff_opt ==# '--histogram'
             set diffopt+=algorithm:histogram
             call add(accepted_git_diff_opts, git_diff_opt)
         endif
