@@ -25,16 +25,20 @@ function! s:ag(invert_match, pattern, pattern_is_fixed) abort
         let command ..= '--files-without-matches '
     endif
     let command ..= '-- '..shellescape(a:pattern)
-    if &buftype == 'quickfix'
-        let qf_info = getqflist({'items': 0})
-        let file_names = []
-        for qf_item_info in qf_info.items
-            let file_name = bufname(qf_item_info.bufnr)
-            if file_name ==# ""
-                continue
-            endif
-            call add(file_names, file_name)
-        endfor
+    if &buftype == 'quickfix' || &filetype == 'fugitive'
+        if &buftype == 'quickfix'
+            let qf_info = getqflist({'items': 0})
+            let file_names = []
+            for qf_item_info in qf_info.items
+                let file_name = bufname(qf_item_info.bufnr)
+                if file_name ==# ""
+                    continue
+                endif
+                call add(file_names, file_name)
+            endfor
+        elseif &filetype == 'fugitive'
+            let file_names = systemlist('git status --porcelain | grep --perl-regexp --only-matching ''(?<=^( M| A|M |A ) ).+'' |  cut --bytes="$(git rev-parse --show-prefix | wc --bytes)-"', '')
+        endif
         if len(file_names) == 0
             let qf = []
         else
