@@ -1,0 +1,344 @@
+{
+  "port": 10100,
+  "managementUsageMaxReadBytes": 67108864,
+  "appOwnedMemoryBudgetMb": 256,
+  "providers": {
+    "openai": {
+      "adapter": "openai-responses",
+      "baseUrl": "https://chatgpt.com/backend-api/codex",
+      "codexAccountMode": "pool",
+      "authMode": "forward"
+    },
+    "zai": {
+      "adapter": "openai-responses",
+      "baseUrl": "https://api.z.ai",
+      "initialModelSelection": {
+        "version": 1,
+        "registrationId": "cebb1d03-30c3-4524-9242-c3d9685bd8b5",
+        "status": "ready",
+        "modelCount": 3
+      },
+      "responsesPath": "/api/v1/responses",
+      "chatCompletionsPath": "/api/coding/paas/v4/chat/completions",
+      "preserveResponsesReasoningContent": true,
+      "zaiResponsesDefaultVersion": 1,
+      "authMode": "key",
+      "apiKey": "${ZAI_API_KEY}",
+      "defaultModel": "glm-5.3",
+      "models": [
+        "glm-5.3",
+        "glm-5.3[1m]",
+        "glm-5.3-flash",
+        "glm-5.2",
+        "glm-5.2[1m]",
+        "glm-5.1",
+        "glm-5",
+        "glm-4.6"
+      ],
+      "modelContextWindows": {
+        "glm-5.3": 1048576,
+        "glm-5.3[1m]": 1048576,
+        "glm-5.3-flash": 1048576,
+        "glm-5.2": 1000000,
+        "glm-5.2[1m]": 1000000
+      },
+      "modelInputModalities": {
+        "glm-5.3": [
+          "text"
+        ],
+        "glm-5.3[1m]": [
+          "text"
+        ],
+        "glm-5.2": [
+          "text"
+        ],
+        "glm-5.2[1m]": [
+          "text"
+        ],
+        "glm-5.3-flash": [
+          "text",
+          "image"
+        ]
+      },
+      "modelMaxOutputTokens": {
+        "glm-5.3": 131072,
+        "glm-5.3[1m]": 131072,
+        "glm-5.3-flash": 131072
+      },
+      "modelReasoningEfforts": {
+        "glm-5.3": [
+          "low",
+          "high",
+          "max"
+        ],
+        "glm-5.3[1m]": [
+          "low",
+          "high",
+          "max"
+        ],
+        "glm-5.3-flash": [
+          "low",
+          "high",
+          "max"
+        ],
+        "glm-5.2": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "glm-5.2[1m]": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ]
+      },
+      "modelDefaultReasoningEfforts": {
+        "glm-5.3": "max",
+        "glm-5.3[1m]": "max",
+        "glm-5.3-flash": "max"
+      },
+      "noVisionModels": [
+        "glm-5.3",
+        "glm-5.3[1m]",
+        "glm-5.2",
+        "glm-5.2[1m]"
+      ],
+      "preserveReasoningContentModels": [
+        "glm-5.3",
+        "glm-5.3[1m]",
+        "glm-5.3-flash",
+        "glm-5.2",
+        "glm-5.2[1m]"
+      ],
+      "modelSuffixBracketStrip": true,
+      "apiKeyPool": [
+        {
+          "id": "1f9a9b18",
+          "key": "${ZAI_API_KEY}",
+          "addedAt": 1790590701106
+        }
+      ],
+      "apiKeySelectionRevision": "db127e58-6246-4e5c-ad89-784e82d14f3d"
+    },
+    "deepseek": {
+      "adapter": "openai-chat",
+      "baseUrl": "https://api.deepseek.com",
+      "initialModelSelection": {
+        "version": 1,
+        "registrationId": "d4baac10-b4e9-4945-adf7-6902e37cec6f",
+        "status": "ready",
+        "modelCount": 2
+      },
+      "responsesPath": "/responses",
+      "statelessResponses": true,
+      "requiresAdjacentResponsesToolResults": true,
+      "annotateEmptyToolOutputs": true,
+      "supportsServiceTier": false,
+      "preserveResponsesReasoningContent": true,
+      "responsesItemIdRepair": {
+        "repairMissingTerminalIds": true,
+        "repairInvalidIds": true
+      },
+      "authMode": "key",
+      "apiKey": "${DEEPSEEK_API_KEY}",
+      "defaultModel": "deepseek-flash",
+      "models": [
+        "deepseek-chat",
+        "deepseek-reasoner",
+        "deepseek-flash",
+        "deepseek-v4-flash",
+        "deepseek-v4-flash-vision-exp"
+      ],
+      "modelContextWindows": {
+        "deepseek-flash": 1048576,
+        "deepseek-v4-flash": 1048576,
+        "deepseek-v4-flash-vision-exp": 1048576
+      },
+      "modelInputModalities": {
+        "deepseek-flash": [
+          "text",
+          "image"
+        ],
+        "deepseek-v4-flash-vision-exp": [
+          "text",
+          "image"
+        ]
+      },
+      "modelReasoningEfforts": {
+        "deepseek-flash": [
+          "low",
+          "high",
+          "max"
+        ],
+        "deepseek-v4-flash": [
+          "low",
+          "high",
+          "max"
+        ]
+      },
+      "modelReasoningEffortMap": {
+        "deepseek-flash": {
+          "low": "low",
+          "medium": "high",
+          "high": "high",
+          "xhigh": "high",
+          "max": "max"
+        },
+        "deepseek-v4-flash": {
+          "low": "low",
+          "medium": "high",
+          "high": "high",
+          "xhigh": "high",
+          "max": "max"
+        }
+      },
+      "noVisionModels": [
+        "deepseek-chat",
+        "deepseek-reasoner",
+        "deepseek-v4-flash"
+      ],
+      "preserveReasoningContentModels": [
+        "deepseek-flash",
+        "deepseek-v4-flash",
+        "deepseek-v4-pro"
+      ]
+    },
+    "moonshot": {
+      "adapter": "openai-chat",
+      "baseUrl": "https://api.moonshot.cn/v1",
+      "initialModelSelection": {
+        "version": 1,
+        "registrationId": "a2ac5ea5-87e3-440d-9a9f-c9f2121dcc86",
+        "status": "ready",
+        "modelCount": 4
+      },
+      "authMode": "key",
+      "apiKey": "${MOONSHOT_API_KEY}",
+      "defaultModel": "kimi-k2.7-code",
+      "models": [
+        "kimi-k3",
+        "kimi-k2.7-code",
+        "kimi-k2.7-code-highspeed",
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ],
+      "modelContextWindows": {
+        "kimi-k3": 1048576,
+        "kimi-k2.7-code": 262144,
+        "kimi-k2.7-code-highspeed": 262144,
+        "kimi-k2.6": 262144,
+        "kimi-k2.5": 262144
+      },
+      "modelInputModalities": {
+        "kimi-k3": [
+          "text",
+          "image"
+        ]
+      },
+      "modelReasoningEfforts": {
+        "kimi-k3": [
+          "max"
+        ],
+        "kimi-k2.7-code": [],
+        "kimi-k2.7-code-highspeed": [],
+        "kimi-k2.6": [],
+        "kimi-k2.5": []
+      },
+      "noReasoningModels": [
+        "kimi-k2.7-code",
+        "kimi-k2.7-code-highspeed",
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ],
+      "noTemperatureModels": [
+        "kimi-k3",
+        "kimi-k2.7-code",
+        "kimi-k2.7-code-highspeed",
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ],
+      "noTopPModels": [
+        "kimi-k3",
+        "kimi-k2.7-code",
+        "kimi-k2.7-code-highspeed",
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ],
+      "noPenaltyModels": [
+        "kimi-k3",
+        "kimi-k2.7-code",
+        "kimi-k2.7-code-highspeed",
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ],
+      "autoToolChoiceOnlyModels": [
+        "kimi-k2.7-code",
+        "kimi-k2.7-code-highspeed"
+      ],
+      "preserveReasoningContentModels": [
+        "kimi-k3",
+        "kimi-k2.7-code",
+        "kimi-k2.7-code-highspeed",
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ]
+    }
+  },
+  "defaultProvider": "openai",
+  "fastRows": true,
+  "emptyCompletionRetry": false,
+  "dropCodexSafetyBuffering": false,
+  "openaiProviderTierVersion": 2,
+  "subagentModelsVersion": 2,
+  "subagentModels": [
+    "gpt-6-astra",
+    "gpt-6-sol",
+    "gpt-6-luna"
+  ],
+  "multiAgentSurfaceAdvisoryVersion": 1,
+  "multiAgentGuidanceEnabled": true,
+  "codexShimAutoRestore": true,
+  "multiAgentMode": "v1",
+  "websockets": false,
+  "codexAutoStart": true,
+  "modelDiscovery": {
+    "knownModels": {
+      "openai": {
+        "ids": [],
+        "removed": [],
+        "updatedAt": "2026-09-28T10:16:05.363Z"
+      },
+      "zai": {
+        "ids": [
+          "glm-5-turbo",
+          "glm-5.3",
+          "glm-5.3-flash"
+        ],
+        "removed": [],
+        "updatedAt": "2026-09-28T10:16:05.363Z"
+      },
+      "deepseek": {
+        "ids": [
+          "deepseek-flash",
+          "deepseek-v4-flash"
+        ],
+        "removed": [],
+        "updatedAt": "2026-09-28T10:17:53.197Z"
+      },
+      "moonshot": {
+        "ids": [
+          "kimi-k2.6",
+          "kimi-k2.7-code",
+          "kimi-k2.7-code-highspeed",
+          "kimi-k3"
+        ],
+        "removed": [],
+        "updatedAt": "2026-09-28T10:19:29.758Z"
+      }
+    }
+  }
+}

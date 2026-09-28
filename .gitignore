@@ -2,3 +2,5 @@
 /tmux/.tmux/plugins
 /neovim/.local
 /openssh/.ssh/known_hosts*
+/opencodex/.config/opencodex/*
+!/opencodex/.config/opencodex/config.json
