@@ -340,5 +340,10 @@
         "updatedAt": "2026-09-28T10:19:29.758Z"
       }
     }
+  },
+  "claudeCode": {
+    "enabled": false,
+    "authMode": "subscription",
+    "authModeMigratedAt": "2026-09-28T11:08:19.043Z"
   }
 }
