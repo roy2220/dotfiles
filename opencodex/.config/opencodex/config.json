@@ -3,12 +3,6 @@
   "managementUsageMaxReadBytes": 67108864,
   "appOwnedMemoryBudgetMb": 256,
   "providers": {
-    "openai": {
-      "adapter": "openai-responses",
-      "baseUrl": "https://chatgpt.com/backend-api/codex",
-      "codexAccountMode": "pool",
-      "authMode": "forward"
-    },
     "zai": {
       "adapter": "openai-responses",
       "baseUrl": "https://api.z.ai",
@@ -286,17 +280,32 @@
         "kimi-k2.6",
         "kimi-k2.5"
       ]
+    },
+    "openai": {
+      "adapter": "openai-responses",
+      "baseUrl": "https://chatgpt.com/backend-api/codex",
+      "supportsServiceTier": true,
+      "codexAccountMode": "pool",
+      "authMode": "forward",
+      "disabled": true
     }
   },
-  "defaultProvider": "openai",
+  "defaultProvider": "zai",
   "fastRows": true,
+  "configRebaseProvenance": {
+    "version": 1,
+    "deletedTopLevelKeys": [
+      "providerContextCapValues",
+      "providerContextCaps"
+    ]
+  },
   "emptyCompletionRetry": false,
   "dropCodexSafetyBuffering": false,
   "openaiProviderTierVersion": 2,
-  "subagentModelsVersion": 2,
+  "subagentModelsVersion": 3,
   "subagentModels": [
     "gpt-6-astra",
-    "gpt-6-sol",
+    "gpt-6.1-sol",
     "gpt-6-luna"
   ],
   "multiAgentSurfaceAdvisoryVersion": 1,
@@ -307,11 +316,6 @@
   "codexAutoStart": true,
   "modelDiscovery": {
     "knownModels": {
-      "openai": {
-        "ids": [],
-        "removed": [],
-        "updatedAt": "2026-09-28T10:16:05.363Z"
-      },
       "zai": {
         "ids": [
           "glm-5-turbo",
@@ -338,6 +342,11 @@
         ],
         "removed": [],
         "updatedAt": "2026-09-28T10:19:29.758Z"
+      },
+      "openai": {
+        "ids": [],
+        "removed": [],
+        "updatedAt": "2026-09-29T10:25:34.226Z"
       }
     }
   },
@@ -354,8 +363,18 @@
         "sonnet": null,
         "haiku": null
       },
-      "appliedFingerprint": "27ee295751304964",
-      "appliedAt": "2026-09-29T03:46:03.492Z"
+      "appliedFingerprint": "92d36a7c06ac8c53",
+      "appliedAt": "2026-10-01T08:03:03.336Z"
     }
-  }
+  },
+  "activeCodexAccountId": "__main__",
+  "disabledModels": [
+    "gpt-5.5",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna",
+    "gpt-6-astra",
+    "gpt-6-sol",
+    "gpt-6-luna"
+  ]
 }
