@@ -344,6 +344,18 @@
   "claudeCode": {
     "enabled": false,
     "authMode": "subscription",
-    "authModeMigratedAt": "2026-09-28T11:08:19.043Z"
+    "authModeMigratedAt": "2026-09-28T11:08:19.043Z",
+    "desktopProfile": {
+      "version": 1,
+      "assignments": {},
+      "defaults": {
+        "opus": null,
+        "fable": null,
+        "sonnet": null,
+        "haiku": null
+      },
+      "appliedFingerprint": "27ee295751304964",
+      "appliedAt": "2026-09-29T03:46:03.492Z"
+    }
   }
 }
