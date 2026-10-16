@@ -28,6 +28,8 @@ set splitright
 
 set updatetime=500
 
+set formatprg=par\ w80T8
+
 nnoremap gp `[v`]
 
 noremap : ,
