@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-
-#!/usr/bin/env python3
 import sys
 from datetime import datetime
+
+date_only = "-d" in sys.argv[1:]
 
 for line in sys.stdin:
     line = line.strip()
@@ -11,4 +11,8 @@ for line in sys.stdin:
     ts = float(line)
     if ts > 1e11:  # 超过 1e11 视为毫秒
         ts /= 1000
-    print(datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S"))
+    if date_only:
+        format = "%Y-%m-%d"
+    else:
+        format = "%Y-%m-%d %H:%M:%S"
+    print(datetime.fromtimestamp(ts).strftime(format))
