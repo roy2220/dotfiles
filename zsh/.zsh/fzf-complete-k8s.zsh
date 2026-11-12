@@ -48,4 +48,16 @@ Kcn() {
     kubectl config set-context --current --namespace=${namespace}
 }
 
+Kep() {
+    local pod=$(kubectl get pod -o name | fzf-popup --prompt='K8s:pod... ' --bind='load:change-prompt:K8s:pod> ')
+    if [[ -z ${pod} ]]; then
+        return
+    fi
+    local container=$(kubectl get ${pod} -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}' | fzf-popup --prompt='K8s:container... ' --bind='load:change-prompt:K8s:container> ')
+    if [[ -z ${container} ]]; then
+        return
+    fi
+    send-command "kubectl exec -it ${pod:q} -c ${container:q} -- sh -c 'exec \$(command -v bash || echo sh)'"
+}
+
 }

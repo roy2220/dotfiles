@@ -338,16 +338,30 @@
           "kimi-k2.6",
           "kimi-k2.7-code",
           "kimi-k2.7-code-highspeed",
-          "kimi-k3"
+          "kimi-k3",
+          "kimi-k3.1-pro",
+          "kimi-k3.1-pro-highspeed"
         ],
         "removed": [],
-        "updatedAt": "2026-09-28T10:19:29.758Z"
+        "updatedAt": "2026-10-23T17:09:35.832Z"
       },
       "openai": {
         "ids": [],
         "removed": [],
         "updatedAt": "2026-09-29T10:25:34.226Z"
       }
+    },
+    "recentArrivals": {
+      "moonshot": [
+        {
+          "id": "kimi-k3.1-pro",
+          "at": "2026-10-23T17:09:35.832Z"
+        },
+        {
+          "id": "kimi-k3.1-pro-highspeed",
+          "at": "2026-10-23T17:09:35.832Z"
+        }
+      ]
     }
   },
   "claudeCode": {
