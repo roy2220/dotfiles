@@ -1,13 +1,13 @@
-let g:ToolInstallCommands = extendnew(get(g:, 'ToolInstallCommands', []), [
+call AddToolInstallCommands(
 \    'npm install -g pyright',
 \    'pip install black',
 \    'pip install isort',
 \    'pip install autoflake',
-\])
+\)
 
-let g:RequiredTreeSitterParsers = extendnew(get(g:, 'RequiredTreeSitterParsers', []), [
+call AddRequiredTreeSitterParsers(
 \    'python',
-\])
+\)
 
 augroup __python__
     autocmd!

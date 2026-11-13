@@ -1,14 +1,22 @@
 runtime basic.vim
 set shadafile=/workspace/.shada
 
-runtime brackets-jump.vim
 runtime quickfix.vim
+runtime brackets-jump.vim
 runtime workflow.vim
 runtime bang.vim
 runtime the-silver-searcher.vim
 runtime tmux-clipboard.vim
 runtime ai-complete.vim
 
+let g:_tool_install_commands = []
+function! AddToolInstallCommands(...) abort
+    call extend(g:_tool_install_commands, a:000)
+endfunction
+let g:_required_tree_sitter_parsers = []
+function! AddRequiredTreeSitterParsers(...) abort
+    call extend(g:_required_tree_sitter_parsers, a:000)
+endfunction
 runtime ft-go.vim
 runtime ft-python.vim
 runtime ft-sh.vim
@@ -17,16 +25,16 @@ runtime ft-yaml.vim
 
 "===================================================================================================
 " vim-plug
-let g:plugin_patch_dir_path = stdpath('config')..'/plugin-patches/'
+let g:_plugin_patch_dir_path = stdpath('config')..'/plugin-patches/'
 call plug#begin()
     Plug 'sainnhe/everforest'
     Plug 'itchyny/lightline.vim'
-    Plug 'mengelbrecht/lightline-bufferline', { 'do': 'git apply '..g:plugin_patch_dir_path..'/lightline-bufferline.diff' }
+    Plug 'mengelbrecht/lightline-bufferline', { 'do': 'git apply '..g:_plugin_patch_dir_path..'/lightline-bufferline.diff' }
     Plug 'psliwka/vim-smoothie'
     Plug 'Yggdroot/indentLine'
     Plug 'tpope/vim-sleuth'
     Plug 'machakann/vim-highlightedyank'
-    Plug '~/.zplug/repos/junegunn/fzf' | Plug 'junegunn/fzf.vim', { 'do': 'git apply '..g:plugin_patch_dir_path..'/fzf.vim.diff' }
+    Plug '~/.zplug/repos/junegunn/fzf' | Plug 'junegunn/fzf.vim', { 'do': 'git apply '..g:_plugin_patch_dir_path..'/fzf.vim.diff' }
     Plug '~/.tmux/plugins/easyjump.tmux'
     Plug 'othree/eregex.vim'
     Plug 'neoclide/jsonc.vim'
@@ -36,21 +44,21 @@ call plug#begin()
         Plug 'airblade/vim-gitgutter'
         Plug 'knsh14/vim-github-link'
         Plug 'lifepillar/vim-mucomplete'
-        Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply '..g:plugin_patch_dir_path..'/vim-smartpairs.diff' }
+        Plug 'gosukiwi/vim-smartpairs', { 'do': 'git apply '..g:_plugin_patch_dir_path..'/vim-smartpairs.diff' }
         Plug 'tpope/vim-surround'
         Plug 'arthurxavierx/vim-caser'
-        Plug 'tommcdo/vim-exchange', { 'do': 'git apply '..g:plugin_patch_dir_path..'/vim-exchange.diff' }
+        Plug 'tommcdo/vim-exchange', { 'do': 'git apply '..g:_plugin_patch_dir_path..'/vim-exchange.diff' }
         Plug 'chrisbra/NrrwRgn'
         Plug 'matze/vim-move'
         Plug 'AndrewRadev/linediff.vim'
         Plug 'hrsh7th/vim-vsnip'
-        Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply '..g:plugin_patch_dir_path..'/vim-lsp.diff'] + get(g:, 'ToolInstallCommands', []), ' && ') }
+        Plug 'prabirshrestha/vim-lsp', { 'do': join(['git apply '..g:_plugin_patch_dir_path..'/vim-lsp.diff'] + g:_tool_install_commands, ' && ') }
         Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':'..join([
         \    'TSUpdate',
-        \    exists('g:RequiredTreeSitterParsers') ? 'TSInstall '..join(g:RequiredTreeSitterParsers, ' ') : '',
+        \    len(g:_required_tree_sitter_parsers) >= 1 ? 'TSInstall '..join(g:_required_tree_sitter_parsers, ' ') : '',
         \    'sleep 30',
         \], '\|') }
-        Plug 'milanglacier/minuet-ai.nvim', { 'do': 'git apply '..g:plugin_patch_dir_path..'/minuet-ai.nvim.diff' } | Plug 'nvim-lua/plenary.nvim'
+        Plug 'milanglacier/minuet-ai.nvim', { 'do': 'git apply '..g:_plugin_patch_dir_path..'/minuet-ai.nvim.diff' } | Plug 'nvim-lua/plenary.nvim'
     endif
 call plug#end()
 let g:plug_timeout=1200

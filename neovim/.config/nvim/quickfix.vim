@@ -1,6 +1,8 @@
-let g:FilesToHideInQuickfixByDefault = extendnew(get(g:, 'FilesToHideInQuickfixByDefault', {}), {
-\    '*': ['\.bak$'],
-\})
+let s:files_to_hide_in_quickfix_by_default = {}
+function! SetFilesToHideInQuickfixByDefault(file_type, ...) abort
+    let s:files_to_hide_in_quickfix_by_default[a:file_type] = a:000
+endfunction
+call SetFilesToHideInQuickfixByDefault('*', '\.bak$')
 
 nnoremap <silent> <M-q> :call <SID>toggle_qf()<CR>
 function! s:toggle_qf()
@@ -110,8 +112,7 @@ function! s:sort_errors(qf) abort
     let [cur_lnum, cur_col] = getcurpos()[1:2]
     let cur_file_path = expand('%:p')
     let cur_bufnr = bufnr()
-    let files_to_hide = get(g:, 'FilesToHideInQuickfixByDefault', {})
-    let hidden_file_path_patterns = get(files_to_hide, '*', []) + get(files_to_hide, &filetype, [])
+    let hidden_file_path_patterns = get(s:files_to_hide_in_quickfix_by_default, '*', []) + get(s:files_to_hide_in_quickfix_by_default, &filetype, [])
     if len(hidden_file_path_patterns) == 0
         let omni_hidden_file_path_pattern = ''
     else
